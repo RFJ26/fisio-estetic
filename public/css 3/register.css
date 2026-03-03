@@ -1,0 +1,205 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+/* ============================================================
+   1. CORES E VARIÁVEIS (TEMA VERDE)
+   ============================================================ */
+:root {
+    --primary-color: #2e7d32;      /* Verde Principal */
+    --primary-hover: #1b5e20;      /* Verde Escuro */
+    --bg-body: #f8f9fa;            /* Fundo igual ao perfil */
+    --text-primary: #2c3e50;
+    --text-muted: #6c757d;
+    --card-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* ============================================================
+   2. RESET E ESTRUTURA
+   ============================================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: var(--bg-body);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: center; /* Garante centralização total */
+}
+
+.register-card {
+    background: white;
+    width: 100%;
+    max-width: 500px; /* Largura contida */
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+}
+
+/* ============================================================
+   3. TIPOGRAFIA
+   ============================================================ */
+.brand-title {
+    color: var(--primary-color); /* Marca a Verde */
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h3 {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 0.9rem;
+}
+
+/* ============================================================
+   4. FORMULÁRIOS E INPUTS
+   ============================================================ */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-wrapper i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #bdc3c7;
+    transition: color 0.3s;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 12px 15px 12px 45px; /* Espaço para o ícone */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background-color: #fff;
+    color: var(--text-primary);
+}
+
+/* Efeito de Foco Verde */
+.input-wrapper input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15); /* Sombra Verde suave */
+}
+
+.input-wrapper input:focus + i,
+.input-wrapper:focus-within i {
+    color: var(--primary-color); /* Ícone fica verde ao focar */
+}
+
+/* Inputs lado a lado (Telefone e NIF) */
+.row-inputs {
+    display: flex;
+    gap: 15px;
+}
+.row-inputs .input-group {
+    flex: 1;
+}
+
+/* ============================================================
+   5. BOTÕES E LINKS
+   ============================================================ */
+.btn-register {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+}
+
+.btn-register:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+}
+
+/* Link de Login */
+.login-link {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.login-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.login-link a:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+/* ============================================================
+   6. MENSAGENS DE ERRO
+   ============================================================ */
+.alert-error {
+    background-color: #f8d7da;
+    color: #842029;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #f5c2c7;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ============================================================
+   7. MOBILE
+   ============================================================ */
+@media (max-width: 480px) {
+    .register-card {
+        padding: 25px;
+    }
+    .row-inputs {
+        flex-direction: column;
+        gap: 0;
+    }
+}

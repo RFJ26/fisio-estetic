@@ -1,0 +1,171 @@
+:root {
+    --brand-dark: #1a3c1b;
+    --brand-primary: #2e7d32;
+    --bg-light: #f8f9fa;
+    --sidebar-width: 260px;
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+}
+
+/* --- Layout Principal --- */
+.content {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    padding: 40px;
+    transition: all 0.3s ease;
+}
+
+/* --- Contentor do Cartão --- */
+.view-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.04);
+    padding: 40px;
+    border: 1px solid #eef0f3;
+    max-width: 900px;
+    margin: 0 auto; /* Centra o cartão */
+}
+
+/* --- Títulos dos Campos --- */
+.view-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #9ca3af; /* Cinzento suave */
+    margin-bottom: 8px;
+    letter-spacing: 0.8px;
+}
+
+/* --- Valores dos Campos --- */
+.view-value {
+    color: #2c3e50;
+    font-weight: 400;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f3f4f6;
+    margin-bottom: 15px;
+    min-height: 35px; /* Altura mínima para alinhamento */
+}
+
+/* --- Badges (Admin) --- */
+.badge-status {
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+/* --- Botão Voltar (Cinzento/Outline) --- */
+.btn-back {
+    color: #6c757d;
+    border: 1px solid #dee2e6;
+    background: white;
+    padding: 8px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-back:hover {
+    background: #f8f9fa;
+    color: #212529;
+    border-color: #cdd4db;
+    transform: translateX(-3px);
+}
+
+/* --- Botões de Ação no fundo do cartão --- */
+.card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid #f0f0f0;
+}
+
+/* Botão Editar (Cinzento Chumbo - Neutro) */
+.btn-edit-action {
+    background-color: #495057;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.btn-edit-action:hover { 
+    background-color: #343a40; /* Mais escuro ao passar o rato */
+    color: white; 
+    transform: translateY(-2px);
+}
+
+/* Botão Competências (Verde Escuro - Destaque Positivo) */
+.btn-assign-action {
+    background-color: var(--brand-dark);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.btn-assign-action:hover { 
+    background-color: #143015; 
+    color: white; 
+    transform: translateY(-2px);
+}
+
+/* Botão Apagar (Vermelho - Perigo) */
+.btn-delete-action {
+    background-color: #fee2e2;
+    color: #dc2626;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: 1px solid transparent;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.btn-delete-action:hover { 
+    background-color: #dc2626; 
+    color: white; 
+    transform: translateY(-2px);
+}
+
+/* --- Responsividade --- */
+@media (max-width: 992px) {
+    .content {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+        padding-top: 80px;
+    }
+    
+    .view-card {
+        padding: 25px;
+    }
+
+    .card-actions {
+        flex-direction: column;
+    }
+    
+    .card-actions a {
+        width: 100%;
+        text-align: center;
+    }
+    
+    /* Empurrar o botão apagar para baixo em mobile sem o ms-auto */
+    .btn-delete-action.ms-auto {
+        margin-left: 0 !important;
+        margin-top: 10px;
+    }
+}

@@ -1,0 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+    --primary-color: #2e7d32;
+    --sidebar-width: 250px; /* Igual ao dashboard */
+    --bg-light: #f8f9fa;
+    --text-dark: #2c3e50;
+    --gold-main: #daa520;
+    --gold-dark: #b8860b;
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-dark);
+    overflow-x: hidden;
+}
+
+/* --- LAYOUT PRINCIPAL (Mesma lógica do Dashboard) --- */
+.content {
+    margin-left: var(--sidebar-width);
+    width: auto; 
+    padding: 40px;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+}
+
+.content .container-fluid {
+    width: 100%;
+    max-width: 1200px; /* Largura máxima controlada para leitura fácil */
+    margin: 0 auto;
+    padding: 0;
+}
+
+/* --- HEADER --- */
+header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+header h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 5px;
+}
+
+/* Botão Voltar */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: white;
+    color: #4b5563;
+    border: 1px solid #e5e7eb;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.btn-back:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+    border-color: #d1d5db;
+    transform: translateX(-3px);
+}
+
+/* --- CARTÃO DE VISUALIZAÇÃO --- */
+.view-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    padding: 40px;
+    border: 1px solid #f3f4f6;
+    width: 100%;
+}
+
+.view-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #9ca3af;
+    margin-bottom: 8px;
+    letter-spacing: 0.8px;
+}
+
+.view-value {
+    font-size: 1.05rem;
+    color: #1f2937;
+    font-weight: 400;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f3f4f6;
+    line-height: 1.6;
+    word-wrap: break-word; /* Importante para observações longas */
+}
+
+/* --- AÇÕES (BOTÕES CENTRADOS) --- */
+.card-actions {
+    display: flex;
+    justify-content: center; /* Centraliza Horizontalmente */
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid #f3f4f6;
+}
+
+/* Botão Editar (Dourado) */
+.btn-edit-action {
+    background-color: var(--gold-main);
+    color: white;
+    padding: 12px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    border: 1px solid var(--gold-main);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(218, 165, 32, 0.2);
+}
+
+.btn-edit-action:hover {
+    background-color: var(--gold-dark);
+    border-color: var(--gold-dark);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(218, 165, 32, 0.3);
+}
+
+/* Botão Apagar (Vermelho/Branco) */
+.btn-delete-action {
+    background-color: #fff;
+    color: #dc3545;
+    padding: 12px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    border: 1px solid #dc3545;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-delete-action:hover {
+    background-color: #dc3545;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(220, 53, 69, 0.2);
+}
+
+/* --- RESPONSIVIDADE (Mobile/Tablet < 991px) --- */
+@media (max-width: 991px) {
+    .content {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+        padding-top: 80px; /* Espaço para o botão toggle */
+    }
+
+    .view-card {
+        padding: 25px;
+    }
+
+    /* Empilha título e botão voltar */
+    header.d-flex {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 15px;
+    }
+
+    .btn-back {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Botões de ação empilhados no telemóvel */
+    .card-actions {
+        flex-direction: column;
+    }
+    
+    .card-actions a {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Sidebar Mobile */
+    .sidebar {
+        left: -250px;
+        transition: left 0.3s ease;
+        z-index: 1050;
+    }
+    .sidebar.active {
+        left: 0;
+    }
+    
+    /* Botão toggle fixo */
+    #sidebarToggle {
+        position: fixed; 
+        top: 20px; 
+        left: 20px; 
+        z-index: 1100;
+        border: none;
+        background: var(--primary-color);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 5px;
+    }
+}

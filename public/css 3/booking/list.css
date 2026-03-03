@@ -1,0 +1,227 @@
+:root {
+    --sidebar-width: 260px;
+    --bg-light: #f8f9fa;
+    --text-dark: #2c3e50;
+    --blue-edit: #2563eb;
+    --red-delete: #dc2626;
+    --green-create: #0c6226; /* Verde Principal */
+    --green-hover: #0a5020;
+    --green-light: #d1fae5;
+    --green-text: #065f46;
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-dark);
+    overflow-x: hidden;
+}
+
+/* --- LAYOUT --- */
+.content {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    min-height: 100vh;
+    padding: 30px;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .content {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+        padding-top: 80px;
+    }
+}
+
+/* --- HEADER --- */
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.header-actions h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+/* Filtros */
+.filter-form { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.filter-select {
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    background-color: #fff;
+    color: #4b5563;
+    cursor: pointer;
+    min-width: 140px;
+}
+.filter-select:focus {
+    border-color: var(--green-create);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(12, 98, 38, 0.1);
+}
+
+/* Botão Novo (Verde) */
+.btn-create {
+    background-color: var(--green-create);
+    color: white !important;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    box-shadow: 0 4px 6px -1px rgba(12, 98, 38, 0.2);
+    border: none;
+    transition: all 0.2s;
+}
+.btn-create:hover {
+    background-color: var(--green-hover);
+    transform: translateY(-1px);
+}
+
+/* --- TABELA --- */
+.card-list {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eff0f2;
+    overflow: hidden;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.table-responsive { overflow-x: auto; }
+.table-custom { width: 100%; border-collapse: collapse; }
+
+.table-custom th {
+    background-color: #f9fafb;
+    color: var(--green-create); /* Cabeçalho Verde */
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 16px 24px;
+    border-bottom: 2px solid #e5e7eb;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.table-custom td {
+    padding: 16px 24px;
+    border-bottom: 1px solid #f3f4f6;
+    vertical-align: middle;
+    color: #374151;
+}
+.table-custom tr:hover td { background-color: #fcfcfd; }
+
+/* Tipografia Tabela */
+.date-day { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); line-height: 1; }
+.date-time { 
+    font-size: 0.85rem; color: var(--green-create); font-weight: 600; margin-top: 4px;
+    background: #f0fdf4; padding: 2px 8px; border-radius: 6px; display: inline-block;
+}
+.client-name { font-weight: 600; color: var(--text-dark); display: block; }
+.service-name { font-weight: 500; color: #4b5563; }
+
+/* --- STATUS BADGES --- */
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+/* Cores específicas para o tema Verde */
+.st-pendente, .st-por-confirmar { background: #fffbeb; color: #b45309; border: 1px solid #fcd34d; } /* Amarelo */
+.st-ativa, .st-confirmada { background: #dcfce7; color: #166534; border: 1px solid #86efac; } /* Verde Forte */
+.st-cancelada { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; } /* Vermelho */
+.st-realizada { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; } /* Azul */
+
+/* --- BOTÕES DE AÇÃO --- */
+.col-actions { text-align: right; width: 1%; white-space: nowrap; }
+.action-group { display: flex; gap: 8px; justify-content: flex-end; }
+
+.btn-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: none; text-decoration: none; font-size: 1.1rem;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+/* Cores Ações */
+.btn-view { background: #f3f4f6; color: #6b7280; }
+.btn-view:hover { background: #e5e7eb; color: #374151; }
+
+.btn-edit { background: #eff6ff; color: var(--blue-edit); }
+.btn-edit:hover { background: #dbeafe; }
+
+.btn-confirm { background: #dcfce7; color: #15803d; }
+.btn-confirm:hover { background: #bbf7d0; }
+
+.btn-complete { background: #e0e7ff; color: #4338ca; }
+.btn-complete:hover { background: #c7d2fe; }
+
+.btn-cancel { background: #fee2e2; color: var(--red-delete); }
+.btn-cancel:hover { background: #fecaca; }
+
+
+/* --- NOTIFICAÇÃO (TOAST) --- */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.toast-custom {
+    background: white;
+    border-left: 5px solid var(--green-create);
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transform: translateX(120%); /* Escondido à direita */
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    min-width: 300px;
+}
+
+.toast-custom.show {
+    transform: translateX(0);
+}
+
+.toast-icon {
+    background: var(--green-create);
+    color: white;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+}
+
+.toast-message {
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+/* --- MODAL STYLE (Verde) --- */
+.modal-header { border-bottom: 2px solid #f3f4f6; padding: 20px; }
+.modal-title { color: var(--green-create); font-weight: 700; }
+.modal-label { color: var(--green-create); font-size: 0.75rem; text-transform: uppercase; font-weight: 700; display: block; }
+.modal-value { font-size: 1.05rem; color: #333; border-bottom: 1px dashed #e5e7eb; padding-bottom: 4px; margin-bottom: 12px; }

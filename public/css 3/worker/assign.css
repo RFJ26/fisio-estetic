@@ -1,0 +1,188 @@
+:root {
+    --brand-dark: #1a3c1b;      /* Verde Escuro */
+    --brand-primary: #2e7d32;   /* Verde Padrão */
+    --brand-accent: #2e7d32;
+    --bg-light: #f8f9fa;
+    --bg-selected: #1a3c1b;     /* Fundo quando selecionado */
+    --text-selected: #ffffff;
+    --sidebar-width: 260px;     /* Largura da sidebar fixa */
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+}
+
+/* Layout Principal */
+.content {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    padding: 40px;
+    padding-bottom: 100px; /* Espaço extra para a barra fixa */
+    transition: all 0.3s ease;
+}
+
+/* Botão de Voltar (Header) */
+.btn-back {
+    color: #6c757d;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+.btn-back:hover { color: var(--brand-dark); }
+
+/* --- CARDS DE SELEÇÃO --- */
+
+/* Checkbox oculto */
+.btn-check {
+    position: absolute;
+    clip: rect(0,0,0,0);
+    pointer-events: none;
+}
+
+/* Cartão Desmarcado */
+.service-selection-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.service-selection-card:hover {
+    border-color: var(--brand-accent);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.06);
+}
+
+/* Cartão Selecionado (Estado Ativo) */
+.btn-check:checked + .service-selection-card {
+    background-color: var(--bg-selected);
+    color: var(--text-selected);
+    border-color: var(--brand-dark);
+    box-shadow: 0 8px 20px rgba(26, 60, 27, 0.25);
+    transform: translateY(-2px);
+}
+
+/* Alterar cor do texto interno quando selecionado */
+.btn-check:checked + .service-selection-card .text-muted,
+.btn-check:checked + .service-selection-card h6 {
+    color: #ffffff !important;
+}
+
+/* Ícone Check no canto */
+.check-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.2rem;
+    opacity: 0;
+    color: #fff;
+    transition: all 0.2s;
+    transform: scale(0.5);
+}
+
+.btn-check:checked + .service-selection-card .check-icon { 
+    opacity: 1; 
+    transform: scale(1);
+}
+
+/* --- DIVISOR DE CATEGORIAS --- */
+.category-divider {
+    color: var(--brand-dark);
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 8px;
+    display: inline-block;
+}
+
+/* --- BARRA DE AÇÃO FIXA --- */
+.bottom-action-bar {
+    position: fixed;
+    bottom: 20px;
+    /* Cálculo inteligente: largura da sidebar + margem de 20px */
+    left: calc(var(--sidebar-width) + 20px); 
+    right: 20px;
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    padding: 15px 25px;
+    z-index: 900;
+    box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: left 0.3s ease;
+}
+
+/* Botões da Barra */
+.btn-save {
+    background: linear-gradient(135deg,#2e7d32); /* Dourado */
+    color: white;
+    border: none;
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 10px 30px;
+    box-shadow: 0 4px 10px #2e7d32;
+    transition: all 0.3s ease;
+}
+
+.btn-save:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px #1a3c1b;
+    color: white;
+}
+
+.btn-cancel {
+    background-color: transparent;
+    color: #6c757d;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 10px 20px;
+    transition: all 0.2s;
+}
+.btn-cancel:hover {
+    background-color: #f8f9fa;
+    color: #343a40;
+    border-color: #cdd4db;
+}
+
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 992px) {
+    .content {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+        padding-top: 80px;
+        padding-bottom: 100px;
+    }
+    
+    .bottom-action-bar {
+        left: 20px; /* Em mobile, ocupa toda a largura menos margens */
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+    
+    .bottom-action-bar .d-flex {
+        width: 100%;
+    }
+    
+    .btn-save, .btn-cancel {
+        width: 100%;
+        text-align: center;
+    }
+}

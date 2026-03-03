@@ -1,0 +1,198 @@
+:root {
+    --sidebar-width: 260px;
+    --brand-dark: #1a3c1b;
+    --brand-hover: #2e4a2f;
+    --primary-green: #2e7d32;
+    --primary-hover: #1b5e20;
+    --primary-soft: rgba(46, 125, 50, 0.15);
+    --bg-light: #f8f9fa;
+    --text-dark: #212529;
+    --text-muted: #495057;
+    --border-light: #dee2e6;
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    
+    /* Nova cor para os títulos */
+    --title-color: #2c3e50;
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-dark);
+    overflow-x: hidden;
+}
+
+.content {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    padding: 30px;
+    min-height: 100vh;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 992px) {
+    .content {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+        padding-top: 80px;
+    }
+}
+
+/* CORRIGIDO: Cor do Título */
+h2.fw-bold {
+    color: var(--title-color) !important;
+    font-weight: 700 !important;
+}
+
+.text-muted strong.text-dark {
+    color: var(--primary-green) !important;
+}
+
+.section-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 25px;
+    border: 1px solid rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.section-header {
+    padding: 18px 25px;
+    background-color: #fff;
+    border-bottom: 2px solid #f2f2f2;
+    display: flex;
+    align-items: center;
+    color: var(--brand-dark);
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+}
+
+.section-header i {
+    color: var(--primary-green);
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+.section-body {
+    padding: 25px;
+}
+
+.day-selector {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.day-check {
+    position: relative;
+}
+
+.day-check input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.day-check label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background-color: #fff;
+    border: 2px solid var(--border-light);
+    border-radius: 50%;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+}
+
+.day-check label:hover {
+    border-color: var(--primary-green);
+    color: var(--primary-green);
+    transform: translateY(-2px);
+}
+
+.day-check input[type="checkbox"]:checked + label {
+    background-color: var(--primary-green);
+    color: white;
+    border-color: var(--primary-green);
+    box-shadow: 0 4px 10px var(--primary-soft);
+    transform: translateY(-2px);
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid var(--border-light);
+    padding: 10px 12px;
+    color: var(--text-dark);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 4px var(--primary-soft);
+    outline: none;
+}
+
+.time-select {
+    background-color: #fdfdfd;
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+}
+
+.form-check-input:focus {
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 0.25rem var(--primary-soft);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+}
+
+/* CORRIGIDO: Classe do Botão */
+.btn-brand {
+    background-color: var(--primary-green);
+    border: none;
+    color: white !important; /* Força branco */
+    font-weight: 600;
+    padding: 12px 35px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.25);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-brand:hover {
+    background-color: var(--primary-hover);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(27, 94, 32, 0.35);
+}
+
+.btn-brand:active {
+    transform: translateY(0);
+}
+
+.btn-outline-secondary {
+    border-radius: 10px;
+    padding: 8px 20px;
+    border-color: #ced4da;
+    color: var(--text-muted);
+}
+.btn-outline-secondary:hover {
+    background-color: #e9ecef;
+    color: #212529;
+    border-color: #adb5bd;
+}

@@ -1,0 +1,131 @@
+/* =========================================
+   VARIÁVEIS (Tema Verde Escuro)
+   ========================================= */
+   :root {
+    --sidebar-width: 260px;
+    /* Mudei para um verde bem mais escuro e sólido */
+    --primary-green: #145a32;   
+    --primary-hover: #0d3b21;   
+    --primary-soft: rgba(20, 90, 50, 0.15);
+    --text-dark: #212529;
+    --title-color: #2c3e50;
+    --bg-light: #f8f9fa;
+    --border-light: #dee2e6;
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-dark);
+    overflow-x: hidden;
+}
+
+/* =========================================
+   LAYOUT
+   ========================================= */
+.content {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    padding: 30px;
+    min-height: 100vh;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 992px) {
+    .content {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+        padding-top: 80px;
+    }
+}
+
+/* =========================================
+   ESTILOS DO CARTÃO
+   ========================================= */
+header h1 {
+    color: var(--title-color);
+    font-weight: 700;
+}
+
+.create-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    padding: 40px;
+    border: 1px solid #eef0f3;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #6c757d;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+
+.form-control {
+    border: 1px solid var(--border-light);
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: var(--title-color);
+    transition: all 0.2s;
+    background-color: #fcfcfc;
+}
+
+.form-control:focus {
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 3px var(--primary-soft);
+    background-color: #fff;
+    outline: none;
+}
+
+/* --- Botões e Espaçamento --- */
+
+/* Container dos botões */
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* AQUI: Espaço de 20px entre os botões */
+    margin-top: 30px;
+}
+
+.btn-save {
+    background-color: var(--primary-green);
+    color: white;
+    padding: 12px 30px; /* Aumentei um pouco o tamanho para dar destaque */
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-save:hover { 
+    background-color: var(--primary-hover); 
+    color: white; 
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(20, 90, 50, 0.3);
+}
+
+.btn-cancel {
+    background-color: white;
+    color: #6c757d;
+    border: 1px solid var(--border-light);
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.btn-cancel:hover { 
+    background-color: #f8f9fa; 
+    color: #212529; 
+    border-color: #cdd2d7; 
+}

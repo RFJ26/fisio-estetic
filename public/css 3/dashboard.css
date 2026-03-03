@@ -1,0 +1,568 @@
+/* ===== Estilos Globais ===== */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    display: flex;
+    color: #3a2d13;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+    width: 250px;
+    min-height: 100vh;
+    background-color: #7c6535;
+    color: #fff;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+}
+
+.sidebar h2 {
+    font-family: 'Mea Culpa', cursive;
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.sidebar .nav {
+    flex-grow: 1;
+}
+
+.sidebar .nav-link {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: 0.3s;
+}
+
+.sidebar .nav-link i {
+    margin-right: 8px;
+    font-size: 1.2em;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background-color: #e4b959;
+    color: #3a2d13;
+}
+
+.sidebar .logout {
+    color: #ff4d4d !important;
+    margin-top: auto;
+}
+
+/* ===== Conteúdo ===== */
+.content {
+    margin-left: 270px;
+    padding: 30px;
+    flex-grow: 1;
+}
+
+/* ===== Header ===== */
+header {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    margin: 0 0 5px 0;
+    color: #7c6535;
+}
+
+header p {
+    margin: 0;
+    color: #5c4c28;
+}
+
+/* ===== Métricas ===== */
+.metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.metric-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    flex: 1 1 200px;
+}
+
+.card-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #7c6535;
+}
+
+.card-text {
+    color: #5c4c28;
+    margin-top: 5px;
+}
+
+/* ===== Tabelas ===== */
+.table-section, .info {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table, .table-custom {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 12px 15px;
+    text-align: left;
+    color: #3a2d13;
+}
+
+.table th {
+    background-color: #7c6535;
+    color: #fff;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table tbody tr:hover {
+    background-color: #e4b959;
+    color: #3a2d13;
+}
+
+/* ===== Botões padrão ===== */
+.btn_ver, .btn-view {
+    background-color: #5c8a8a;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-right: 5px;
+}
+
+.btn_editar, .btn-edit {
+    background-color: #f0ad4e;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-right: 5px;
+}
+
+.btn_apagar, .btn-delete {
+    background-color: #d9534f;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.btn_ver:hover, .btn-view:hover { background-color: #3d6666; }
+.btn_editar:hover, .btn-edit:hover { background-color: #ec971f; }
+.btn_apagar:hover, .btn-delete:hover { background-color: #c9302c; }
+
+/* Botão principal (Adicionar) */
+.btn_primary {
+    background-color: #7c6535;
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+.btn_primary:hover {
+    background-color: #e4b959;
+    color: #3a2d13;
+}
+
+/* Botões em tabela */
+.table-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.table-actions a {
+    flex: 1;
+    text-align: center;
+}
+
+.sidebar-toggle {
+    display: none; /* Esconde em pc */
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background-color: #7c6535;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 1.2rem;
+    z-index: 1001;
+}
+
+/* ===== Responsivo  ===== */
+@media(max-width: 576px){
+    /* Sidebar */
+    .sidebar {
+        width: 220px;
+        transform: translateX(-100%);
+    }
+
+    .sidebar-toggle {
+        display: block;
+    }
+
+    .content {
+        margin-left: 0;
+        padding: 10px;
+    }
+
+    /* Métricas empilhadas */
+    .metrics {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    /* Botões principais menores */
+    .btn_primary {
+        font-size: 0.85rem;
+        padding: 5px 8px;
+    }
+
+    /* Tabelas mais compactas */
+    .table th, .table td, .table-custom th, .table-custom td {
+        padding: 5px 8px;
+        font-size: 0.75rem;
+    }
+
+    /* Botões da tabela empilhados e menores */
+    .table-actions {
+        flex-direction: column;
+        gap: 3px;
+    }
+    .table-actions a {
+        flex: 1 1 100%;
+        font-size: 0.75rem;
+        padding: 3px 5px;
+    }
+
+    /* Tabela scroll horizontal */
+    .table-responsive {
+        overflow-x: auto;
+    }
+}
+/* ===== Fonte e cores base ===== */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    display: flex;
+    color: #3a2d13;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+    width: 250px;
+    min-height: 100vh;
+    background-color: #7c6535;
+    color: #fff;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+    z-index: 1000;
+}
+
+.sidebar h2 {
+    font-family: 'Mea Culpa', cursive;
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.sidebar .nav {
+    flex-grow: 1;
+    list-style: none;
+    padding-left: 0;
+}
+
+.sidebar .nav-link {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: 0.3s;
+}
+
+.sidebar .nav-link i {
+    margin-right: 8px;
+    font-size: 1.2em;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background-color: #e4b959;
+    color: #3a2d13;
+}
+
+.sidebar .logout {
+    color: #ff4d4d !important;
+    margin-top: auto;
+}
+
+/* ===== Botão toggle da sidebar (mobile) ===== */
+.sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background-color: #7c6535;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 1.2rem;
+    z-index: 1001;
+    cursor: pointer;
+}
+
+.sidebar-toggle:hover {
+    background-color: #e4b959;
+    color: #3a2d13;
+}
+
+/* ===== Conteúdo ===== */
+.content {
+    margin-left: 270px;
+    padding: 30px;
+    flex-grow: 1;
+}
+
+/* ===== Header ===== */
+header {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    margin: 0 0 5px 0;
+    color: #7c6535;
+}
+
+header p {
+    margin: 0;
+    color: #5c4c28;
+}
+
+/* ===== Métricas ===== */
+.metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.metric-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    flex: 1 1 200px;
+}
+
+.card-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #7c6535;
+}
+
+.card-text {
+    color: #5c4c28;
+    margin-top: 5px;
+}
+
+/* ===== Tabelas ===== */
+.table-section, .info {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table, .table-custom {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 8px 10px; 
+    text-align: left;
+    color: #3a2d13;
+    font-size: 0.9rem;
+}
+
+.table th {
+    background-color: #7c6535;
+    color: #fff;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table tbody tr:hover {
+    background-color: #e4b959;
+    color: #3a2d13;
+}
+
+/* ===== Botões padrões ===== */
+.btn_ver, .btn-view {
+    background-color: #5c8a8a;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-right: 5px;
+    display: inline-block;
+}
+
+.btn_editar, .btn-edit {
+    background-color: #f0ad4e;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-right: 5px;
+    display: inline-block;
+}
+
+.btn_apagar, .btn-delete {
+    background-color: #d9534f;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn_ver:hover, .btn-view:hover { background-color: #3d6666; }
+.btn_editar:hover, .btn-edit:hover { background-color: #ec971f; }
+.btn_apagar:hover, .btn-delete:hover { background-color: #c9302c; }
+
+/* Botão principal */
+.btn_primary {
+    background-color: #7c6535;
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+.btn_primary:hover {
+    background-color: #e4b959;
+    color: #3a2d13;
+}
+
+/* Ações da tabela */
+.table-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* ===== Responsivo ===== */
+@media(max-width: 1024px){
+    .table th, .table td {
+        font-size: 0.85rem;
+        padding: 6px 8px;
+    }
+}
+
+@media(max-width: 768px){
+    .sidebar {
+        width: 220px;
+        transform: translateX(-100%);
+        position: fixed;
+        height: 100%;
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .sidebar-toggle {
+        display: block;
+    }
+
+    .content {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .metrics {
+        flex-direction: column;
+    }
+}
+
+@media(max-width: 480px){
+    .table th, .table td {
+        font-size: 0.75rem;
+        padding: 4px 6px;
+    }
+
+    .btn_ver, .btn-editar, .btn_apagar, .btn_primary {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+    }
+
+    .sidebar h2 {
+        font-size: 26px;
+    }
+}

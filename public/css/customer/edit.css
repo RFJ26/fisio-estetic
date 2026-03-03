@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+/* ============================================================
+   1. VARIÁVEIS GERAIS (TEMA VERDE - IGUAL AO DASHBOARD)
+   ============================================================ */
+:root {
+    --bg-body: #f8f9fa;
+    --text-primary: #2c3e50;
+    --green-accent: #2e7d32;      /* Verde Principal */
+    --green-dark: #1b5e20;        /* Verde Escuro */
+    --green-soft: #e8f5e9;        /* Verde Claro */
+    
+    --card-bg: #ffffff;
+    --card-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    --input-border: #dee2e6;
+    
+    /* Sidebar */
+    --sidebar-width: 260px;
+}
+
+* { font-family: 'Poppins', sans-serif; box-sizing: border-box; }
+
+body {
+    background-color: var(--bg-body);
+    color: var(--text-primary);
+    overflow-x: hidden;
+}
+
+a { text-decoration: none; transition: 0.3s; }
+
+
+
+/* ============================================================
+   3. ÁREA DE CONTEÚDO
+   ============================================================ */
+.content {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    padding: 40px;
+}
+
+/* Título */
+h1 { color: #1a3c1b; font-weight: 700; }
+
+/* Botão Voltar */
+.btn-cancel {
+    background-color: #fff;
+    color: #6c757d;
+    border: 1px solid #dee2e6;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+}
+.btn-cancel:hover { background-color: #e9ecef; color: #495057; }
+
+/* ============================================================
+   4. CARTÃO DE EDIÇÃO (FORMULÁRIO)
+   ============================================================ */
+.edit-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 35px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid rgba(0,0,0,0.02);
+    margin-top: 20px;
+}
+
+/* Inputs e Labels */
+.form-label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #495057;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    padding: 12px 15px;
+    border: 1px solid var(--input-border);
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--green-accent);
+    box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.1);
+}
+
+/* Botão Guardar */
+.btn-save {
+    background-color: var(--green-accent);
+    color: white;
+    padding: 12px 30px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-save:hover {
+    background-color: var(--green-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(46, 125, 50, 0.2);
+}
+
+/* Alertas */
+.alert { border-radius: 10px; font-size: 0.95rem; border: none; }
+.alert-danger { background-color: #fee2e2; color: #991b1b; }
+
+/* ============================================================
+   5. MOBILE
+   ============================================================ */
+@media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
+    .sidebar.active { transform: translateX(0); }
+    
+    .content {
+        margin-left: 0;
+        width: 100%;
+        padding: 80px 20px;
+    }
+
+    .sidebar-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        top: 20px; left: 20px;
+        z-index: 1100;
+        background: var(--green-accent);
+        color: white;
+        width: 45px; height: 45px;
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+}
+.sidebar-toggle { display: none; }

@@ -1,0 +1,128 @@
+/* =========================================
+   VARIÁVEIS DE COR (Nova Identidade)
+   ========================================= */
+   :root {
+    --sidebar-width: 260px;
+    --brand-dark: #1a3c1b;      /* Verde Escuro */
+    --primary-green: #0f6412;   /* Verde Vivo */
+    --primary-hover: #388e3c;
+    --primary-soft: rgba(76, 175, 80, 0.15);
+    --bg-light: #f8f9fa;
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Poppins', sans-serif;
+}
+
+/* =========================================
+   CORREÇÃO DO LAYOUT (CRÍTICO)
+   ========================================= */
+.content {
+    /* Empurra o conteúdo para a direita para sair de trás da sidebar */
+    margin-left: var(--sidebar-width); 
+    width: calc(100% - var(--sidebar-width));
+    padding: 30px;
+    min-height: 100vh;
+    transition: all 0.3s ease;
+}
+
+/* Em mobile, remove a margem */
+@media (max-width: 992px) {
+    .content {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+        padding-top: 80px; /* Espaço para o botão do menu */
+    }
+}
+
+/* =========================================
+   CARTÃO DE EDIÇÃO
+   ========================================= */
+.edit-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+    padding: 2rem;
+    border: 1px solid #f0f0f0;
+    max-width: 800px;
+    margin: 0 auto; /* Centra o cartão */
+}
+
+/* Labels e Inputs */
+.form-label {
+    font-weight: 500;
+    color: #444;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.form-control, .form-select {
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1px solid #dee2e6;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Foco Verde */
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 4px var(--primary-soft);
+    outline: none;
+}
+
+/* Container da Imagem Atual */
+.current-img-container {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    border: 1px dashed #ccc;
+    display: inline-block;
+}
+
+.img-preview {
+    max-width: 150px;
+    height: auto;
+    border-radius: 6px;
+    display: block;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* =========================================
+   BOTÕES (VERDES)
+   ========================================= */
+.btn-save {
+    background-color: var(--primary-green);
+    color: white; 
+    border: none; 
+    font-weight: 600;
+    padding: 12px 30px; 
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-save:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(76, 175, 80, 0.35);
+    color: white;
+}
+
+.btn-cancel {
+    color: #666; 
+    text-decoration: none; 
+    margin-right: 20px; 
+    font-weight: 500;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.btn-cancel:hover { 
+    color: #333; 
+    background-color: #eee;
+}

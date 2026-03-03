@@ -1,0 +1,227 @@
+:root {
+    --sidebar-width: 260px;
+    --bg-light: #f8f9fa;
+    --text-dark: #2c3e50;
+    --green-create: #0c6226; /* Verde Principal */
+    --green-hover: #0a5020;
+    --green-light: #d1fae5;
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-dark);
+}
+
+/* --- LAYOUT PRINCIPAL (CORREÇÃO SIDEBAR) --- */
+.content {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    min-height: 100vh;
+    padding: 40px;
+    transition: all 0.3s ease;
+}
+
+/* Container do Formulário (Cartão Branco) */
+.booking-section {
+    background: #fff;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+    max-width: 900px;
+    margin: 0 auto; /* Centralizar */
+    border: 1px solid #eff0f2;
+}
+
+/* Responsivo Mobile */
+@media (max-width: 768px) {
+    .content {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+        padding-top: 80px;
+    }
+    .booking-section {
+        padding: 1.5rem;
+    }
+}
+
+/* --- TIPOGRAFIA E INPUTS --- */
+h3 {
+    color: var(--text-dark);
+    font-weight: 700;
+}
+
+.form-label { 
+    font-weight: 700; 
+    color: #064e3b; /* Verde muito escuro para títulos */
+    margin-bottom: 8px; 
+    font-size: 0.75rem; 
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.form-select, .form-control {
+    border: 1px solid #e5e7eb; 
+    border-radius: 10px;
+    padding: 12px 14px; 
+    font-size: 0.95rem; 
+    color: #374151;
+    background-color: #fff;
+}
+
+.form-select:focus, .form-control:focus { 
+    border-color: var(--green-create); 
+    box-shadow: 0 0 0 3px rgba(12, 98, 38, 0.1); 
+    outline: none;
+}
+
+/* --- DATA PICKER (CARROSSEL) --- */
+.date-picker-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: #f3f4f6;
+    padding: 15px;
+    border-radius: 16px;
+    margin-bottom: 20px;
+}
+
+.date-scroller {
+    display: flex;
+    overflow-x: auto;
+    gap: 12px;
+    padding: 5px;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    width: 100%;
+}
+.date-scroller::-webkit-scrollbar { display: none; }
+
+/* Botões Setas */
+.nav-btn {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    color: #4b5563;
+    transition: all 0.2s;
+}
+.nav-btn:hover {
+    background: var(--green-create);
+    color: white;
+    border-color: var(--green-create);
+}
+
+/* Cartão do Dia */
+.date-card {
+    min-width: 75px;
+    height: 90px;
+    background: white;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    opacity: 0.5; /* Indisponível */
+    pointer-events: none;
+}
+
+/* Disponível */
+.date-card.available {
+    opacity: 1;
+    pointer-events: auto;
+    border-color: #e5e7eb;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.date-card.available:hover {
+    border-color: var(--green-create);
+    transform: translateY(-2px);
+}
+
+/* Selecionado (VERDE) */
+.date-card.active {
+    background: var(--green-create);
+    color: white !important;
+    border-color: var(--green-create);
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(12, 98, 38, 0.3);
+}
+
+/* Texto dentro do card */
+.date-card .week { font-size: 0.7rem; text-transform: uppercase; font-weight: 700; color: #9ca3af; }
+.date-card.active .week { color: rgba(255,255,255,0.8); }
+
+.date-card .day { font-size: 1.5rem; font-weight: 700; line-height: 1; color: #1f2937; margin: 4px 0; }
+.date-card.active .day { color: white; }
+
+.date-card .month { font-size: 0.7rem; font-weight: 500; color: #6b7280; }
+.date-card.active .month { color: rgba(255,255,255,0.8); }
+
+
+/* --- GRELHA DE HORÁRIOS (SLOTS) --- */
+.slots-container { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); 
+    gap: 10px; 
+    margin-top: 15px; 
+}
+
+.slot-btn {
+    padding: 10px; 
+    text-align: center;
+    background: #fff; 
+    border: 1px solid #e5e7eb; 
+    border-radius: 8px;
+    color: #4b5563; 
+    font-weight: 500; 
+    font-size: 0.9rem;
+    cursor: pointer; 
+    transition: all 0.2s;
+}
+
+.slot-btn:hover { 
+    border-color: var(--green-create); 
+    color: var(--green-create);
+    background: #f0fdf4;
+}
+
+/* Slot Selecionado (VERDE) */
+.slot-btn.active {
+    background: var(--green-create);
+    color: white; 
+    border-color: var(--green-create);
+    box-shadow: 0 4px 6px rgba(12, 98, 38, 0.2); 
+    font-weight: 600;
+}
+
+/* --- BOTÃO FINALIZAR (PRETO/VERDE) --- */
+#btnFinalizar {
+    width: 100%; 
+    padding: 15px; 
+    border-radius: 10px; 
+    border: none;
+    background: #1f2937; /* Cinza Escuro quase preto */
+    color: white; 
+    font-weight: 600; 
+    letter-spacing: 0.5px;
+    margin-top: 30px; 
+    transition: all 0.2s;
+}
+
+#btnFinalizar:hover { 
+    background: var(--green-create); /* Muda para verde no hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.loader { margin: 20px auto; text-align: center; color: var(--green-create); }

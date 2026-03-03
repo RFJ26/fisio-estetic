@@ -1,0 +1,192 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ============================================================
+   1. CORES E VARIÁVEIS
+   ============================================================ */
+:root {
+    --primary-color: #2e7d32; 
+    --primary-hover: #1b5e20;
+    --bg-body: #f8f9fa;
+    --text-primary: #2c3e50;
+    --text-muted: #6c757d;
+    --card-bg: #ffffff;
+    
+    --primary-soft: color-mix(in srgb, var(--primary-color), white 85%);
+    --card-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    --border-radius: 16px;
+    --sidebar-width: 260px; /* Largura da Sidebar */
+}
+
+* { font-family: 'Poppins', sans-serif; box-sizing: border-box; }
+
+body {
+    background-color: var(--bg-body);
+    color: var(--text-primary);
+    overflow-x: hidden;
+}
+
+/* ============================================================
+   2. LAYOUT CORRIGIDO
+   ============================================================ */
+.content {
+    /* IMPORTANTE: Empurra o conteúdo para a direita */
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    padding: 40px; 
+    min-height: 100vh;
+    transition: all 0.3s ease;
+}
+
+h2 { font-weight: 700; color: var(--text-primary); }
+.text-muted { color: var(--text-muted) !important; }
+
+/* ============================================================
+   3. CARTÃO DA TABELA
+   ============================================================ */
+.card-custom {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    box-shadow: var(--card-shadow);
+    margin-top: 30px;
+    border: none;
+    width: 100%;
+}
+
+/* ============================================================
+   4. TABELA
+   ============================================================ */
+.table { 
+    width: 100%; 
+    border-collapse: separate; 
+    border-spacing: 0; 
+    margin-bottom: 0;
+}
+
+/* Cabeçalho */
+.table thead th {
+    border-bottom: 2px solid #f0f0f0;
+    color: var(--text-muted);
+    font-size: 0.75rem; 
+    text-transform: uppercase; 
+    letter-spacing: 1px;
+    font-weight: 600; 
+    padding: 15px;
+    text-align: center !important; 
+    vertical-align: middle;
+    background-color: transparent;
+}
+
+/* Células */
+.table tbody td {
+    padding: 20px 15px;
+    border-bottom: 1px solid #f8f9fa;
+    text-align: center !important; 
+    vertical-align: middle !important;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+/* Centralizar conteúdo flex nas células */
+.table tbody td .d-flex {
+    justify-content: center !important;
+}
+
+/* Hover na linha */
+.table-hover tbody tr:hover td { 
+    background-color: var(--primary-soft); 
+    transition: background-color 0.2s;
+}
+
+/* ============================================================
+   5. COMPONENTES E BOTÕES NOVOS
+   ============================================================ */
+.text-gold {
+    color: var(--primary-color) !important;
+    font-weight: 700 !important;
+    font-size: 1.1rem;
+    display: block; 
+}
+
+/* Badges */
+.badge {
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.badge.bg-success { background-color: #d1e7dd !important; color: #0f5132 !important; }
+.badge.bg-info    { background-color: #cff4fc !important; color: #055160 !important; }
+.badge.bg-warning { background-color: #fff3cd !important; color: #664d03 !important; }
+.badge.bg-danger  { background-color: #f8d7da !important; color: #842029 !important; }
+.badge.bg-light   { background-color: #f8f9fa !important; color: var(--text-muted) !important; border: 1px solid #e9ecef; }
+
+/* --- BOTÕES CIRCULARES DE AÇÃO --- */
+.btn-action {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Azul: Confirmar */
+.btn-action.confirm { color: #0dcaf0; border: 1px solid #0dcaf0; }
+.btn-action.confirm:hover { background: #0dcaf0; color: white; transform: translateY(-3px); }
+
+/* Verde: Concluir */
+.btn-action.conclude { color: var(--primary-color); border: 1px solid var(--primary-color); }
+.btn-action.conclude:hover { background: var(--primary-color); color: white; transform: translateY(-3px); }
+
+/* Vermelho: Cancelar */
+.btn-action.cancel { color: #dc3545; border: 1px solid #dc3545; }
+.btn-action.cancel:hover { background: #dc3545; color: white; transform: translateY(-3px); }
+
+
+/* ============================================================
+   6. MOBILE
+   ============================================================ */
+@media (max-width: 768px) {
+    .content { 
+        margin-left: 0;
+        width: 100%;
+        padding: 80px 20px 20px 20px; 
+    }
+    
+    .table thead { display: none; }
+    
+    .table tbody tr {
+        display: block;
+        background: white;
+        margin-bottom: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    }
+    
+    .table tbody td { 
+        display: flex; 
+        justify-content: space-between;
+        align-items: center;
+        text-align: right !important;
+        padding: 10px 0;
+        border: none;
+        border-bottom: 1px solid #f5f5f5;
+    }
+    
+    .table tbody td:last-child { border-bottom: none; justify-content: flex-end; }
+    
+    .table tbody td .d-flex { 
+        align-items: flex-start; 
+        text-align: left; 
+    }
+}

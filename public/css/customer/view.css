@@ -1,0 +1,320 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+    --brand-dark: #1a3c1b;
+    --brand-primary: #2e7d32;
+    --brand-light: #e8f5e9;
+    --bg-light: #f8f9fa;
+    --text-main: #2c3e50;
+    --text-muted: #6c757d;
+    --sidebar-width: 250px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-main);
+    overflow-x: hidden;
+}
+
+/* --- LAYOUT PRINCIPAL --- */
+.content {
+    margin-left: var(--sidebar-width);
+    width: auto; 
+    padding: 40px;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+}
+
+.content .container-fluid {
+    width: 100%;
+    max-width: 1000px; 
+    margin: 0 auto;
+    padding: 0;
+}
+
+/* --- HEADER --- */
+header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+header h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 5px;
+}
+
+/* Botão Voltar */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: white;
+    color: #4b5563;
+    border: 1px solid #e5e7eb;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.btn-back:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+    border-color: #d1d5db;
+    transform: translateX(-3px);
+}
+
+/* --- CARTÃO DE VISUALIZAÇÃO --- */
+.view-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    padding: 40px;
+    border: 1px solid #f3f4f6;
+    width: 100%;
+}
+
+.view-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #9ca3af;
+    margin-bottom: 8px;
+    letter-spacing: 0.8px;
+}
+
+.view-value {
+    font-size: 1.05rem;
+    color: #1f2937;
+    font-weight: 400;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f3f4f6;
+    line-height: 1.6;
+    word-wrap: break-word; 
+}
+
+/* --- AÇÕES (BOTÕES CENTRADOS) --- */
+.card-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid #f3f4f6;
+}
+
+/* Botão Editar (Cinza Escuro) */
+.btn-edit-action {
+    background-color: #495057;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-edit-action:hover { 
+    background-color: #343a40; 
+    color: white; 
+    transform: translateY(-2px);
+}
+
+/* Botão Apagar (Fundo Vermelho Claro) */
+.btn-delete-action {
+    background-color: #fee2e2;
+    color: #dc2626;
+    padding: 12px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: 1px solid transparent;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-delete-action:hover { 
+    background-color: #dc2626; 
+    color: white; 
+    transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   HISTÓRICO DE MARCAÇÕES (MODERNO E CROSS-BROWSER)
+   ========================================================================== */
+
+/* Botão de Expandir (Estilo Barra Premium) */
+.toggle-bar {
+    -webkit-appearance: none; /* Correção para Safari */
+    appearance: none;
+    width: 100%;
+    margin: 40px auto 0 auto;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 15px 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left; /* Correção para Safari */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.toggle-bar:hover {
+    border-color: var(--brand-primary);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.toggle-title {
+    font-weight: 600;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.toggle-icon-box {
+    background: var(--brand-light);
+    color: var(--brand-primary);
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.toggle-bar i.bi-chevron-down { transition: transform 0.3s; color: var(--text-muted); }
+.toggle-bar[aria-expanded="true"] i.bi-chevron-down { transform: rotate(180deg); color: var(--brand-primary); }
+
+/* Contentor da Tabela */
+.collapse-container {
+    margin: 15px auto 0 auto;
+}
+
+/* Tabela com "Linhas Flutuantes" (Correção Safari/Mac) */
+.modern-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.modern-table thead th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 0 20px 10px 20px;
+    border: none;
+    text-align: left;
+}
+
+/* Removemos o background do TR e passamos para o TD para o Mac não "partir" a tabela */
+.modern-table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.modern-table tbody tr:hover {
+    transform: translateY(-2px); /* Substitui o scale() que dá erro no Mac */
+}
+
+.modern-table td {
+    background: white;
+    padding: 20px;
+    vertical-align: middle;
+    border: none;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* Sombra aplicada às células */
+}
+
+/* Arredondar os cantos extremos para formar um cartão */
+.modern-table td:first-child { 
+    border-top-left-radius: 10px; 
+    border-bottom-left-radius: 10px; 
+}
+.modern-table td:last-child { 
+    border-top-right-radius: 10px; 
+    border-bottom-right-radius: 10px; 
+}
+
+/* Estilo das datas e horas */
+.date-highlight { font-weight: 600; color: var(--text-main); }
+.time-sub { color: var(--text-muted); font-size: 0.9rem; display: flex; align-items: center; gap: 5px; margin-top: 4px; }
+
+/* Status Badges */
+.status-pill {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: inline-block;
+}
+
+.status-success { background: #dcfce7; color: #166534; }
+.status-pending { background: #fef9c3; color: #854d0e; }
+.status-default { background: #f3f4f6; color: #4b5563; }
+
+
+/* --- RESPONSIVIDADE (Mobile/Tablet < 991px) --- */
+@media (max-width: 991px) {
+    .content {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+        padding-top: 80px; 
+    }
+
+    .view-card { padding: 25px; }
+
+    header.d-flex {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 15px;
+    }
+
+    .btn-back {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .card-actions { flex-direction: column; }
+    .card-actions a { width: 100%; justify-content: center; }
+
+    .sidebar {
+        left: -250px;
+        transition: left 0.3s ease;
+        z-index: 1050;
+    }
+    .sidebar.active { left: 0; }
+    
+    #sidebarToggle {
+        position: fixed; 
+        top: 20px; 
+        left: 20px; 
+        z-index: 1100;
+        border: none;
+        background: var(--brand-primary);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 5px;
+    }
+}

@@ -1,0 +1,213 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ============================================================
+   1. CORES E VARIÁVEIS (TEMA VERDE UNIFICADO)
+   ============================================================ */
+:root {
+    --primary-color: #2e7d32;      /* Verde Principal */
+    --primary-hover: #1b5e20;      /* Verde Escuro */
+    --bg-body: #f8f9fa;            /* Mesmo fundo do registo */
+    --text-primary: #2c3e50;
+    --text-muted: #6c757d;
+    --card-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* ============================================================
+   2. RESET E ESTRUTURA
+   ============================================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: var(--bg-body);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* ============================================================
+   3. CARTÃO DE LOGIN
+   ============================================================ */
+.login-card {
+    background: white;
+    width: 100%;
+    max-width: 420px; /* Um pouco mais estreito que o registo */
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    text-align: center;
+}
+
+/* ============================================================
+   4. TIPOGRAFIA
+   ============================================================ */
+.brand-title {
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+h3 {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 30px;
+}
+
+/* ============================================================
+   5. FORMULÁRIOS E INPUTS
+   ============================================================ */
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-wrapper i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #bdc3c7;
+    transition: color 0.3s;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 12px 15px 12px 45px; /* Espaço para o ícone */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #fff;
+    color: var(--text-primary);
+}
+
+/* Efeito de Foco Verde */
+.input-wrapper input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
+}
+
+/* Muda a cor do ícone quando se clica no input */
+.input-wrapper:focus-within i {
+    color: var(--primary-color);
+}
+
+/* ============================================================
+   6. BOTÕES E LINKS
+   ============================================================ */
+.btn-login {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+}
+
+.btn-login:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+}
+
+/* Link de Registo */
+.register-link {
+    margin-top: 25px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.register-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.register-link a:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+/* ============================================================
+   7. MENSAGENS DE ERRO
+   ============================================================ */
+.alert-error {
+    background-color: #f8d7da;
+    color: #842029;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #f5c2c7;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+
+/* ============================================================
+   ÁREA DO LOGO (NOVO)
+   ============================================================ */
+
+/* Container do logo e título */
+.logo-area {
+    display: flex;
+    flex-direction: column; /* Coloca imagem em cima do texto */
+    align-items: center;    /* Centra tudo */
+    margin-bottom: 30px;
+}
+
+/* A Imagem do Logótipo */
+.login-logo {
+    height: 80px;        /* Tamanho maior para destaque */
+    width: auto;         /* Mantém a proporção */
+    margin-bottom: 15px; /* Espaço entre a imagem e o texto "Fisioestetic" */
+    object-fit: contain;
+}
+
+/* Ajuste no Título para remover margens antigas desnecessárias */
+.brand-title {
+    margin-bottom: 0;
+    font-size: 1.8rem;
+    color: var(--primary-color);
+}

@@ -1,0 +1,328 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary: #2e7d32;        /* Verde Principal */
+    --primary-dark: #1b5e20;   /* Verde Escuro (Hover) */
+    --primary-light: #e8f5e9;  /* Verde Claro (Fundo) */
+    --text-dark: #2c3e50;
+    --text-muted: #6c757d;
+    --bg-light: #f8f9fa;
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-dark);
+    padding-top: 100px;
+}
+
+/* --- Barra de Progresso --- */
+.wizard-progress {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin: 0 auto 40px;
+    max-width: 800px;
+}
+.progress-line {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #e0e0e0;
+    z-index: 1;
+}
+.step-item {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    width: 20%;
+}
+.step-circle {
+    width: 35px;
+    height: 35px;
+    background: white;
+    border: 3px solid #e0e0e0;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #aaa;
+    transition: 0.3s;
+}
+.step-label { font-size: 0.8rem; font-weight: 600; color: #aaa; }
+
+/* Estados dos Passos */
+.step-item.active .step-circle {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 0 0 4px var(--primary-light);
+}
+.step-item.active .step-label { color: var(--primary); }
+
+.step-item.completed .step-circle {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+.step-item.completed .step-label { color: var(--primary); }
+
+/* --- Cartões de Seleção --- */
+.option-card {
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 16px;
+    padding: 25px;
+    text-align: center;
+    transition: all 0.3s;
+    height: 100%;
+    text-decoration: none;
+    color: var(--text-dark);
+    display: block;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+.option-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(46, 125, 50, 0.15);
+}
+.option-card:hover .card-icon {
+    background-color: var(--primary);
+    color: white;
+}
+.card-icon {
+    width: 60px;
+    height: 60px;
+    background-color: var(--primary-light);
+    color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin: 0 auto 15px;
+    transition: 0.3s;
+}
+.card-title { font-weight: 600; margin-bottom: 5px; font-size: 1.1rem; }
+.card-meta { font-size: 0.85rem; color: var(--text-muted); }
+
+/* --- Grelha de Horários --- */
+.slots-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+    margin-top: 20px;
+}
+.slot-input { display: none; }
+.slot-label {
+    display: block;
+    padding: 10px 5px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: 0.2s;
+}
+.slot-label:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+.slot-input:checked + .slot-label {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
+}
+
+.btn-primary-custom {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 14px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    width: 100%;
+    transition: 0.3s;
+}
+.btn-primary-custom:hover { 
+    background: var(--primary-dark); 
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.btn-outline-back {
+    color: var(--text-muted);
+    border: 1px solid #ddd;
+    border-radius: 50px;
+    padding: 5px 15px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+}
+.btn-outline-back:hover {
+    background: #eee;
+    color: var(--text-dark);
+}
+
+/* --- Navbar Custom --- */
+.navbar { background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,0.05); padding: 1rem 0; }
+.navbar-brand { font-weight: 700; color: #2e7d32 !important; font-size: 1.4rem; text-transform: uppercase; }
+.nav-link { color: #6c757d !important; font-weight: 500; }
+.nav-link:hover, .nav-link.active { color: #2e7d32 !important; }
+.user-profile-link { background-color: #e8f5e9; padding: 8px 18px !important; border-radius: 20px; color: #2e7d32 !important; font-weight: 600; }
+.navbar-logo { height: 50px; width: auto; object-fit: contain; }
+
+/* =========================================
+   CALENDÁRIO PERSONALIZADO (ALINHAMENTO CORRIGIDO)
+   ========================================= */
+
+.calendar-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.flatpickr-calendar {
+    width: 100% !important;
+    max-width: 380px !important;
+    box-shadow: none !important;
+    border: none !important;
+    font-family: 'Poppins', sans-serif;
+    background: transparent;
+    margin: 0 auto !important;
+}
+
+/* Cabeçalho Verde */
+.flatpickr-months {
+    background-color: var(--primary);
+    color: white;
+    fill: white;
+    padding: 15px 0;
+    border-radius: 12px 12px 0 0;
+    margin-bottom: 0 !important;
+}
+
+.flatpickr-month {
+    color: white !important;
+    fill: white !important;
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months,
+.flatpickr-current-month input.cur-year {
+    color: white;
+    font-weight: 600;
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months:hover,
+.flatpickr-current-month input.cur-year:hover {
+    background: rgba(0,0,0,0.1);
+}
+
+.flatpickr-prev-month, .flatpickr-next-month {
+    color: white !important;
+    fill: white !important;
+    top: 15px !important;
+}
+
+/* ALINHAMENTO DOS DIAS DA SEMANA (Cabeçalho S, T, Q...) */
+.flatpickr-weekdays {
+    background: var(--primary);
+    padding-bottom: 5px;
+}
+span.flatpickr-weekday {
+    background: var(--primary);
+    color: rgba(255,255,255,0.9);
+    font-weight: 400;
+    font-size: 0.9rem;
+    /* Força largura exata */
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+/* CONTAINER DOS DIAS */
+.flatpickr-innerContainer, .flatpickr-rContainer {
+    width: 100%;
+}
+
+.flatpickr-days {
+    width: 100% !important;
+    background: white;
+    border: 1px solid #eee;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: 10px;
+    display: flex; /* Garante flexbox no container */
+}
+
+.dayContainer {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around; /* Distribuição uniforme */
+}
+
+/* DIAS INDIVIDUAIS - ALINHAMENTO MATEMÁTICO */
+.flatpickr-day {
+    /* 100% / 7 dias = 14.2857% */
+    flex-basis: 14.2857% !important;
+    max-width: 14.2857% !important;
+    width: 14.2857% !important;
+    height: 38px;
+    line-height: 38px;
+    margin: 4px 0 !important; /* Importante: SEM margem lateral */
+    border-radius: 50% !important;
+    border: 1px solid transparent;
+    color: var(--text-dark);
+    font-weight: 500;
+    
+    /* Centraliza o número dentro da caixa invisível */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Dia HOJE */
+.flatpickr-day.today {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: transparent;
+}
+.flatpickr-day.today:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+/* Dia SELECIONADO */
+.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, 
+.flatpickr-day.selected:focus, .flatpickr-day.selected:hover {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: white !important;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.4);
+}
+
+/* Dias DESABILITADOS */
+.flatpickr-day.disabled {
+    color: #ccc !important;
+    background: transparent !important;
+    cursor: not-allowed;
+}
+.flatpickr-day:hover {
+    background: var(--primary-light);
+    border-color: transparent;
+}
+
+.flatpickr-input { display: none; }

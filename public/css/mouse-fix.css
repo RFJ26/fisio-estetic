@@ -1,0 +1,25 @@
+/* Aplica-se a todo o corpo do site, tabelas e botões */
+body, table, button, .nao-selecionavel {
+    /* Impede a seleção de texto */
+    -webkit-user-select: none; /* Safari e Chrome antigos */
+    -moz-user-select: none;    /* Firefox antigo */
+    -ms-user-select: none;     /* Internet Explorer/Edge */
+    user-select: none;         /* Padrão moderno */
+
+    /* Garante que o cursor seja sempre a seta padrão e não o texto */
+    cursor: default;
+}
+
+/* Garante que caixas de texto e áreas de escrita continuem a funcionar */
+input, textarea, [contenteditable="true"] {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+    cursor: text;
+}
+
+/* Para botões, forçamos o cursor de 'mãozinha' para indicar que é clicável */
+button, input[type="button"], input[type="submit"], a {
+    cursor: pointer;
+}

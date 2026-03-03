@@ -1,0 +1,249 @@
+:root {
+    --green-primary: #0c6226;
+    --green-hover: #0a5020;
+    --green-light: #d1fae5;  /* Fundo suave para slots atuais */
+    --text-dark: #1f2937;
+    --text-muted: #6b7280;
+    --bg-body: #f8f9fa;      /* Cinza muito claro, igual ao create */
+    --white: #ffffff;
+    --sidebar-width: 260px;
+}
+
+/* --- Layout Principal --- */
+body {
+    background-color: var(--bg-body);
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-dark);
+}
+
+.content {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    min-height: 100vh;
+    padding: 40px;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .content {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+        padding-top: 80px;
+    }
+}
+
+/* --- Contentor do Formulário --- */
+.edit-container {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+    max-width: 900px;
+    margin: 0 auto;
+    border: 1px solid #eff0f2;
+}
+
+/* --- Títulos das Secções --- */
+.section-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--green-primary);
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    border-left: 4px solid var(--green-primary);
+    padding-left: 12px;
+}
+
+/* --- Informação Estática (Cliente/Serviço) --- */
+.static-info {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f9fafb;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 30px;
+    border: 1px solid #e5e7eb;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.info-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 5px;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.info-sub {
+    font-size: 0.9rem;
+    color: var(--green-primary); /* Nome do profissional em Verde */
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+/* --- Select de Estado --- */
+.status-select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background-color: var(--white);
+    font-size: 1rem;
+    color: var(--text-dark);
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.status-select:focus {
+    border-color: var(--green-primary);
+    box-shadow: 0 0 0 3px rgba(12, 98, 38, 0.1);
+}
+
+/* --- Scroll de Datas --- */
+.date-scroller-wrapper {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+}
+
+/* Scrollbar personalizada (Verde/Cinza) */
+.date-scroller-wrapper::-webkit-scrollbar { height: 6px; }
+.date-scroller-wrapper::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 3px; }
+.date-scroller-wrapper::-webkit-scrollbar-thumb { background: #d1fae5; border-radius: 3px; }
+
+.input-date-hidden, .input-slot-hidden { display: none; }
+
+.date-card {
+    min-width: 75px;
+    height: 90px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--white);
+    color: var(--text-dark);
+}
+
+.date-card:hover {
+    border-color: var(--green-primary);
+    transform: translateY(-2px);
+}
+
+/* DATA SELECIONADA - Fundo Verde */
+.input-date-hidden:checked + .date-card {
+    background-color: var(--green-primary);
+    border-color: var(--green-primary);
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(12, 98, 38, 0.3);
+}
+
+.input-date-hidden:checked + .date-card span {
+    color: white !important;
+}
+
+/* --- Grid de Slots --- */
+.slots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.slot-card {
+    padding: 10px 5px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #4b5563;
+    transition: all 0.2s;
+    background: var(--white);
+}
+
+.slot-card small {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: normal;
+    margin-top: 2px;
+}
+
+.slot-card:hover {
+    border-color: var(--green-primary);
+    color: var(--green-primary);
+    background-color: #f0fdf4;
+}
+
+/* Slot Atual (Visualmente diferente, mas não selecionado) */
+.slot-current {
+    border-color: var(--green-light);
+    background-color: #f0fdf4; /* Verde muito claro */
+    color: var(--green-primary);
+    font-weight: 600;
+}
+
+/* SLOT SELECIONADO - Fundo Verde */
+.input-slot-hidden:checked + .slot-card {
+    background-color: var(--green-primary);
+    border-color: var(--green-primary);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 4px 6px rgba(12, 98, 38, 0.2);
+}
+
+/* Se o slot selecionado era o atual */
+.input-slot-hidden:checked + .slot-card.slot-current {
+    background-color: var(--green-primary);
+    border-color: var(--green-primary);
+    color: white;
+}
+
+/* --- Botão Salvar (Igual ao Create) --- */
+.btn-save {
+    width: 100%;
+    margin-top: 30px;
+    padding: 15px;
+    background-color: #1f2937; /* Dark Grey */
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+}
+
+.btn-save:hover {
+    background-color: var(--green-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* --- Responsividade --- */
+@media (max-width: 576px) {
+    .edit-container { padding: 1.5rem; }
+    .static-info { flex-direction: column; gap: 10px; }
+    .date-card { min-width: 65px; }
+}

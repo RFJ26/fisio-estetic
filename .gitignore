@@ -1,0 +1,17 @@
+# Ignorar ficheiros de configuração sensíveis
+aiven.env
+.env
+*.env
+
+# Ignorar cache e logs do PHP
+vendor/
+node_modules/
+*.log
+*.cache
+
+# Ignorar arquivos temporários do sistema
+.DS_Store
+Thumbs.db
+
+# Ignorar ficheiros do VS Code
+.vscode/

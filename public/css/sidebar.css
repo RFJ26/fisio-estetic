@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+    --sidebar-width: 260px;
+    --brand-green-dark: #1a3c1b;   /* Fundo Principal */
+    --brand-green-hover: #2e4a2f;  /* Hover */
+    --text-sidebar: #e0e0e0;       /* Texto Claro */
+    
+    /* Cores de Destaque */
+    --primary-color: #4caf50;
+    --primary-soft: rgba(76, 175, 80, 0.15);
+}
+
+/* --- ESTRUTURA SIDEBAR --- */
+.sidebar {
+    width: var(--sidebar-width) !important;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--brand-green-dark);
+    padding: 30px 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    overflow-y: auto; /* Permite scroll se o menu for muito alto */
+}
+
+/* --- LOGO --- */
+.logo-area { 
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 20px;
+}
+
+.logo-area h2 {
+    color: #fff;
+    font-weight: 600;
+    text-align: center;
+    margin: 0;
+    text-transform: uppercase;
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+}
+
+.badge-role {
+    background: var(--primary-soft); 
+    color: var(--primary-color);
+    padding: 4px 12px; 
+    border-radius: 20px; 
+    font-size: 0.75rem; 
+    font-weight: 600; 
+    text-transform: uppercase;
+    display: inline-block; 
+    margin-top: 8px;
+}
+
+/* --- LINKS --- */
+.nav-link {
+    color: var(--text-sidebar);
+    font-size: 0.95rem;
+    padding: 14px 20px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.nav-link i {
+    margin-right: 15px;
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.6);
+    min-width: 20px;
+    text-align: center;
+    transition: color 0.2s;
+}
+
+/* Hover Effect */
+.nav-link:hover {
+    background-color: var(--brand-green-hover);
+    color: #fff;
+    transform: translateX(5px);
+}
+.nav-link:hover i {
+    color: #fff;
+}
+
+/* Active State */
+.nav-link.active {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    font-weight: 500;
+    border-left: 4px solid var(--primary-color);
+}
+.nav-link.active i { 
+    color: var(--primary-color); 
+}
+
+/* Logout Button */
+.nav-link.logout {
+    margin-top: auto; /* Empurra para o fundo */
+    color: #ffcccc;
+}
+.nav-link.logout:hover {
+    background-color: rgba(220, 53, 69, 0.15); /* Vermelho translúcido */
+    color: #ff8888;
+}
+.nav-link.logout i {
+    color: #ffcccc;
+}
+
+/* --- BOTÃO TOGGLE (MOBILE) --- */
+.sidebar-toggle {
+    display: none; /* Escondido em Desktop */
+}
+
+/* --- RESPONSIVIDADE (MOBILE) --- */
+@media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(-100%); /* Esconde usando transform */
+    }
+
+    .sidebar.active {
+        transform: translateX(0); /* Mostra */
+    }
+
+    /* Estilo do botão de abrir o menu */
+    .sidebar-toggle {
+        display: block;
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        z-index: 1001;
+        background-color: var(--brand-green-dark);
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+}

@@ -1,0 +1,198 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ============================================================
+   1. CORES E VARIÁVEIS
+   ============================================================ */
+:root {
+    --primary-color: #2e7d32;
+    --primary-hover: #1b5e20;
+    --primary-light: #e8f5e9;
+    --bg-body: #f8f9fa;
+    --text-primary: #2c3e50;
+    --text-muted: #6c757d;
+    --card-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    --border-color: #e0e0e0;
+}
+
+* { font-family: 'Poppins', sans-serif; box-sizing: border-box; }
+
+body {
+    background-color: var(--bg-body);
+    color: var(--text-primary);
+    padding-top: 90px;
+}
+
+/* ============================================================
+   2. NAVBAR
+   ============================================================ */
+.navbar {
+    background-color: #ffffff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    color: var(--primary-color) !important;
+    font-size: 1.5rem;
+    letter-spacing: 0.5px;
+    gap: 10px;
+}
+
+.navbar-logo {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+}
+
+.nav-link {
+    color: var(--text-muted) !important;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--primary-color) !important;
+}
+
+.user-profile-link {
+    background-color: var(--primary-light);
+    padding: 8px 18px !important;
+    border-radius: 20px;
+    color: var(--primary-color) !important;
+    font-weight: 600;
+}
+
+/* ============================================================
+   3. CABEÇALHO DA PÁGINA (IGUAL AO DASHBOARD)
+   ============================================================ */
+.page-title {
+    font-size: 2rem; /* AUMENTADO para igualar o Dashboard */
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.page-subtitle {
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin-top: 5px;
+}
+
+/* ============================================================
+   4. CARTÃO DE PERFIL
+   ============================================================ */
+.profile-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid #f0f0f0;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+.section-header {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #eaeaea;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.section-title {
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin: 0;
+}
+
+/* ============================================================
+   5. INPUTS & FORMULÁRIO
+   ============================================================ */
+.form-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+.input-group {
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.input-group-text {
+    background-color: #fff;
+    border: 1px solid var(--border-color);
+    border-right: none;
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    padding-left: 15px;
+    border-radius: 10px 0 0 10px;
+}
+
+.form-control {
+    border: 1px solid var(--border-color);
+    border-left: none;
+    height: 50px;
+    color: var(--text-primary);
+    border-radius: 0 10px 10px 0;
+    font-size: 0.95rem;
+}
+
+.form-control:focus {
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.15);
+    border-color: var(--primary-color);
+}
+
+.form-control:focus + .input-group-text,
+.input-group:focus-within .input-group-text {
+    border-color: var(--primary-color);
+    color: var(--primary-hover);
+}
+
+/* ============================================================
+   6. BOTÕES
+   ============================================================ */
+.btn-save {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    font-weight: 600;
+    padding: 12px 35px;
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-save:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    color: white;
+    box-shadow: 0 8px 20px rgba(46, 125, 50, 0.4);
+}
+
+.btn-cancel {
+    background-color: white;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-cancel:hover {
+    background-color: #f1f1f1;
+    color: #333;
+    border-color: #ccc;
+}

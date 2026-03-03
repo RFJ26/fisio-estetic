@@ -1,0 +1,96 @@
+/* =========================================
+   LAYOUT FIX (Igual ao view.php)
+   ========================================= */
+   .content {
+    margin-left: 260px; /* Empurra o conteúdo para a direita */
+    width: calc(100% - 260px);
+    padding: 40px;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+/* Ajuste Mobile */
+@media (max-width: 768px) {
+    .content {
+        margin-left: 0;
+        width: 100%;
+        padding-top: 80px;
+    }
+}
+
+/* =========================================
+   ESTILO DO FORMULÁRIO (Card de Edição)
+   ========================================= */
+.edit-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    padding: 40px;
+    border: 1px solid #eef0f3;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* Labels dos inputs */
+.form-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #6c757d;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+
+/* Inputs */
+.form-control {
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    font-size: 1rem;
+    color: #2c3e50;
+    transition: all 0.3s;
+}
+
+.form-control:focus {
+    border-color: #145a32; /* Verde da marca */
+    box-shadow: 0 0 0 0.2rem rgba(20, 90, 50, 0.15);
+}
+
+/* Área de Botões */
+.form-actions {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #f1f3f5;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Botão Salvar */
+.btn-save {
+    background-color: #145a32;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+.btn-save:hover {
+    background-color: #0d3b21;
+    color: white;
+}
+
+/* Botão Cancelar */
+.btn-cancel {
+    color: #6c757d;
+    text-decoration: none;
+    padding: 10px 20px;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+.btn-cancel:hover {
+    background-color: #e9ecef;
+    color: #343a40;
+}

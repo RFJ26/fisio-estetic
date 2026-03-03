@@ -1,0 +1,165 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+/* ============================================================
+   1. CORES E VARIÁVEIS DO DASHBOARD
+   ============================================================ */
+:root {
+    --primary-color: #2e7d32; 
+    --bg-body: #f8f9fa;
+    --text-primary: #2c3e50;
+    --text-muted: #6c757d;
+    --card-bg: #ffffff;
+    
+    --primary-soft: color-mix(in srgb, var(--primary-color), white 85%);
+    --card-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    --sidebar-width: 260px; /* Largura padrão da sidebar */
+}
+
+* { font-family: 'Poppins', sans-serif; box-sizing: border-box; }
+
+body {
+    background-color: var(--bg-body);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    margin: 0;
+}
+
+a { text-decoration: none; transition: 0.3s; }
+
+/* ============================================================
+   2. CONTEÚDO PRINCIPAL (LAYOUT)
+   ============================================================ */
+.content {
+    /* CORREÇÃO AQUI: Empurrar o conteúdo para a direita da sidebar */
+    margin-left: var(--sidebar-width); 
+    width: calc(100% - var(--sidebar-width));
+    padding: 40px;
+    min-height: 100vh;
+    transition: all 0.3s ease;
+}
+
+.header-section h1 { font-weight: 700; color: var(--text-primary); }
+.text-highlight { color: var(--primary-color) !important; }
+
+/* ============================================================
+   3. CARDS DE MÉTRICAS
+   ============================================================ */
+.metric-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid rgba(0,0,0,0.02);
+    transition: transform 0.2s ease;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+}
+
+.metric-card:hover { transform: translateY(-5px); }
+
+.icon-box {
+    width: 60px; height: 60px;
+    background-color: var(--primary-soft);
+    color: var(--primary-color);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+}
+
+.icon-box.red { background: rgba(220, 53, 69, 0.1); color: #dc3545; }
+.icon-box.blue { background: rgba(13, 202, 240, 0.1); color: #0dcaf0; }
+
+.card-info { flex-grow: 1; }
+.card-value { font-size: 2rem; font-weight: 700; color: var(--primary-color); line-height: 1.1; display: block; }
+.card-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin: 0; }
+.stretched-link::after { position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 1; content: ""; }
+
+/* ============================================================
+   4. TABELAS (CENTRALIZADAS)
+   ============================================================ */
+.custom-table-container {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: var(--card-shadow);
+    margin-top: 30px;
+    width: 100%;
+}
+
+.section-title { font-weight: 700; font-size: 1.4rem; color: var(--text-primary); }
+
+.custom-table { 
+    width: 100%; 
+    border-collapse: separate; 
+    border-spacing: 0; 
+}
+
+/* Cabeçalho - Centralizado */
+.custom-table thead th {
+    border-bottom: 2px solid #f0f0f0;
+    color: var(--text-muted);
+    font-size: 0.75rem; 
+    text-transform: uppercase; 
+    letter-spacing: 1px;
+    font-weight: 600; 
+    padding: 15px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Células - Centralizadas */
+.custom-table td {
+    padding: 20px 15px;
+    border-bottom: 1px solid #f8f9fa;
+    vertical-align: middle;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    text-align: center;
+}
+
+.custom-table tr:hover td { background-color: var(--primary-soft); }
+
+/* Badges */
+.badge-status { padding: 6px 12px; border-radius: 30px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+.bg-success-soft { background: rgba(25, 135, 84, 0.1); color: #198754; }
+.bg-warning-soft { background: rgba(255, 193, 7, 0.1); color: #d6a100; }
+.bg-info-soft { background: rgba(13, 202, 240, 0.1); color: #09a2c1; }
+.bg-secondary-soft { background: #f0f0f0; color: var(--text-muted); }
+
+.btn-link-custom { color: var(--primary-color); font-weight: 600; font-size: 0.9rem; }
+.btn-link-custom:hover { text-decoration: underline; }
+
+/* ============================================================
+   5. MOBILE & RESPONSIVIDADE
+   ============================================================ */
+.sidebar-toggle { display: none; } 
+
+@media (max-width: 768px) {
+    /* No mobile, a sidebar sai da frente e o conteúdo ocupa tudo */
+    .content { 
+        margin-left: 0;
+        width: 100%;
+        padding: 80px 20px; 
+    }
+    
+    .sidebar-toggle { 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        position: fixed; 
+        top: 20px; 
+        left: 20px; 
+        z-index: 1100; 
+        background: var(--primary-color); 
+        color: white; 
+        width: 45px; 
+        height: 45px; 
+        border-radius: 10px; 
+        border: none; 
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
+    }
+}

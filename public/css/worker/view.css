@@ -1,0 +1,277 @@
+:root {
+    --brand-dark: #1a3c1b;
+    --brand-primary: #2e7d32;
+    --brand-light: #e8f5e9;
+    --bg-light: #f8f9fa;
+    --text-main: #2c3e50;
+    --text-muted: #6c757d;
+    --sidebar-width: 260px;
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-main);
+    overflow-x: hidden;
+}
+
+/* --- Layout Principal --- */
+.content {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    padding: 40px;
+    transition: all 0.3s ease;
+}
+
+/* --- Contentor do Cartão Principal --- */
+.view-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.04);
+    padding: 40px;
+    border: 1px solid #eef0f3;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* --- Tipografia dos Detalhes --- */
+.view-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #9ca3af;
+    margin-bottom: 8px;
+    letter-spacing: 0.8px;
+}
+
+.view-value {
+    color: var(--text-main);
+    font-weight: 400;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f3f4f6;
+    margin-bottom: 15px;
+    min-height: 35px;
+    display: flex;
+    align-items: center;
+}
+
+/* --- Botão Voltar --- */
+.btn-back {
+    color: var(--text-muted);
+    border: 1px solid #dee2e6;
+    background: white;
+    padding: 8px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-back:hover {
+    background: #f8f9fa;
+    color: #212529;
+    border-color: #cdd4db;
+    transform: translateX(-3px);
+}
+
+/* --- Área de Ações (Botões no fundo) --- */
+.card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.btn-edit-action {
+    background-color: #495057;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.btn-edit-action:hover { 
+    background-color: #343a40; 
+    color: white; 
+    transform: translateY(-2px);
+}
+
+.btn-assign-action {
+    background-color: var(--brand-dark);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.btn-assign-action:hover { 
+    background-color: #143015; 
+    color: white; 
+    transform: translateY(-2px);
+}
+
+.btn-delete-action {
+    background-color: #fee2e2;
+    color: #dc2626;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: 1px solid transparent;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.btn-delete-action:hover { 
+    background-color: #dc2626; 
+    color: white; 
+    transform: translateY(-2px);
+}
+
+/* =========================================
+   NOVO: ÁREA DE MARCAÇÕES (Moderno)
+   ========================================= */
+
+/* O botão grande de abrir/fechar */
+.btn-toggle-area {
+    width: 100%;
+    max-width: 900px;
+    margin: 30px auto 0 auto;
+    background: #ffffff;
+    border: 1px solid #eef0f3;
+    padding: 20px 25px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-toggle-area:hover {
+    box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+    transform: translateY(-2px);
+    border-color: #dee2e6;
+    color: var(--brand-primary);
+}
+
+/* Animação da seta */
+.btn-toggle-area i.bi-chevron-down {
+    transition: transform 0.3s ease;
+}
+.btn-toggle-area[aria-expanded="true"] i.bi-chevron-down {
+    transform: rotate(180deg);
+}
+
+/* O cartão que abre com a tabela dentro */
+.collapse-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.03);
+    padding: 30px;
+    border: 1px solid #eef0f3;
+    max-width: 900px;
+    margin: 15px auto 0 auto; /* Espaço entre o botão e o cartão */
+}
+
+/* Tabela Moderna e Limpa */
+.table-stylish {
+    width: 100%;
+    border-collapse: separate; 
+    border-spacing: 0;
+    margin-top: 10px;
+}
+
+.table-stylish thead th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #adb5bd;
+    font-weight: 600;
+    padding: 15px 20px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.table-stylish tbody tr {
+    transition: background-color 0.2s;
+}
+
+.table-stylish tbody tr:hover {
+    background-color: #fcfcfc;
+}
+
+.table-stylish td {
+    padding: 18px 20px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f8f9fa;
+    color: #495057;
+    font-size: 0.95rem;
+}
+
+.table-stylish tr:last-child td {
+    border-bottom: none;
+}
+
+/* Badges Suaves (Pill style) */
+.badge-pill {
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-success-soft {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.badge-warning-soft {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.badge-secondary-soft {
+    background-color: #f3f4f6;
+    color: #4b5563;
+}
+
+/* --- Responsividade --- */
+@media (max-width: 992px) {
+    .content {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+        padding-top: 80px;
+    }
+    
+    .view-card, .btn-toggle-area, .collapse-card {
+        padding: 20px;
+    }
+
+    .card-actions {
+        flex-direction: column;
+    }
+    
+    .card-actions a {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .btn-delete-action.ms-auto {
+        margin-left: 0 !important;
+        margin-top: 10px;
+    }
+}

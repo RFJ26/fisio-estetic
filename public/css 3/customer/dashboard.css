@@ -1,0 +1,220 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ============================================================
+   1. CORES E VARIÁVEIS (TEMA VERDE UNIFICADO)
+   ============================================================ */
+:root {
+    --primary-color: #2e7d32;      /* Verde Principal */
+    --primary-hover: #1b5e20;      /* Verde Escuro */
+    --primary-light: #e8f5e9;      /* Verde Muito Claro */
+    --bg-body: #f8f9fa;
+    --text-primary: #2c3e50;
+    --text-muted: #6c757d;
+    --card-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+* { font-family: 'Poppins', sans-serif; box-sizing: border-box; }
+
+body {
+    background-color: var(--bg-body);
+    color: var(--text-primary);
+    padding-top: 80px; /* Espaço para a navbar fixa */
+}
+
+/* ============================================================
+   2. NAVBAR
+   ============================================================ */
+.navbar {
+    background-color: #ffffff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    color: var(--primary-color) !important;
+    font-size: 1.4rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.nav-link {
+    color: var(--text-muted) !important;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--primary-color) !important;
+}
+
+/* Badge do Perfil na Navbar */
+.user-profile-link {
+    background-color: var(--primary-light);
+    padding: 8px 18px !important;
+    border-radius: 20px;
+    color: var(--primary-color) !important;
+    font-weight: 600;
+}
+
+/* ============================================================
+   3. CABEÇALHO (BEM-VINDO)
+   ============================================================ */
+.welcome-header h1 {
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.welcome-header span {
+    color: var(--primary-color);
+}
+
+.date-badge {
+    background: white;
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    box-shadow: var(--card-shadow);
+}
+
+/* ============================================================
+   4. CARTÃO DE DESTAQUE (PRÓXIMA MARCAÇÃO)
+   ============================================================ */
+.next-appointment-card {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+    border-radius: 16px;
+    padding: 40px;
+    color: white;
+    box-shadow: 0 15px 35px rgba(46, 125, 50, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+.card-label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    opacity: 0.9;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.appointment-info h3 {
+    font-weight: 700;
+    font-size: 1.8rem;
+}
+
+/* Badge de Estado dentro do cartão verde */
+.badge.bg-white {
+    background-color: white !important;
+    color: var(--primary-color) !important;
+    font-weight: 700;
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+/* Botão Transparente (Glassmorphism) */
+.btn-light-green {
+    background-color: rgba(255,255,255,0.2);
+    color: white;
+    font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 12px 28px;
+    border-radius: 50px;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-light-green:hover {
+    background-color: white;
+    color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* ============================================================
+   5. CARTÕES DE AÇÃO (GRID)
+   ============================================================ */
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 25px;
+    margin-top: 10px;
+}
+
+.action-card {
+    background: white;
+    border-radius: 16px;
+    padding: 35px 25px;
+    text-align: center;
+    display: block;
+    text-decoration: none;
+    color: var(--text-primary);
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+    height: 100%;
+    box-shadow: var(--card-shadow);
+}
+
+.action-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary-color);
+    box-shadow: 0 15px 35px rgba(46, 125, 50, 0.15);
+}
+
+.icon-circle {
+    width: 70px;
+    height: 70px;
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin: 0 auto 20px auto;
+    transition: all 0.3s;
+}
+
+.action-card:hover .icon-circle {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.action-card h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.action-card p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* Ajuste Mobile */
+@media (max-width: 768px) {
+    .next-appointment-card { padding: 25px; }
+    .welcome-header h1 { font-size: 1.5rem; }
+}
+
+/* ... código anterior da navbar ... */
+
+/* ... código anterior da navbar ... */
+
+.navbar-logo {
+    height: 50px;  /* AUMENTADO: Antes estava 35px */
+    width: auto;   /* Mantém a proporção correta */
+    object-fit: contain;
+}
+
+/* Opcional: Ajustar o texto para alinhar melhor com o logo maior */
+.navbar-brand {
+    gap: 10px;      /* Mais espaço entre a imagem e o texto */
+    font-size: 1.5rem; /* Texto ligeiramente maior */
+}

@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // ==========================================
     // 3. VERIFICAR SE É FUNCIONÁRIO OU ADMIN
     // ==========================================
-    $query_func = "SELECT id, nome, palavra_passe, cargo FROM funcionario WHERE email = '$email_escaped' LIMIT 1";
+    $query_func = "SELECT id, nome, palavra_passe, adm FROM funcionario WHERE email = '$email_escaped' LIMIT 1";
     $res_func = mysqli_query($conn, $query_func);
 
     if ($res_func && mysqli_num_rows($res_func) > 0) {
@@ -37,10 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Cria os cookies
             setcookie('id', $user_func['id'], $um_ano, '/');
             setcookie('nome', $user_func['nome'], $um_ano, '/');
-            setcookie('role', $user_func['cargo'], $um_ano, '/'); // Guarda 'admin' ou 'worker'
+            setcookie('role', $user_func['adm'], $um_ano, '/'); // Guarda 'admin' ou 'worker'
             
             // Redireciona consoante o cargo
-            if ($user_func['cargo'] === 'admin') {
+            if ($user_func['adm'] === 'admin') {
                 header("Location: /adm/dashboard.php"); // Se o teu dashboard de admin tiver outro nome, altera aqui!
             } else {
                 header("Location: /worker/dashboard.php");

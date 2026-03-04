@@ -6,8 +6,21 @@
   },
   "routes": [
     { "src": "/css/(.*)", "dest": "/public/css/$1" },
+    { "src": "/css 3/(.*)", "dest": "/public/css 3/$1" },
     { "src": "/images/(.*)", "dest": "/public/images/$1" },
-    { "src": "/(.*)\\.php", "dest": "/api/$1.php" },
-    { "src": "/(.*)", "dest": "/api/index.php" }
+    { "src": "/scripts/(.*)", "dest": "/public/scripts/$1" },
+    { "src": "/uploads/(.*)", "dest": "/public/uploads/$1" },
+    { "src": "/favicon.ico", "dest": "/public/favicon.ico" },
+    
+    { "src": "/login.php", "dest": "/api/login.php" },
+    { "src": "/register.php", "dest": "/api/register.php" },
+    { "src": "/recuperar_passe.php", "dest": "/api/recuperar_passe.php" },
+    
+    { "src": "/adm/(.*)", "dest": "/api/adm/$1" },
+    { "src": "/customer/(.*)", "dest": "/api/customer/$1" },
+    { "src": "/worker/(.*)", "dest": "/api/worker/$1" },
+
+    { "src": "/", "dest": "/api/index.php" },
+    { "src": "/index.php", "dest": "/api/index.php" }
   ]
 }

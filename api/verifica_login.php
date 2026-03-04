@@ -1,23 +1,35 @@
 <?php
-// 1. Verifica se o Cookie principal existe
-if (!isset($_COOKIE['id'])) {
-    die("<h1>ERRO: O Vercel não guardou o Cookie!</h1><p>O login foi feito, mas o cookie 'id' desapareceu pelo caminho.</p>");
+// 1. Se não tem cookie nenhum, vai direto para o ecrã de login
+if (!isset($_COOKIE['id']) || !isset($_COOKIE['role'])) {
+    header('Location: /index.php');
+    exit();
 }
 
-// 2. Verifica a Role (Cargo) e o URL
 $url_atual = $_SERVER['REQUEST_URI'];
+$role = $_COOKIE['role'];
 
-if (strpos($url_atual, '/adm/') !== false) {
-    if (!isset($_COOKIE['role']) || $_COOKIE['role'] !== 'admin') {
-        $cargo_atual = $_COOKIE['role'] ?? 'Nenhum cookie de role';
-        die("<h1>ERRO DE ACESSO</h1><p>Tentaste aceder a uma pasta de Admin, mas o teu cargo registado é: <b>$cargo_atual</b></p>");
+// ==========================================
+// 2. REGRAS DE ACESSO POR CARGO
+// ==========================================
+
+// -> Se o cargo for 'admin', ele salta todas estas regras e tem ACESSO LIVRE a todas as pastas!
+
+// Regras para o FUNCIONÁRIO (Worker)
+if ($role === 'worker') {
+    // O funcionário só é bloqueado se tentar entrar na pasta do Admin
+    if (strpos($url_atual, '/adm/') !== false) {
+        header('Location: /worker/dashboard.php');
+        exit();
     }
 }
 
-if (strpos($url_atual, '/worker/') !== false) {
-    if (!isset($_COOKIE['role']) || $_COOKIE['role'] !== 'worker') {
-        $cargo_atual = $_COOKIE['role'] ?? 'Nenhum cookie de role';
-        die("<h1>ERRO DE ACESSO</h1><p>Tentaste aceder a uma pasta de Funcionário, mas o teu cargo registado é: <b>$cargo_atual</b></p>");
+// Regras para o CLIENTE (Customer)
+if ($role === 'customer') {
+    // O cliente é muito restrito. SÓ pode andar dentro da pasta /customer/ ou no /logout.php
+    // Se tentar ir para qualquer outro sítio (ex: /worker/list.php), é recambiado para o seu dashboard.
+    if (strpos($url_atual, '/customer/') === false && strpos($url_atual, '/logout.php') === false) {
+        header('Location: /customer/dashboard.php');
+        exit();
     }
 }
 ?>

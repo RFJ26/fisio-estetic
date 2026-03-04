@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['id'])) {
+if (!isset($_COOKIE['id'])) {
     header("Location: ../index.php");
     exit();
 }
@@ -10,7 +10,7 @@ include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
 require_once __DIR__ . '/../../src/helpers.php';
 
-$id_funcionario = $_SESSION['id'];
+$id_funcionario = $_COOKIE['id'];
 $mensagem_sucesso = '';
 $mensagem_erro = '';
 
@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 if (mysqli_query($conn, $query_update)) {
                     $mensagem_sucesso = "Dados atualizados com sucesso.";
-                    $_SESSION['nome'] = $nome;
+                    $_COOKIE['nome'] = $nome;
                     
                     $perfil['nome'] = $nome;
                     $perfil['email'] = $email;

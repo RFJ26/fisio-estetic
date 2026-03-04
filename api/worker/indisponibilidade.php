@@ -18,8 +18,8 @@ function slotParaHora15m($slot) {
 // =========================================================================
 // 1. DADOS DO FUNCIONÁRIO E SEGURANÇA
 // =========================================================================
-$id_funcionario = $_SESSION['id'] ?? 0;
-$nome_funcionario = $_SESSION['nome'] ?? 'Colaborador';
+$id_funcionario = $_COOKIE['id'] ?? 0;
+$nome_funcionario = $_COOKIE['nome'] ?? 'Colaborador';
 
 if ($id_funcionario == 0 && !empty($nome_funcionario)) {
     $nome_seguro = mysqli_real_escape_string($conn, $nome_funcionario);
@@ -27,7 +27,7 @@ if ($id_funcionario == 0 && !empty($nome_funcionario)) {
     $res_recupera = mysqli_query($conn, $query_recupera);
     if ($dados = mysqli_fetch_assoc($res_recupera)) {
         $id_funcionario = $dados['id'];
-        $_SESSION['id'] = $id_funcionario;
+        $_COOKIE['id'] = $id_funcionario;
     }
 }
 

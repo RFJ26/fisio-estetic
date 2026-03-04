@@ -111,7 +111,7 @@ $marcacoes = mysqli_query($conn, $marcacoes_query);
             
             <header class="header-section d-flex justify-content-between align-items-center mb-5">
                 <div>
-                    <h1>Olá, <span class="text-gold"><?= htmlspecialchars($_SESSION['nome']) ?></span></h1>
+                    <h1>Olá, <span class="text-gold"><?= htmlspecialchars($_COOKIE['nome']) ?></span></h1>
                     <p class="text-muted mb-0">Bem-vindo ao painel de gestão.</p>
                 </div>
                 <div class="d-none d-md-block text-end">

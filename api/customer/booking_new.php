@@ -11,12 +11,12 @@ require_once __DIR__ . '/../../src/send_email.php';
 // 1. VERIFICAR LOGIN PADRÃO DO CLIENTE
 // ============================================================================
 // Se o cliente não estiver logado, é redirecionado para a página inicial
-if (!isset($_SESSION['id_cliente'])) {
+if (!isset($_COOKIE['id_cliente'])) {
     header("Location: ../index.php");
     exit();
 }
-$id_cliente = $_SESSION['id_cliente'];
-$nome_cliente = $_SESSION['nome'];
+$id_cliente = $_COOKIE['id_cliente'];
+$nome_cliente = $_COOKIE['nome'];
 $primeiro_nome = explode(" ", $nome_cliente)[0]; // Extrai apenas o primeiro nome para o menu
 
 // ============================================================================

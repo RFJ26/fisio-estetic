@@ -11,13 +11,13 @@ include_once __DIR__ . '/../../src/helpers.php';require_once __DIR__ . '/../../s
 $tz_lisboa = new DateTimeZone('Europe/Lisbon');
 date_default_timezone_set('Europe/Lisbon');
 
-if (!isset($_SESSION['id_cliente'])) {
+if (!isset($_COOKIE['id_cliente'])) {
     header("Location: ../index.php"); 
     exit();
 }
 
-$id_cliente = $_SESSION['id_cliente'];
-$primeiro_nome = explode(" ", $_SESSION['nome'])[0];
+$id_cliente = $_COOKIE['id_cliente'];
+$primeiro_nome = explode(" ", $_COOKIE['nome'])[0];
 
 $agora = new DateTime('now', $tz_lisboa);
 

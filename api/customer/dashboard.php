@@ -4,13 +4,13 @@ session_start();
 
 require_once __DIR__ . '/../../src/conexao.php';
 include_once __DIR__ . '/../../src/helpers.php';
-if (!isset($_SESSION['id_cliente'])) {
+if (!isset($_COOKIE['id_cliente'])) {
     header("Location: ../index.php"); 
     exit();
 }
 
-$id_cliente = $_SESSION['id_cliente'];
-$nome_cliente = $_SESSION['nome'];
+$id_cliente = $_COOKIE['id_cliente'];
+$nome_cliente = $_COOKIE['nome'];
 $primeiro_nome = explode(" ", $nome_cliente)[0];
 
 // Query para buscar a próxima marcação futura

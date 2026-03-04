@@ -6,8 +6,8 @@ include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
 require_once __DIR__ . '/../../src/helpers.php'; 
 
-$id_funcionario = $_SESSION['id'] ?? 0; 
-$nome_funcionario = $_SESSION['nome'] ?? 'Colaborador';
+$id_funcionario = $_COOKIE['id'] ?? 0; 
+$nome_funcionario = $_COOKIE['nome'] ?? 'Colaborador';
 $primeiro_nome = explode(' ', trim($nome_funcionario))[0];
 $data_hoje = date('Y-m-d');
 

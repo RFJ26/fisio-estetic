@@ -2,15 +2,15 @@
 session_start();
 require_once __DIR__ . '/../../src/conexao.php';
 
-if (!isset($_SESSION['id_cliente'])) {
+if (!isset($_COOKIE['id_cliente'])) {
     header("Location: ../index.php"); 
     exit();
 }
 
-$id_cliente = $_SESSION['id_cliente'];
+$id_cliente = $_COOKIE['id_cliente'];
 
 // Dados para o topo (Igual ao Dashboard)
-$nome_cliente = $_SESSION['nome'];
+$nome_cliente = $_COOKIE['nome'];
 $primeiro_nome = explode(" ", $nome_cliente)[0];
 
 $mensagem = "";
@@ -81,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (mysqli_query($conn, $sql_update)) {
                 $mensagem = "Dados atualizados com sucesso!";
                 $tipo_mensagem = "success";
-                $_SESSION['nome'] = $nome; 
+                $_COOKIE['nome'] = $nome; 
                 $nome_cliente = $nome;
                 $primeiro_nome = explode(" ", $nome_cliente)[0];
             } else {

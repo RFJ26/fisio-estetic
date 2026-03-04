@@ -36,23 +36,23 @@ if (session_status() === PHP_SESSION_NONE) {
             </div>
         <?php endif; ?>
        <!--  <?php
-        if (isset($_SESSION['email_nao_validado'])):
+        if (isset($_COOKIE['email_nao_validado'])):
         ?>
             <div class="alert-error" style="background-color: #fff3cd; color: #856404; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9em; border: 1px solid #ffeeba;">
                 <i class="bi bi-envelope-exclamation-fill"></i>
                 <span>Por favor, valide o seu email antes de entrar. Verifique a sua caixa de entrada!</span>
             </div>
         <?php
-            unset($_SESSION['email_nao_validado']);
+            unset($_COOKIE['email_nao_validado']);
             
-        elseif (isset($_SESSION['nao_autenticado'])):
+        elseif (isset($_COOKIE['nao_autenticado'])):
         ?>
             <div class="alert-error" style="background-color: #fee2e2; color: #dc2626; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9em;">
                 <i class="bi bi-exclamation-triangle-fill"></i>
                 <span>Email ou palavra-passe incorretos.</span>
             </div>
         <?php
-            unset($_SESSION['nao_autenticado']);
+            unset($_COOKIE['nao_autenticado']);
         endif;
         ?> -->
 

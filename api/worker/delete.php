@@ -9,8 +9,8 @@ if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
     // SEGURANÇA: Impedir que o administrador apague a si próprio
-    // Assume que o ID do utilizador logado está em $_SESSION['id'] (confirma no teu verifica_login.php)
-    if (isset($_SESSION['id']) && $id == $_SESSION['id']) {
+    // Assume que o ID do utilizador logado está em $_COOKIE['id'] (confirma no teu verifica_login.php)
+    if (isset($_COOKIE['id']) && $id == $_COOKIE['id']) {
         echo "<script>alert('Erro: Não pode apagar a sua própria conta enquanto está ligado.'); window.location.href = 'list.php';</script>";
         exit;
     }

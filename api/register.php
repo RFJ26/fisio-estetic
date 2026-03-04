@@ -37,7 +37,7 @@ if (isset($_POST['register'])) {
 
     // 3. SE HOUVER ERROS DE VALIDAÇÃO
     if (!empty($erros)) {
-        $_SESSION['msg_erro'] = implode("<br>", $erros);
+        $_COOKIE['msg_erro'] = implode("<br>", $erros);
     } else {
         $nome = mysqli_real_escape_string($conn, $nome);
         $email = mysqli_real_escape_string($conn, $email);
@@ -50,7 +50,7 @@ if (isset($_POST['register'])) {
         $result_check = mysqli_query($conn, $query_check);
 
         if (mysqli_num_rows($result_check) > 0) {
-            $_SESSION['msg_erro'] = "Este Email ou NIF já está registado.";
+            $_COOKIE['msg_erro'] = "Este Email ou NIF já está registado.";
         } else {
             // 5. Criar a conta
             $password_hashed = md5($palavra_passe);
@@ -90,7 +90,7 @@ if (isset($_POST['register'])) {
                 }
                 exit();
             } else {
-                $_SESSION['msg_erro'] = "Erro ao registar: " . mysqli_error($conn);
+                $_COOKIE['msg_erro'] = "Erro ao registar: " . mysqli_error($conn);
             }
         }
     }
@@ -118,12 +118,12 @@ if (isset($_POST['register'])) {
         <h3>Crie a sua conta</h3>
         <p class="subtitle">Preencha os dados para se registar.</p>
 
-        <?php if (isset($_SESSION['msg_erro'])): ?>
+        <?php if (isset($_COOKIE['msg_erro'])): ?>
             <div class="alert-error" style="background-color: #fee2e2; color: #dc2626; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9em; line-height: 1.5;">
                 <i class="bi bi-exclamation-circle-fill"></i>
-                <?= $_SESSION['msg_erro']; ?>
+                <?= $_COOKIE['msg_erro']; ?>
             </div> 
-            <?php unset($_SESSION['msg_erro']); ?>
+            <?php unset($_COOKIE['msg_erro']); ?>
         <?php endif; ?>
 
         <form action="register.php" method="POST">

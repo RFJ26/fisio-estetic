@@ -23,14 +23,14 @@ if ($res_func && mysqli_num_rows($res_func) > 0) {
         $um_ano = time() + (86400 * 365);
 
         // Criar Cookies no navegador (o '/' garante que funcionam em todas as páginas)
-        setcookie('user_id', $user['id'], $um_ano, '/');
-        setcookie('user_nome', $user['nome'], $um_ano, '/');
+        setcookie('id', $user['id'], $um_ano, '/');
+        setcookie('nome', $user['nome'], $um_ano, '/');
 
         if ($user['adm'] == 1) {
-            setcookie('user_role', 'admin', $um_ano, '/');
+            setcookie('role', 'admin', $um_ano, '/');
             $dest = '/adm/dashboard.php';
         } else {
-            setcookie('user_role', 'worker', $um_ano, '/');
+            setcookie('role', 'worker', $um_ano, '/');
             $dest = '/worker/dashboard.php';
         }
         

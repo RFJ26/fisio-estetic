@@ -89,15 +89,15 @@ if (array_key_exists('provider', $_POST)) {
     $clientId = $_POST['clientId'];
     $clientSecret = $_POST['clientSecret'];
     $tenantId = $_POST['tenantId'];
-    $_SESSION['provider'] = $providerName;
-    $_SESSION['clientId'] = $clientId;
-    $_SESSION['clientSecret'] = $clientSecret;
-    $_SESSION['tenantId'] = $tenantId;
-} elseif (array_key_exists('provider', $_SESSION)) {
-    $providerName = $_SESSION['provider'];
-    $clientId = $_SESSION['clientId'];
-    $clientSecret = $_SESSION['clientSecret'];
-    $tenantId = $_SESSION['tenantId'];
+    $_COOKIE['provider'] = $providerName;
+    $_COOKIE['clientId'] = $clientId;
+    $_COOKIE['clientSecret'] = $clientSecret;
+    $_COOKIE['tenantId'] = $tenantId;
+} elseif (array_key_exists('provider', $_COOKIE)) {
+    $providerName = $_COOKIE['provider'];
+    $clientId = $_COOKIE['clientId'];
+    $clientSecret = $_COOKIE['clientSecret'];
+    $tenantId = $_COOKIE['tenantId'];
 }
 
 //If you don't want to use the built-in form, set your client id and secret here
@@ -159,16 +159,16 @@ if (null === $provider) {
 if (!isset($_GET['code'])) {
     //If we don't have an authorization code then get one
     $authUrl = $provider->getAuthorizationUrl($options);
-    $_SESSION['oauth2state'] = $provider->getState();
+    $_COOKIE['oauth2state'] = $provider->getState();
     header('Location: ' . $authUrl);
     exit;
     //Check given state against previously stored one to mitigate CSRF attack
-} elseif (empty($_GET['state']) || ($_GET['state'] !== $_SESSION['oauth2state'])) {
-    unset($_SESSION['oauth2state']);
-    unset($_SESSION['provider']);
+} elseif (empty($_GET['state']) || ($_GET['state'] !== $_COOKIE['oauth2state'])) {
+    unset($_COOKIE['oauth2state']);
+    unset($_COOKIE['provider']);
     exit('Invalid state');
 } else {
-    unset($_SESSION['provider']);
+    unset($_COOKIE['provider']);
     //Try to get an access token (using the authorization code grant)
     $token = $provider->getAccessToken(
         'authorization_code',

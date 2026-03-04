@@ -5,9 +5,9 @@
 session_start();
 date_default_timezone_set('Europe/Lisbon'); // Fuso horário de Portugal
 
-include('../verifica_login.php');
+include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
-require_once '../../src/send_email.php'; 
+require_once __DIR__ . '/../../src/send_email.php';
 
 mysqli_set_charset($conn, "utf8");
 

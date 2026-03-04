@@ -7,7 +7,7 @@
 session_start();
 require_once __DIR__ . '/../../src/conexao.php';
 include('../../src/helpers.php'); 
-require_once '../../src/send_email.php'; // Importa a lógica de email
+require_once __DIR__ . '/../../src/send_email.php';// Importa a lógica de email
 
 $tz_lisboa = new DateTimeZone('Europe/Lisbon');
 date_default_timezone_set('Europe/Lisbon');

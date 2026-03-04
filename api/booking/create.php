@@ -2,7 +2,7 @@
 session_start();
 date_default_timezone_set('Europe/Lisbon');
 
-include('../verifica_login.php');
+include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
 require '../../src/helpers.php'; 
 require_once '../../src/send_email.php';

@@ -2,9 +2,9 @@
 session_start();
 
 // Includes
-include('../verifica_login.php');
+include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
-require_once '../../src/send_email.php'; 
+require_once __DIR__ . '/../../src/send_email.php';
 
 // ============================================================================
 // PROCESSAR AÇÕES DOS BOTÕES (Confirmar / Cancelar)

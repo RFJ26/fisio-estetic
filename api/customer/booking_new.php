@@ -5,7 +5,7 @@ date_default_timezone_set('Europe/Lisbon');
 
 require_once __DIR__ . '/../../src/conexao.php';
 require '../../src/helpers.php';
-require_once '../../src/send_email.php'; 
+require_once __DIR__ . '/../../src/send_email.php';
 
 // ============================================================================
 // 1. VERIFICAR LOGIN PADRÃO DO CLIENTE

@@ -1,18 +1,19 @@
 <?php
-// O conexao.php já deve ter o session_start() como configurámos antes
+// O conexao.php já deve ter o session_start()
 require_once __DIR__ . '/../src/conexao.php'; 
 
 // ==========================================================
 // LIMPEZA DE SEGURANÇA E VALIDAÇÃO INICIAL
 // ==========================================================
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /index.php'); // USAR / NO INÍCIO
+    header('Location: /index.php'); 
     exit();
 }
 
 if (empty($_POST['email']) || empty($_POST['password'])) {
     $_SESSION['nao_autenticado'] = true;
-    header('Location: /index.php'); // USAR / NO INÍCIO
+    session_write_close(); // FORÇA A GRAVAÇÃO DA SESSÃO ANTES DE MUDAR DE PÁGINA
+    header('Location: /index.php'); 
     exit();
 }
 
@@ -33,7 +34,8 @@ if ($result_cli && mysqli_num_rows($result_cli) > 0) {
         
         if ($cliente['email_verificado'] == 0) {
             $_SESSION['email_nao_validado'] = true; 
-            header('Location: /index.php'); // USAR / NO INÍCIO
+            session_write_close(); // FORÇA A GRAVAÇÃO
+            header('Location: /index.php'); 
             exit();
         }
         
@@ -43,7 +45,8 @@ if ($result_cli && mysqli_num_rows($result_cli) > 0) {
         $_SESSION['id']            = $cliente['id'];
         $_SESSION['nome']          = $cliente['nome'];
         
-        header('Location: /customer/dashboard.php'); // CAMINHO ABSOLUTO
+        session_write_close(); // FORÇA A GRAVAÇÃO
+        header('Location: /customer/dashboard.php'); 
         exit();
     }
 }
@@ -65,12 +68,16 @@ if ($result_func && mysqli_num_rows($result_func) > 0) {
             $_SESSION['email_admin'] = $email;
             $_SESSION['nome_admin']  = $func['nome'];
             $_SESSION['id_admin']    = $func['id'];
-            header('Location: /adm/dashboard.php'); // CAMINHO ABSOLUTO
+            
+            session_write_close(); // FORÇA A GRAVAÇÃO
+            header('Location: /adm/dashboard.php'); 
         } else {
             $_SESSION['email_worker'] = $email;
             $_SESSION['nome_worker']  = $func['nome'];
             $_SESSION['id_worker']    = $func['id'];
-            header('Location: /worker/dashboard.php'); // CAMINHO ABSOLUTO
+            
+            session_write_close(); // FORÇA A GRAVAÇÃO
+            header('Location: /worker/dashboard.php'); 
         }
         exit();
     }
@@ -80,5 +87,6 @@ if ($result_func && mysqli_num_rows($result_func) > 0) {
 // 3. FALHA NO LOGIN
 // ---------------------------------------------------------
 $_SESSION['nao_autenticado'] = true; 
-header('Location: /index.php'); // USAR / NO INÍCIO
+session_write_close(); // FORÇA A GRAVAÇÃO
+header('Location: /index.php'); 
 exit();

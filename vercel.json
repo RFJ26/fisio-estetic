@@ -11,7 +11,7 @@
     { "src": "/scripts/(.*)", "dest": "/public/scripts/$1" },
     { "src": "/uploads/(.*)", "dest": "/public/uploads/$1" },
     {
-      "src": "/(.*).php",
+      "src": "/(.*)\\.php",
       "dest": "/api/$1.php"
     },
     {

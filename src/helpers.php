@@ -85,4 +85,3 @@ function formatarData($data) {
     //Muda o formato da data
     return date('d/m/Y', strtotime($data));
 }
-?>  

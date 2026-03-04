@@ -1,11 +1,12 @@
 <?php
-session_start();
-
-// Includes
-include __DIR__ . '/../verifica_login.php';
+// 1. Conexão e Sessão
 require_once __DIR__ . '/../../src/conexao.php';
-require_once __DIR__ . '/../../src/send_email.php';
 
+// 2. Segurança (Verifica se está logado)
+require_once __DIR__ . '/../verifica_login.php';
+
+// 3. Outros auxiliares
+require_once __DIR__ . '/../../src/send_email.php';
 // ============================================================================
 // PROCESSAR AÇÕES DOS BOTÕES (Confirmar / Cancelar)
 // ============================================================================

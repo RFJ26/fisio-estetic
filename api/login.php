@@ -1,5 +1,4 @@
 <?php
-// Primeiro carregamos a ligação ($conn)
 require_once __DIR__ . '/../src/conexao.php'; 
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -7,41 +6,38 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-// AGORA sim, usamos o $conn que foi criado no ficheiro acima
 $email = mysqli_real_escape_string($conn, trim($_POST['email'] ?? ''));
 $password = $_POST['password'] ?? '';
 $password_md5 = md5($password);
 
-// 1. LOGIN ADMIN/FUNCIONÁRIO
+// 1. Tentar Funcionário/ADM
 $query_func = "SELECT id, nome, palavra_passe, adm FROM funcionario WHERE email = '$email' LIMIT 1";
-$result_func = mysqli_query($conn, $query_func);
+$res_func = mysqli_query($conn, $query_func);
 
-if ($result_func && mysqli_num_rows($result_func) > 0) {
-    $func = mysqli_fetch_assoc($result_func);
+if ($res_func && mysqli_num_rows($res_func) > 0) {
+    $user = mysqli_fetch_assoc($res_func);
+    if ($password_md5 === $user['palavra_passe']) {
+        $_SESSION['id']   = $user['id'];
+        $_SESSION['nome'] = $user['nome'];
 
-    if ($password_md5 === $func['palavra_passe']) {
-        $_SESSION['nome'] = $func['nome'];
-        $_SESSION['id']   = $func['id'];
-
-        if ($func['adm'] == 1) {
-            $_SESSION['id_admin'] = $func['id'];
-            $redirect = '/adm/dashboard.php';
+        if ($user['adm'] == 1) {
+            $_SESSION['id_admin'] = $user['id'];
+            $url = '/adm/dashboard.php';
         } else {
-            $_SESSION['id_worker'] = $func['id'];
-            $redirect = '/worker/dashboard.php';
+            $_SESSION['id_worker'] = $user['id'];
+            $url = '/worker/dashboard.php';
         }
-        
-        session_write_close(); // GRAVA A SESSÃO ANTES DE SAIR
-        header("Location: $redirect");
+        session_write_close(); // GRAVA ANTES DE REDIRECIONAR
+        header("Location: $url");
         exit();
     }
 }
 
-// 2. LOGIN CLIENTE (Opcional, se tiveres esta tabela)
+// 2. Tentar Cliente
 $query_cli = "SELECT id, nome, palavra_passe FROM cliente WHERE email = '$email' LIMIT 1";
-$result_cli = mysqli_query($conn, $query_cli);
-if ($result_cli && mysqli_num_rows($result_cli) > 0) {
-    $cli = mysqli_fetch_assoc($result_cli);
+$res_cli = mysqli_query($conn, $query_cli);
+if ($res_cli && mysqli_num_rows($res_cli) > 0) {
+    $cli = mysqli_fetch_assoc($res_cli);
     if ($password_md5 === $cli['palavra_passe']) {
         $_SESSION['id_cliente'] = $cli['id'];
         $_SESSION['nome'] = $cli['nome'];
@@ -51,7 +47,7 @@ if ($result_cli && mysqli_num_rows($result_cli) > 0) {
     }
 }
 
-// 3. FALHA
+// 3. Falha
 $_SESSION['nao_autenticado'] = true;
 session_write_close();
 header('Location: /');

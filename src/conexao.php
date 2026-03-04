@@ -1,17 +1,24 @@
 <?php
+// Tenta ler as variáveis de ambiente da Vercel
+$host = getenv('DB_HOST');
+$user = getenv('DB_USER');
+$pass = getenv('DB_PASSWORD');
+$db   = getenv('DB_NAME');
+$port = getenv('DB_PORT') ?: '11494'; // Porta padrão do Aiven se não houver variável
 
-$env = parse_ini_file(__DIR__ . '/../aiven.env');
+try {
+    // Usando mysqli conforme o seu erro indicou
+    $conn = new mysqli($host, $user, $pass, $db, $port);
 
-define('DB_HOST', $env['DB_HOST']);
-define('DB_USER', $env['DB_USER']);
-define('DB_PORT', $env['DB_PORT']);
-define('DB_PASS', $env['DB_PASS']);
-define('DB_NAME', $env['DB_NAME']);
+    if ($conn->connect_error) {
+        throw new Exception("Falha na ligação: " . $conn->connect_error);
+    }
+    
+    // Define o charset para evitar erros de acentuação
+    $conn->set_charset("utf8mb4");
 
-$conn = new mysqli(
-    DB_HOST,
-    DB_USER,
-    DB_PASS,
-    DB_NAME,
-    DB_PORT
-) or die("Erro na conexão à base de dados");
+} catch (Exception $e) {
+    // Em produção, é melhor logar o erro do que mostrar ao utilizador
+    error_log($e->getMessage());
+    die("Erro interno de ligação ao banco de dados.");
+}

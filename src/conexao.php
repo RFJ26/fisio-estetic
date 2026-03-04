@@ -4,9 +4,9 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 $host = getenv('DB_HOST');
 $user = getenv('DB_USER');
-$pass = getenv('DB_PASSWORD');
+$pass = getenv('DB_PASS');
 $db   = getenv('DB_NAME');
-$port = getenv('DB_PORT') ?: '11494';
+$port = getenv('DB_PORT');
 
 try {
     // Tenta a ligação

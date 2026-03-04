@@ -4,12 +4,12 @@ session_start();
 
 require_once __DIR__ . '/../../src/conexao.php';
 include_once __DIR__ . '/../../src/helpers.php';
-if (!isset($_COOKIE['id])) {
+if (!isset($_COOKIE['id'])) {
     header("Location: ../index.php"); 
     exit();
 }
 
-$id_cliente = $_COOKIE['id];
+$id_cliente = $_COOKIE['id'];
 $nome_cliente = $_COOKIE['nome'];
 $primeiro_nome = explode(" ", $nome_cliente)[0];
 

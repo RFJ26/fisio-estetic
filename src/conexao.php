@@ -9,7 +9,7 @@ if (session_status() === PHP_SESSION_NONE) {
 // Credenciais Aiven lidas da Vercel
 $host = getenv('DB_HOST');
 $user = getenv('DB_USER');
-$pass = getenv('DB_PASSWORD');
+$pass = getenv('DB_PASS');
 $db   = getenv('DB_NAME');
 $port = getenv('DB_PORT') ?: 11494;
 

@@ -3,7 +3,7 @@ session_start();
 
 include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
-require '../../src/helpers.php'; // Necessário para o formatarData e converterSlotParaHora
+require_once __DIR__ . '/../../src/helpers.php'; // Necessário para o formatarData e converterSlotParaHora
 
 $categoria = null;
 $result_servicos = null;

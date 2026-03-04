@@ -3,8 +3,7 @@ session_start();
 
 
 require_once __DIR__ . '/../../src/conexao.php';
-include('../../src/helpers.php'); 
-
+include_once __DIR__ . '/../../src/helpers.php';
 if (!isset($_SESSION['id_cliente'])) {
     header("Location: ../index.php"); 
     exit();

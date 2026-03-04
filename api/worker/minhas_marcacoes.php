@@ -3,7 +3,7 @@ session_start();
 
 include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
-require '../../src/helpers.php';
+require_once __DIR__ . '/../../src/helpers.php';
 require_once '../../src/send_email.php';
 
 $id_funcionario = $_SESSION['id_funcionario'] ?? $_SESSION['id'] ?? 0;

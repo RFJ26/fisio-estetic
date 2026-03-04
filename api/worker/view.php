@@ -3,7 +3,7 @@ session_start();
 
 include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
-require '../../src/helpers.php'; // Essencial para as funções de data e hora
+require_once __DIR__ . '/../../src/helpers.php'; // Essencial para as funções de data e hora
 
 $utilizador = null;
 $result_marcacoes = null;

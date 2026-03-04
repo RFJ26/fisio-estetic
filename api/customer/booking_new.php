@@ -4,7 +4,7 @@ session_start();
 date_default_timezone_set('Europe/Lisbon');
 
 require_once __DIR__ . '/../../src/conexao.php';
-require '../../src/helpers.php';
+require_once __DIR__ . '/../../src/helpers.php';
 require_once __DIR__ . '/../../src/send_email.php';
 
 // ============================================================================

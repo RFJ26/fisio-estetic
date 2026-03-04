@@ -1,5 +1,10 @@
 <?php
-session_start();
+// 1. Configuração de sessão compatível com Vercel
+if (session_status() === PHP_SESSION_NONE) {
+    ini_set('session.cookie_samesite', 'Lax');
+    ini_set('session.cookie_secure', '1');
+    session_start();
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-pt">
@@ -8,7 +13,6 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Entrar - Fisioestetic</title>
     <link rel="stylesheet" href="css/mouse-fix.css">
-
     <link rel="stylesheet" href="css/login.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
@@ -27,7 +31,6 @@ session_start();
         <p class="subtitle">Faça login para gerir as suas marcações.</p>
 
         <?php
-        // --- NOVO: AVISO DE EMAIL NÃO VALIDADO ---
         if (isset($_SESSION['email_nao_validado'])):
         ?>
             <div class="alert-error" style="background-color: #fff3cd; color: #856404; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9em; border: 1px solid #ffeeba;">
@@ -37,7 +40,6 @@ session_start();
         <?php
             unset($_SESSION['email_nao_validado']);
             
-        // --- ANTIGO: AVISO DE LOGIN INCORRETO ---
         elseif (isset($_SESSION['nao_autenticado'])):
         ?>
             <div class="alert-error" style="background-color: #fee2e2; color: #dc2626; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9em;">
@@ -49,7 +51,7 @@ session_start();
         endif;
         ?>
 
-        <form action="login.php" method="POST">
+        <form action="/login.php" method="POST">
             
             <div class="input-group">
                 <label for="email">Email</label>
@@ -68,7 +70,7 @@ session_start();
             </div>
 
             <div style="text-align: right; margin-bottom: 25px;">
-                <a href="recuperar_passe.php" style="font-size: 0.85rem; color: #275a29; text-decoration: none; font-weight: 500;">
+                <a href="/recuperar_passe.php" style="font-size: 0.85rem; color: #275a29; text-decoration: none; font-weight: 500;">
                     Esqueceu-se da palavra-passe?
                 </a>
             </div>
@@ -77,7 +79,7 @@ session_start();
         </form>
 
         <div class="register-link">
-            <p>Ainda não tem conta? <a href="register.php">Registar agora</a></p>
+            <p>Ainda não tem conta? <a href="/register.php">Registar agora</a></p>
         </div>
 
     </div>

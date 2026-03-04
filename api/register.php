@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/../src/conexao.php'; 
-include('../src/send_email.php'); // INCLUI O FICHEIRO DE EMAILS
+require_once __DIR__ . '/../src/send_email.php'; // INCLUI O FICHEIRO DE EMAILS
 
 if (isset($_POST['register'])) {
 

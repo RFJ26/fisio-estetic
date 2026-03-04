@@ -15,10 +15,16 @@
     { "src": "/login.php", "dest": "/api/login.php" },
     { "src": "/register.php", "dest": "/api/register.php" },
     { "src": "/recuperar_passe.php", "dest": "/api/recuperar_passe.php" },
+    { "src": "/logout.php", "dest": "/api/logout.php" },
+    { "src": "/validar_email.php", "dest": "/api/validar_email.php" },
+    { "src": "/verificar.php", "dest": "/api/verificar.php" },
     
     { "src": "/adm/(.*)", "dest": "/api/adm/$1" },
     { "src": "/customer/(.*)", "dest": "/api/customer/$1" },
     { "src": "/worker/(.*)", "dest": "/api/worker/$1" },
+    { "src": "/service/(.*)", "dest": "/api/service/$1" },
+    { "src": "/service_category/(.*)", "dest": "/api/service_category/$1" },
+    { "src": "/booking/(.*)", "dest": "/api/booking/$1" },
 
     { "src": "/", "dest": "/api/index.php" },
     { "src": "/index.php", "dest": "/api/index.php" }

@@ -1,19 +1,18 @@
 <?php
-session_start();
-require_once __DIR__ . '/../src/conexao.php'; // Confirma se o caminho para a tua base de dados está correto
+// O conexao.php já deve ter o session_start() como configurámos antes
+require_once __DIR__ . '/../src/conexao.php'; 
 
 // ==========================================================
 // LIMPEZA DE SEGURANÇA E VALIDAÇÃO INICIAL
 // ==========================================================
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: index.php');
+    header('Location: /index.php'); // USAR / NO INÍCIO
     exit();
 }
 
-// Verifica se os campos estão vazios
 if (empty($_POST['email']) || empty($_POST['password'])) {
     $_SESSION['nao_autenticado'] = true;
-    header('Location: index.php');
+    header('Location: /index.php'); // USAR / NO INÍCIO
     exit();
 }
 
@@ -30,27 +29,21 @@ $result_cli = mysqli_query($conn, $query_cli);
 if ($result_cli && mysqli_num_rows($result_cli) > 0) {
     $cliente = mysqli_fetch_assoc($result_cli);
 
-    // Verifica se a password coincide
     if ($password_md5 === $cliente['palavra_passe']) {
         
-        // --- NOVA BARREIRA: VERIFICAÇÃO DE EMAIL ---
         if ($cliente['email_verificado'] == 0) {
-            $_SESSION['email_nao_validado'] = true; // Aciona o aviso amarelo no index.php
-            header('Location: index.php');
+            $_SESSION['email_nao_validado'] = true; 
+            header('Location: /index.php'); // USAR / NO INÍCIO
             exit();
         }
         
-        // Se estiver validado, cria as variáveis de sessão para o cliente
         $_SESSION['email_cliente'] = $email;
         $_SESSION['nome_cliente']  = $cliente['nome'];
         $_SESSION['id_cliente']    = $cliente['id']; 
-        
-        // Variáveis genéricas
         $_SESSION['id']            = $cliente['id'];
         $_SESSION['nome']          = $cliente['nome'];
         
-        // Redireciona para a área do cliente
-        header('Location: customer/dashboard.php');
+        header('Location: /customer/dashboard.php'); // CAMINHO ABSOLUTO
         exit();
     }
 }
@@ -64,33 +57,28 @@ $result_func = mysqli_query($conn, $query_func);
 if ($result_func && mysqli_num_rows($result_func) > 0) {
     $func = mysqli_fetch_assoc($result_func);
 
-    // Verifica se a password coincide
     if ($password_md5 === $func['palavra_passe']) {
+        $_SESSION['id']   = $func['id'];
+        $_SESSION['nome'] = $func['nome'];
         
-        // Variáveis genéricas
-        $_SESSION['id']            = $func['id'];
-        $_SESSION['nome']          = $func['nome'];
-        
-        // Verifica se é Administrador (adm = 1) ou Funcionário normal (adm = 0)
         if ($func['adm'] == 1) {
             $_SESSION['email_admin'] = $email;
             $_SESSION['nome_admin']  = $func['nome'];
             $_SESSION['id_admin']    = $func['id'];
-            header('Location: adm/dashboard.php');
+            header('Location: /adm/dashboard.php'); // CAMINHO ABSOLUTO
         } else {
             $_SESSION['email_worker'] = $email;
             $_SESSION['nome_worker']  = $func['nome'];
             $_SESSION['id_worker']    = $func['id'];
-            header('Location: worker/dashboard.php');
+            header('Location: /worker/dashboard.php'); // CAMINHO ABSOLUTO
         }
         exit();
     }
 }
 
 // ---------------------------------------------------------
-// 3. FALHA NO LOGIN (Password errada ou email não existe)
+// 3. FALHA NO LOGIN
 // ---------------------------------------------------------
-$_SESSION['nao_autenticado'] = true; // Aciona o aviso vermelho no index.php
-header('Location: index.php');
+$_SESSION['nao_autenticado'] = true; 
+header('Location: /index.php'); // USAR / NO INÍCIO
 exit();
-?>

@@ -2,12 +2,12 @@
 session_start();
 require_once __DIR__ . '/../../src/conexao.php';
 
-if (!isset($_COOKIE['id_cliente'])) {
+if (!isset($_COOKIE['id])) {
     header("Location: ../index.php"); 
     exit();
 }
 
-$id_cliente = $_COOKIE['id_cliente'];
+$id_cliente = $_COOKIE['id];
 
 // Dados para o topo (Igual ao Dashboard)
 $nome_cliente = $_COOKIE['nome'];

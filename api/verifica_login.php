@@ -1,10 +1,8 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// Verifica se existe alguma sessão ativa
-if (!isset($_SESSION['id']) && !isset($_SESSION['id_cliente']) && !isset($_SESSION['id_admin'])) {
+// Em vez de verificar as $_SESSION, verificamos os $_COOKIE
+if (!isset($_COOKIE['user_id'])) {
+    // Se o cookie não existir, expulsa para o login
     header('Location: /index.php'); 
     exit();
 }
+?>

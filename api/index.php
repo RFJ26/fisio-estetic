@@ -29,8 +29,13 @@ if (session_status() === PHP_SESSION_NONE) {
 
         <h3>Bem-vindo</h3>
         <p class="subtitle">Faça login para gerir as suas marcações.</p>
-
-        <?php
+    <?php if (isset($_GET['erro']) && $_GET['erro'] === 'auth'): ?>
+            <div class="alert-error" style="background-color: #fee2e2; color: #dc2626; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9em;">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span>Email ou palavra-passe incorretos.</span>
+            </div>
+        <?php endif; ?>
+       <!--  <?php
         if (isset($_SESSION['email_nao_validado'])):
         ?>
             <div class="alert-error" style="background-color: #fff3cd; color: #856404; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9em; border: 1px solid #ffeeba;">
@@ -49,7 +54,7 @@ if (session_status() === PHP_SESSION_NONE) {
         <?php
             unset($_SESSION['nao_autenticado']);
         endif;
-        ?>
+        ?> -->
 
         <form action="/login.php" method="POST">
             

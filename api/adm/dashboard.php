@@ -96,13 +96,13 @@ $marcacoes = mysqli_query($conn, $marcacoes_query);
         </div>
 
         <ul class="nav flex-column mt-4">
-            <li class="nav-item"><a class="nav-link active" href="../adm/dashboard.php"><i class="bi bi-grid-1x2-fill me-3"></i>Início</a></li>
-            <li class="nav-item"><a class="nav-link" href="../worker/list.php"><i class="bi bi-person-badge me-3"></i>Funcionários</a></li>
-            <li class="nav-item"><a class="nav-link" href="../customer/list.php"><i class="bi bi-people me-3"></i>Clientes</a></li>
-            <li class="nav-item"><a class="nav-link" href="../service/list.php"><i class="bi bi-scissors me-3"></i>Serviços</a></li>
-            <li class="nav-item"><a class="nav-link" href="../service_category/list.php"><i class="bi bi-tag me-3"></i>Categorias</a></li>
-            <li class="nav-item"><a class="nav-link" href="../booking/list.php"><i class="bi bi-calendar-check me-3"></i>Marcações</a></li>
-            <li class="nav-item mt-auto"><a class="nav-link logout" href="../logout.php"><i class="bi bi-box-arrow-left me-3"></i>Sair</a></li>
+            <li class="nav-item"><a class="nav-link active" href="/adm/dashboard.php"><i class="bi bi-grid-1x2-fill me-3"></i>Início</a></li>
+            <li class="nav-item"><a class="nav-link" href="/worker/list.php"><i class="bi bi-person-badge me-3"></i>Funcionários</a></li>
+            <li class="nav-item"><a class="nav-link" href="/customer/list.php"><i class="bi bi-people me-3"></i>Clientes</a></li>
+            <li class="nav-item"><a class="nav-link" href="/service/list.php"><i class="bi bi-scissors me-3"></i>Serviços</a></li>
+            <li class="nav-item"><a class="nav-link" href="/service_category/list.php"><i class="bi bi-tag me-3"></i>Categorias</a></li>
+            <li class="nav-item"><a class="nav-link" href="/booking/list.php"><i class="bi bi-calendar-check me-3"></i>Marcações</a></li>
+            <li class="nav-item mt-auto"><a class="nav-link logout" href="/logout.php"><i class="bi bi-box-arrow-left me-3"></i>Sair</a></li>
         </ul>
     </nav>
 

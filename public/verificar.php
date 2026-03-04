@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('../src/conexao.php'); // Ajusta o caminho da conexão se for preciso
+require_once __DIR__ . '/../src/conexao.php'; // Ajusta o caminho da conexão se for preciso
 
 if (isset($_GET['token'])) {
     $token = mysqli_real_escape_string($conn, $_GET['token']);

@@ -2,7 +2,7 @@
 session_start();
 
 include('../verifica_login.php');
-require '../../src/conexao.php';
+require_once __DIR__ . '/../../src/conexao.php';
 require '../../src/helpers.php';
 
 $servico = null;

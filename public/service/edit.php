@@ -1,7 +1,7 @@
 <?php
 session_start();
 include('../verifica_login.php');
-require '../../src/conexao.php';
+require_once __DIR__ . '/../../src/conexao.php';
 
 // Receber o ID (via GET ao abrir, ou POST ao guardar)
 $id = $_GET['id'] ?? $_POST['id'] ?? null;

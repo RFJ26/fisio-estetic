@@ -3,7 +3,7 @@ session_start();
 
 
 include('../verifica_login.php');
-require '../../src/conexao.php';
+require_once __DIR__ . '/../../src/conexao.php';
 
 // 1. Validar ID do Funcionário
 if (!isset($_GET['id']) && !isset($_POST['id_funcionario'])) {

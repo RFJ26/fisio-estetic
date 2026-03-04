@@ -3,7 +3,7 @@ session_start();
 
 // Includes
 include('../verifica_login.php');
-include('../../src/conexao.php');
+require_once __DIR__ . '/../../src/conexao.php';
 require_once '../../src/send_email.php'; 
 
 // ============================================================================

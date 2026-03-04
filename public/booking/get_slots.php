@@ -1,5 +1,5 @@
 <?php
-require '../../src/conexao.php';
+require_once __DIR__ . '/../../src/conexao.php';
 
 $data = isset($_GET['data']) ? mysqli_real_escape_string($conn, $_GET['data']) : '';
 $id_relacao = isset($_GET['id_relacao']) ? intval($_GET['id_relacao']) : 0;

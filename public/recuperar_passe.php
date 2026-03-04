@@ -1,6 +1,6 @@
 <?php
 session_start();
-require '../src/conexao.php';
+require_once __DIR__ . '/../src/conexao.php';
 require_once '../src/send_email.php';
 
 $msg = "";

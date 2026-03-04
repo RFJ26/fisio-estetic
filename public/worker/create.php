@@ -4,7 +4,7 @@ session_start();
 
 
 include('../verifica_login.php');
-include('../../src/conexao.php');
+require_once __DIR__ . '/../../src/conexao.php';
 
 $erros = [];
 

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('../../src/conexao.php');
+require_once __DIR__ . '/../../src/conexao.php';
 
 if (!isset($_SESSION['id_cliente'])) {
     header("Location: ../index.php"); 

@@ -1,7 +1,7 @@
 <?php
 session_start();
 include('../verifica_login.php');
-require '../../src/conexao.php';
+require_once __DIR__ . '/../../src/conexao.php';
 
 // Verifica se temos o ID do serviço
 if (!isset($_GET['id_servico']) || empty($_GET['id_servico'])) {

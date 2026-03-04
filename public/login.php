@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('../src/conexao.php'); // Confirma se o caminho para a tua base de dados está correto
+require_once __DIR__ . '/../src/conexao.php'; // Confirma se o caminho para a tua base de dados está correto
 
 // ==========================================================
 // LIMPEZA DE SEGURANÇA E VALIDAÇÃO INICIAL

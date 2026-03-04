@@ -3,7 +3,7 @@ session_start();
 // --- FORÇAR FUSO HORÁRIO DE PORTUGAL ---
 date_default_timezone_set('Europe/Lisbon');
 
-require '../../src/conexao.php';
+require_once __DIR__ . '/../../src/conexao.php';
 require '../../src/helpers.php';
 require_once '../../src/send_email.php'; 
 

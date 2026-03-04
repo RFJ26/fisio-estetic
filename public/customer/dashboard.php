@@ -2,7 +2,7 @@
 session_start();
 
 
-include('../../src/conexao.php');
+require_once __DIR__ . '/../../src/conexao.php';
 include('../../src/helpers.php'); 
 
 if (!isset($_SESSION['id_cliente'])) {

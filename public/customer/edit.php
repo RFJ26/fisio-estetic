@@ -4,7 +4,7 @@ session_start();
 
 
 include('../verifica_login.php');
-require '../../src/conexao.php';
+require_once __DIR__ . '/../../src/conexao.php';
 
 $id = $_GET['id'] ?? $_POST['id'] ?? null;
 $erros = [];

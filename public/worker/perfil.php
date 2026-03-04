@@ -7,7 +7,7 @@ if (!isset($_SESSION['id'])) {
 }
 
 include('../verifica_login.php');
-require '../../src/conexao.php';
+require_once __DIR__ . '/../../src/conexao.php';
 require '../../src/helpers.php';
 
 $id_funcionario = $_SESSION['id'];

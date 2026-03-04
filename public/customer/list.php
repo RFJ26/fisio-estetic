@@ -3,7 +3,7 @@ session_start();
 
 
 include('../verifica_login.php');
-require '../../src/conexao.php';
+require_once __DIR__ . '/../../src/conexao.php';
 
 // ============================================================================
 // LÓGICA DE APAGAR CLIENTE

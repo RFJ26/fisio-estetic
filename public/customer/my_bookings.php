@@ -5,7 +5,7 @@
  */
 
 session_start();
-include('../../src/conexao.php');
+require_once __DIR__ . '/../../src/conexao.php';
 include('../../src/helpers.php'); 
 require_once '../../src/send_email.php'; // Importa a lógica de email
 

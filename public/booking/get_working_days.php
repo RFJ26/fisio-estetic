@@ -1,5 +1,5 @@
 <?php
-require '../../src/conexao.php';
+require_once __DIR__ . '/../../src/conexao.php';
 header('Content-Type: application/json');
 
 if (!isset($_GET['id_relacao'])) {

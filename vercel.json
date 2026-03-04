@@ -6,17 +6,8 @@
   },
   "routes": [
     { "src": "/css/(.*)", "dest": "/public/css/$1" },
-    { "src": "/css 3/(.*)", "dest": "/public/css 3/$1" },
     { "src": "/images/(.*)", "dest": "/public/images/$1" },
-    { "src": "/scripts/(.*)", "dest": "/public/scripts/$1" },
-    { "src": "/uploads/(.*)", "dest": "/public/uploads/$1" },
-    {
-      "src": "/(.*)\\.php",
-      "dest": "/api/$1.php"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/api/index.php"
-    }
+    { "src": "/(.*)\\.php", "dest": "/api/$1.php" },
+    { "src": "/(.*)", "dest": "/api/index.php" }
   ]
 }

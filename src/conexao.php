@@ -1,9 +1,8 @@
 <?php
-// 1. Configurações de Sessão para Vercel (Serverless)
-ini_set('session.cookie_samesite', 'Lax');
-ini_set('session.cookie_secure', '1');
-
 if (session_status() === PHP_SESSION_NONE) {
+    // As configurações de cookies devem vir sempre ANTES do session_start
+    ini_set('session.cookie_samesite', 'Lax');
+    ini_set('session.cookie_secure', '1');
     session_start();
 }
 

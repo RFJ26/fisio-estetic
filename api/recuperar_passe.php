@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/../src/conexao.php';
-require_once '../src/send_email.php';
+require_once __DIR__ . '/../src/send_email.php';
 
 $msg = "";
 $msg_tipo = "";

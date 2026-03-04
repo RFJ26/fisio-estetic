@@ -1,15 +1,14 @@
 <?php
-// Configurações de Sessão para Vercel (HTTPS obrigatório)
 if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.cookie_samesite', 'Lax');
     ini_set('session.cookie_secure', '1');
     session_start();
 }
 
-// Credenciais Aiven lidas da Vercel
+// Credenciais atualizadas com DB_PASS
 $host = getenv('DB_HOST');
 $user = getenv('DB_USER');
-$pass = getenv('DB_PASS');
+$pass = getenv('DB_PASS'); // Alterado de DB_PASSWORD para DB_PASS
 $db   = getenv('DB_NAME');
 $port = getenv('DB_PORT') ?: 11494;
 
@@ -20,5 +19,5 @@ try {
     $conn->set_charset("utf8mb4");
 } catch (Exception $e) {
     error_log("Erro de Conexão: " . $e->getMessage());
-    die("Erro técnico na base de dados.");
+    die("Erro técnico na base de dados. Verifique as variáveis de ambiente.");
 }

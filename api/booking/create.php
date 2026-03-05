@@ -5,7 +5,7 @@ date_default_timezone_set('Europe/Lisbon');
 include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
 require_once __DIR__ . '/../../src/helpers.php'; 
-require_once '../../src/send_email.php';
+require_once __DIR__ . '/../../src/send_email.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['finalizar'])) {
     $id_c = intval($_POST['id_cliente']);

@@ -7,7 +7,7 @@ include __DIR__ . '/../verifica_login.php';
 // --- CONFIGURAÇÃO DE SESSÃO E ACESSO ---
 require_once '../../src/conexao.php';
 require_once '../../src/helpers.php';      
-require_once '../../src/send_email.php';
+require_once __DIR__ . '/../../src/send_email.php';
 
 mysqli_set_charset($conn, "utf8mb4");
 

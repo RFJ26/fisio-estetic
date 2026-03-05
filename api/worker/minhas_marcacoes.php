@@ -4,7 +4,7 @@ session_start();
 include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
 require_once __DIR__ . '/../../src/helpers.php';
-require_once '../../src/send_email.php';
+require_once __DIR__ . '/../../src/send_email.php';
 
 $id_funcionario = $_COOKIE['id_funcionario'] ?? $_COOKIE['id'] ?? 0;
 $nome_funcionario = $_COOKIE['nome'] ?? 'Colaborador';

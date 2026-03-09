@@ -42,7 +42,7 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
 // ============================================================================
 // CONSULTAS PARA AS MÉTRICAS
 // ============================================================================
-$total_marcacoes = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM marcacao"))['total'];
+$total_marcacoes = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM marcacao WHERE estado = 'ativa'"))['total'];
 $total_categorias = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM categoria"))['total'];
 $total_clientes = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM cliente"))['total'];
 
@@ -106,124 +106,111 @@ $marcacoes = mysqli_query($conn, $marcacoes_query);
         </ul>
     </nav>
 
-    <div class="content">
-        <div class="container-fluid">
-            
-            <header class="header-section d-flex justify-content-between align-items-center mb-5">
-                <div>
-                    <h1>Olá, <span class="text-gold"><?= htmlspecialchars($_COOKIE['nome']) ?></span></h1>
-                    <p class="text-muted mb-0">Bem-vindo ao painel de gestão.</p>
-                </div>
-                <div class="d-none d-md-block text-end">
-                    <span class="text-muted small"><?= date('d/m/Y') ?></span>
-                </div>
-            </header>
+   <div class="content">
+    <div class="container-fluid">
+        
+        <header class="header-section d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h1>Olá, <span class="text-gold"><?= htmlspecialchars($_COOKIE['nome']) ?></span></h1>
+                <p class="text-muted mb-0">Bem-vindo ao painel de gestão.</p>
+            </div>
+            <div class="d-none d-md-block text-end">
+                <span class="text-muted small"><?= date('d/m/Y') ?></span>
+            </div>
+        </header>
 
-            <?php if (isset($_GET['msg'])): ?>
-                <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
-                    <i class="bi bi-check-circle-fill me-2"></i> <?= htmlspecialchars($_GET['msg']) ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            <?php endif; ?>
-
-            <section class="metrics-section mb-5">
-                <div class="row g-4">
-                    <div class="col-md-4">
+        <section class="metrics-section mb-5">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <a href="../booking/list.php" class="metric-link">
                         <div class="metric-card">
                             <div class="d-flex justify-content-between align-items-center h-100">
                                 <div>
-                                    <span class="card-label">Total Marcações</span>
+                                    <span class="card-label">Marcações por Realizar</span>
                                     <div class="card-value"><?= $total_marcacoes ?></div>
                                 </div>
-                                <div class="icon-box">
-                                    <i class="bi bi-calendar-event"></i>
-                                </div>
+                                <div class="icon-box"><i class="bi bi-calendar-event"></i></div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="col-md-4">
+                    </a>
+                </div>
+                
+                <div class="col-md-4">
+                    <a href="../service_category/list.php" class="metric-link">
                         <div class="metric-card">
                             <div class="d-flex justify-content-between align-items-center h-100">
                                 <div>
                                     <span class="card-label">Categorias</span>
                                     <div class="card-value"><?= $total_categorias ?></div>
                                 </div>
-                                <div class="icon-box">
-                                    <i class="bi bi-tag"></i>
-                                </div>
+                                <div class="icon-box"><i class="bi bi-tag"></i></div>
                             </div>
                         </div>
-                    </div>
+                    </a>
+                </div>
 
-                    <div class="col-md-4">
+                <div class="col-md-4">
+                    <a href="../customer/list.php" class="metric-link">
                         <div class="metric-card">
                             <div class="d-flex justify-content-between align-items-center h-100">
                                 <div>
                                     <span class="card-label">Clientes</span>
                                     <div class="card-value"><?= $total_clientes ?></div>
                                 </div>
-                                <div class="icon-box">
-                                    <i class="bi bi-people"></i>
-                                </div>
+                                <div class="icon-box"><i class="bi bi-people"></i></div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <section class="table-section">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2 class="section-title">Marcações Pendentes</h2>
-                    <a href="../booking/list.php" class="btn-link-gold">Ver Todas <i class="bi bi-arrow-right ms-1"></i></a>
-                </div>
-                
-                <div class="custom-table-container">
-                    <div class="table-responsive">
-                        <table class="table custom-table align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Cliente</th>
-                                    <th>Funcionário</th>
-                                    <th>Serviço</th>
-                                    <th>Data</th>
-                                    <th>Estado</th>
-                                    <th class="text-center">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                if(mysqli_num_rows($marcacoes) > 0){
-                                    while($row = mysqli_fetch_assoc($marcacoes)){
-                                        $data_formatada = date('d/m/Y', strtotime($row['data']));
-                                        echo "<tr>
-                                            <td class='fw-bold text-dark'>".htmlspecialchars($row['cliente'])."</td>
-                                            <td>".htmlspecialchars($row['funcionario'])."</td>
-                                            <td>".htmlspecialchars($row['servico'])."</td>
-                                            <td>{$data_formatada}</td>
-                                            <td><span class='badge-status'>".htmlspecialchars($row['estado'])."</span></td>
-                                            <td class='text-center'>
-                                                <a href='dashboard.php?action=confirm&id={$row['id']}' class='btn btn-success btn-sm me-1' title='Confirmar Marcação'>
-                                                    <i class='bi bi-check-lg'></i>
-                                                </a>
-                                                <a href='dashboard.php?action=cancel&id={$row['id']}' class='btn btn-danger btn-sm' title='Cancelar Marcação' onclick='return confirm(\"Tem a certeza que deseja cancelar esta marcação?\")'>
-                                                    <i class='bi bi-x-lg'></i>
-                                                </a>
-                                            </td>
-                                        </tr>";
-                                    }
-                                } else {
-                                    echo "<tr><td colspan='6' class='text-center py-5 text-muted'>Nenhuma marcação pendente.</td></tr>";
+        <section class="table-section">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="section-title">Marcações Pendentes</h2>
+                <a href="../booking/list.php" class="btn-link-gold">Ver Todas <i class="bi bi-arrow-right ms-1"></i></a>
+            </div>
+            
+            <div class="custom-table-container">
+                <div class="table-responsive" style="overflow: visible;"> <table class="table custom-table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Funcionário</th>
+                                <th>Serviço</th>
+                                <th>Data</th>
+                                <th>Estado</th>
+                                <th class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if(mysqli_num_rows($marcacoes) > 0){
+                                while($row = mysqli_fetch_assoc($marcacoes)){
+                                    $data_formatada = date('d/m/Y', strtotime($row['data']));
+                                    echo "<tr>
+                                        <td data-label='Cliente' class='fw-bold text-dark'>".htmlspecialchars($row['cliente'])."</td>
+                                        <td data-label='Funcionário'>".htmlspecialchars($row['funcionario'])."</td>
+                                        <td data-label='Serviço'>".htmlspecialchars($row['servico'])."</td>
+                                        <td data-label='Data'>{$data_formatada}</td>
+                                        <td data-label='Estado'><span class='badge-status'>".htmlspecialchars($row['estado'])."</span></td>
+                                        <td data-label='Ações' class='text-center'>
+                                            <a href='dashboard.php?action=confirm&id={$row['id']}' class='btn btn-success btn-sm me-1'><i class='bi bi-check-lg'></i></a>
+                                            <a href='dashboard.php?action=cancel&id={$row['id']}' class='btn btn-danger btn-sm' onclick='return confirm(\"Cancelar?\")'><i class='bi bi-x-lg'></i></a>
+                                        </td>
+                                    </tr>";
                                 }
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
+                            } else {
+                                echo "<tr><td colspan='6' class='text-center py-5 text-muted'>Nenhuma marcação pendente.</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
                 </div>
-            </section>
-
-        </div> 
+            </div>
+        </section>
     </div> 
+</div> 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>

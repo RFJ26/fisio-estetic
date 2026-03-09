@@ -6,7 +6,7 @@
     --green-accent: #2e7d32;       
     --green-soft: #e8f5e9;         
     --card-shadow: 0 5px 20px rgba(0,0,0,0.05);
-    --sidebar-width: 250px; /* Variável para facilitar ajustes futuros */
+    --sidebar-width: 250px;
 }
 
 * {
@@ -17,34 +17,36 @@
 body {
     background-color: var(--bg-body);
     color: var(--text-primary);
-    overflow-x: hidden; /* Evita scroll horizontal acidental */
+    overflow-x: hidden;
 }
 
-/* --- LAYOUT PRINCIPAL (CORRIGIDO) --- */
-
-/* 1. O Wrapper que empurra o conteúdo */
+/* --- LAYOUT PRINCIPAL --- */
 .content {
-    margin-left: var(--sidebar-width); /* Empurra para a direita */
-    width: auto; /* Ocupa o espaço restante naturalmente */
+    margin-left: var(--sidebar-width);
+    width: auto;
     min-height: 100vh;
     transition: margin-left 0.3s ease;
 }
 
-/* 2. O Container que centraliza e limita a largura */
 .content .container-fluid {
     width: 100%;
-    max-width: 1600px; /* Limite para monitores gigantes */
-    margin: 0 auto;    /* Centraliza o conteúdo no espaço disponível */
-    padding: 40px;     /* Espaçamento interno */
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 40px;
 }
 
-/* Cabeçalho */
-.header-section h1 {
-    color: #1a3c1b;
-    font-weight: 700;
+/* --- CORREÇÃO DE LINKS (REMOVER AZUL) --- */
+.metric-link {
+    text-decoration: none !important;
+    color: inherit !important;
+    display: block;
+    height: 100%;
 }
 
-.text-gold { color: var(--green-accent) !important; }
+.metric-link:hover {
+    text-decoration: none !important;
+    color: inherit !important;
+}
 
 /* --- CARTÕES DE MÉTRICAS --- */
 .metric-card {
@@ -53,13 +55,14 @@ body {
     padding: 25px;
     box-shadow: var(--card-shadow);
     border: 1px solid rgba(0,0,0,0.03);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     height: 100%;
 }
 
-.metric-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(46, 125, 50, 0.15);
+.metric-link:hover .metric-card {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(46, 125, 50, 0.15);
+    border-color: var(--green-accent);
 }
 
 .card-label {
@@ -79,7 +82,6 @@ body {
     line-height: 1;
 }
 
-/* Ícones dos Cards */
 .icon-box {
     width: 60px;
     height: 60px;
@@ -90,6 +92,12 @@ body {
     align-items: center;
     justify-content: center;
     font-size: 1.8rem;
+    transition: all 0.3s ease;
+}
+
+.metric-link:hover .icon-box {
+    background-color: var(--green-accent);
+    color: white;
 }
 
 /* --- TABELAS --- */
@@ -100,26 +108,6 @@ body {
     box-shadow: var(--card-shadow);
 }
 
-.section-title {
-    color: #1a3c1b;
-    font-weight: 700;
-    font-size: 1.5rem;
-}
-
-.btn-link-gold {
-    color: var(--green-accent);
-    font-weight: 600;
-    text-decoration: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    transition: all 0.2s;
-}
-.btn-link-gold:hover { 
-    background-color: var(--green-soft);
-    color: #1b5e20; 
-}
-
-/* Tabela Estilo */
 .custom-table thead th {
     border-bottom: 2px solid #e9ecef;
     color: #6c757d;
@@ -138,11 +126,6 @@ body {
     font-size: 0.95rem;
 }
 
-.custom-table tr:hover td {
-    background-color: #fcfdfc;
-}
-
-/* Badge de Estado */
 .badge-status {
     background-color: var(--green-soft);
     color: var(--green-accent);
@@ -151,29 +134,52 @@ body {
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
 
-/* --- RESPONSIVIDADE (Portáteis e Mobile) --- */
-/* Ponto de quebra aumentado para 991px para cobrir tablets e portáteis pequenos */
+/* --- RESPONSIVIDADE E TABELA SEM SCROLL (MOBILE) --- */
 @media (max-width: 991px) {
-    .content {
-        margin-left: 0; /* Remove a margem da sidebar */
+    .content { margin-left: 0; }
+    .content .container-fluid { padding: 20px; padding-top: 80px; }
+    
+    /* Transformação radical da tabela para não ter scroll */
+    .custom-table thead { display: none !important; }
+    
+    .custom-table, .custom-table tbody, .custom-table tr, .custom-table td {
+        display: block !important;
+        width: 100% !important;
     }
     
-    .content .container-fluid {
-        padding: 20px;
-        padding-top: 80px; /* Espaço para o botão toggle */
+    .custom-table tr {
+        margin-bottom: 20px !important;
+        border: 1px solid #ddd !important;
+        border-radius: 12px !important;
+        overflow: hidden;
+        background: #fff;
+    }
+    
+    .custom-table td {
+        text-align: right !important;
+        padding: 12px 15px !important;
+        padding-left: 50% !important;
+        position: relative !important;
+        border-bottom: 1px solid #eee !important;
+    }
+    
+    .custom-table td::before {
+        content: attr(data-label); /* Puxa o texto do PHP */
+        position: absolute;
+        left: 15px;
+        width: 45%;
+        font-weight: 700;
+        text-align: left;
+        color: #7f8c8d;
     }
 
-    /* Ajuste da Sidebar para Mobile */
-    .sidebar {
-        left: -250px; /* Escondida por padrão */
-        transition: left 0.3s ease;
-        z-index: 1050; /* Garante que fica acima do conteúdo quando aberta */
-    }
-
-    .sidebar.active {
-        left: 0; /* Mostra quando ativa */
+    /* Estilo para a última célula (Ações) no mobile */
+    .custom-table td:last-child {
+        text-align: center !important;
+        padding-left: 15px !important;
+        background: #fcfdfc;
+        border-bottom: none;
     }
 }

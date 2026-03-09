@@ -37,11 +37,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Cria os cookies
             setcookie('id', $user_func['id'], $um_ano, '/');
             setcookie('nome', $user_func['nome'], $um_ano, '/');
-            setcookie('role', $user_func['adm'], $um_ano, '/'); // Guarda 'admin' ou 'worker'
+            setcookie('role', $user_func['adm'], $um_ano, '/');
             
-            // Redireciona consoante o cargo
-            if ($user_func['adm'] === 'admin') {
-                header("Location: /adm/dashboard.php"); // Se o teu dashboard de admin tiver outro nome, altera aqui!
+            // Limpa espaços e mete tudo em minúsculas para não haver falhas
+            $cargo = trim(strtolower($user_func['adm']));
+
+            // Redireciona consoante o cargo (aceita 'admin' ou o número 1, caso uses números)
+            if ($cargo === 'admin' || $cargo === '1') {
+                header("Location: /adm/dashboard.php"); 
             } else {
                 header("Location: /worker/dashboard.php");
             }

@@ -42,10 +42,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Limpa espaços e mete tudo em minúsculas para não haver falhas
             $cargo = trim(strtolower($user_func['adm']));
 
-            // Redireciona consoante o cargo (aceita 'admin' ou o número 1, caso uses números)
+            // ... dentro do IF do funcionário ...
             if ($cargo === 'admin' || $cargo === '1') {
-                header("Location: /adm/dashboard.php"); 
+                // Se for admin, mandamos para a página de escolha
+                header("Location: /select_role.php"); 
             } else {
+                // Se for apenas funcionário, vai direto para o painel dele
                 header("Location: /worker/dashboard.php");
             }
             exit();

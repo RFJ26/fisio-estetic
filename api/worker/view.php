@@ -165,7 +165,7 @@ if(isset($_GET['id'])) {
                                         $est = strtolower($marc['estado']);
                                         $badge = 'badge-secondary-soft';
                                         if($est == 'ativa') $badge = 'badge-success-soft';
-                                        if($est == 'por conficmar   ') $badge = 'badge-warning-soft';
+                                        if($est == 'por confirmar') $badge = 'badge-warning-soft';
                                         if($est == 'cancelada') $badge = 'badge-danger-soft';
                                     ?>
                                         <tr>

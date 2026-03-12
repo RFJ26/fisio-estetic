@@ -1,13 +1,13 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['role']) || 
-   ($_SESSION['role'] !== 'admin' && $_SESSION['role'] !== '1')) {
+if (!isset($_COOKIE['role']) || 
+   ($_COOKIE['role'] !== 'admin' && $_COOKIE['role'] !== '1')) {
     header("Location: /index.php");
     exit();
 }
 
-$nome = $_SESSION['nome'] ?? 'Administrador';
+$nome = $_COOKIE['nome'] ?? 'Administrador';
 
 ?>
 <!DOCTYPE html>

@@ -27,6 +27,7 @@
     { "src": "/booking/(.*)", "dest": "/api/booking/$1" },
 
     { "src": "/", "dest": "/api/index.php" },
-    { "src": "/index.php", "dest": "/api/index.php" }
+    { "src": "/index.php", "dest": "/api/index.php" },
+    { "src": "/select_role.php", "dest": "/api/select_role.php" }
   ]
 }

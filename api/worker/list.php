@@ -95,6 +95,9 @@ $query_string_filtros = http_build_query($params);
             <li class="nav-item"><a class="nav-link" href="../service/list.php"><i class="bi bi-scissors me-3"></i>Serviços</a></li>
             <li class="nav-item"><a class="nav-link" href="../service_category/list.php"><i class="bi bi-tag me-3"></i>Categorias</a></li>
             <li class="nav-item"><a class="nav-link" href="../booking/list.php"><i class="bi bi-calendar-check me-3"></i>Marcações</a></li>
+            <?php if(isset($_COOKIE['role']) && ($_COOKIE['role'] === 'admin' || $_COOKIE['role'] === '1')): ?>
+                <li class="nav-item mt-3"><a class="nav-link" href="/select_role.php" style="color: #ef6c00;"><i class="bi bi-arrow-left-right me-3"></i>Mudar Perfil</a></li>
+            <?php endif; ?>
             <li class="nav-item mt-auto"><a class="nav-link logout" href="../logout.php"><i class="bi bi-box-arrow-left me-3"></i>Sair</a></li>
         </ul>
     </nav>
@@ -102,23 +105,27 @@ $query_string_filtros = http_build_query($params);
     <div class="content">
         <div class="container-fluid">
             
-            <div class="header-actions">
+            <div class="header-actions d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h1 class="h3 mb-1 fw-bold text-dark">Equipa</h1>
                     <p class="text-muted mb-0">Gestão de funcionários e permissões.</p>
                 </div>
                 
-                <div class="d-flex gap-3 align-items-center flex-wrap">
-                    <form class="search-box" action="" method="GET" id="form-pesquisa">
-                        <i class="bi bi-search"></i>
-                        <input type="text" id="campo-pesquisa" name="search" autocomplete="off" placeholder="Procurar funcionário..." value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
-                        <input type="hidden" name="pagina" value="1">
-                    </form>
+                <a href="create.php" class="btn-add">
+                    <i class="bi bi-plus-lg"></i> <span class="d-none d-sm-inline">Novo Funcionário</span>
+                </a>
+            </div>
 
-                    <a href="create.php" class="btn-add">
-                        <i class="bi bi-plus-lg"></i> <span class="d-none d-sm-inline">Novo Funcionário</span>
-                    </a>
-                </div>
+            <div class="filter-bar bg-white p-3 rounded-4 shadow-sm border mb-4" style="border-color: #f0f0f0 !important;">
+                <form class="row g-3 align-items-center" action="" method="GET" id="form-pesquisa">
+                    <div class="col-12">
+                        <div class="search-box">
+                            <i class="bi bi-search"></i>
+                            <input type="text" id="campo-pesquisa" name="search" autocomplete="off" placeholder="Procurar funcionário..." value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
+                        </div>
+                    </div>
+                    <input type="hidden" name="pagina" value="1" id="pagina-atual">
+                </form>
             </div>
 
             <?php if(isset($_GET['msg']) && $_GET['msg'] == 'deleted'): ?>
@@ -136,7 +143,7 @@ $query_string_filtros = http_build_query($params);
             <?php endif; ?>
 
             <div class="table-container" id="conteudo-tabela">
-                <div class="table-responsive">
+                <div class="table-responsive" style="overflow: visible;">
                     <table class="table custom-table mb-0">
                         <thead>
                             <tr>
@@ -149,7 +156,6 @@ $query_string_filtros = http_build_query($params);
                         <tbody>
                             <?php if(mysqli_num_rows($funcionarios) > 0): ?>
                                 <?php while($funcionario = mysqli_fetch_assoc($funcionarios)): 
-                                    // Gerar iniciais para o Avatar (Corrigido para lidar com acentos)
                                     $nomes = explode(" ", trim($funcionario['nome']));
                                     $iniciais = mb_strtoupper(mb_substr($nomes[0], 0, 1, 'UTF-8'), 'UTF-8');
                                     if(count($nomes) > 1) { 
@@ -158,10 +164,10 @@ $query_string_filtros = http_build_query($params);
                                     }
                                 ?> 
                                 <tr>
-                                    <td>
+                                    <td data-label="Nome">
                                         <div class="d-flex align-items-center">
                                             <div class="avatar-circle"><?= $iniciais ?></div>
-                                            <div>
+                                            <div class="text-start">
                                                 <div class="fw-bold text-dark"><?= htmlspecialchars($funcionario['nome']) ?></div>
                                                 <?php if($funcionario['adm']): ?>
                                                     <small class="text-success fw-medium"><i class="bi bi-shield-check"></i> Admin</small>
@@ -169,13 +175,13 @@ $query_string_filtros = http_build_query($params);
                                             </div>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td data-label="Email">
                                         <div class="text-muted"><i class="bi bi-envelope me-2"></i><?= htmlspecialchars($funcionario['email']) ?></div>
                                     </td>
-                                    <td>
+                                    <td data-label="Telefone">
                                         <div class="text-muted"><i class="bi bi-phone me-2"></i><?= htmlspecialchars($funcionario['telefone']) ?></div>
                                     </td>
-                                    <td class="text-end pe-4">
+                                    <td data-label="Ações" class="text-end pe-4">
                                         <div class="action-buttons justify-content-end">
                                             <a href="view_indisponibilidade.php?id=<?= $funcionario['id'] ?>" class="btn-icon btn-indisp" title="Gerir Indisponibilidades">
                                                 <i class="bi bi-calendar-minus"></i>
@@ -209,29 +215,45 @@ $query_string_filtros = http_build_query($params);
                 </div>
 
                 <?php if ($total_paginas > 1): ?>
-                    <div class="card-footer bg-white border-top py-3 px-4 d-flex justify-content-between align-items-center">
+                    <div class="card-footer bg-white border-top py-3 px-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <span class="text-muted small">
-                            A mostrar página <?= $pagina_atual ?> de <?= $total_paginas ?> (Total: <?= $total_registos ?> funcionários)
+                            Página <?= $pagina_atual ?> de <?= $total_paginas ?>
                         </span>
                         
                         <nav aria-label="Navegação de páginas">
-                            <ul class="pagination pagination-sm mb-0">
+                            <ul class="pagination pagination-sm mb-0 justify-content-center justify-content-md-end">
                                 <li class="page-item <?= ($pagina_atual <= 1) ? 'disabled' : '' ?>">
-                                    <a class="page-link" href="?<?= $query_string_filtros ?>&pagina=<?= $pagina_atual - 1 ?>" aria-label="Anterior">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
+                                    <a class="page-link" href="?<?= $query_string_filtros ?>&pagina=<?= $pagina_atual - 1 ?>" aria-label="Anterior">&laquo;</a>
                                 </li>
                                 
-                                <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
-                                    <li class="page-item <?= ($pagina_atual == $i) ? 'active' : '' ?>">
-                                        <a class="page-link" href="?<?= $query_string_filtros ?>&pagina=<?= $i ?>"><?= $i ?></a>
-                                    </li>
-                                <?php endfor; ?>
+                                <?php 
+                                $adjacentes = 1; 
+                                
+                                $pmin = ($pagina_atual > $adjacentes) ? ($pagina_atual - $adjacentes) : 1;
+                                $pmax = ($pagina_atual < ($total_paginas - $adjacentes)) ? ($pagina_atual + $adjacentes) : $total_paginas;
+
+                                if ($pmin > 1) {
+                                    echo '<li class="page-item"><a class="page-link" href="?'.$query_string_filtros.'&pagina=1">1</a></li>';
+                                    if ($pmin > 2) {
+                                        echo '<li class="page-item disabled"><span class="page-link border-0 text-muted">...</span></li>';
+                                    }
+                                }
+
+                                for ($i = $pmin; $i <= $pmax; $i++) {
+                                    $active = ($pagina_atual == $i) ? 'active' : '';
+                                    echo '<li class="page-item '.$active.'"><a class="page-link" href="?'.$query_string_filtros.'&pagina='.$i.'">'.$i.'</a></li>';
+                                }
+
+                                if ($pmax < $total_paginas) {
+                                    if ($pmax < $total_paginas - 1) {
+                                        echo '<li class="page-item disabled"><span class="page-link border-0 text-muted">...</span></li>';
+                                    }
+                                    echo '<li class="page-item"><a class="page-link" href="?'.$query_string_filtros.'&pagina='.$total_paginas.'">'.$total_paginas.'</a></li>';
+                                }
+                                ?>
                                 
                                 <li class="page-item <?= ($pagina_atual >= $total_paginas) ? 'disabled' : '' ?>">
-                                    <a class="page-link" href="?<?= $query_string_filtros ?>&pagina=<?= $pagina_atual + 1 ?>" aria-label="Próxima">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
+                                    <a class="page-link" href="?<?= $query_string_filtros ?>&pagina=<?= $pagina_atual + 1 ?>" aria-label="Próxima">&raquo;</a>
                                 </li>
                             </ul>
                         </nav>

@@ -56,7 +56,7 @@ if (session_status() === PHP_SESSION_NONE) {
         endif;
         ?> -->
 
-        <form action="/login.php" method="POST">
+        <form action="login.php" method="POST">
             
             <div class="input-group">
                 <label for="email">Email</label>
@@ -75,7 +75,7 @@ if (session_status() === PHP_SESSION_NONE) {
             </div>
 
             <div style="text-align: right; margin-bottom: 25px;">
-                <a href="/recuperar_passe.php" style="font-size: 0.85rem; color: #275a29; text-decoration: none; font-weight: 500;">
+                <a href="recuperar_passe.php" style="font-size: 0.85rem; color: #275a29; text-decoration: none; font-weight: 500;">
                     Esqueceu-se da palavra-passe?
                 </a>
             </div>
@@ -84,7 +84,7 @@ if (session_status() === PHP_SESSION_NONE) {
         </form>
 
         <div class="register-link">
-            <p>Ainda não tem conta? <a href="/register.php">Registar agora</a></p>
+            <p>Ainda não tem conta? <a href="register.php">Registar agora</a></p>
         </div>
 
     </div>

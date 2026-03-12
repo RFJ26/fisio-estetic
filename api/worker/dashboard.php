@@ -87,7 +87,9 @@ $result_lista = mysqli_query($conn, $query_lista);
                     <i class="bi bi-person-circle"></i> Meu Perfil
                 </a>
             </li>
-            
+            <?php if(isset($_COOKIE['role']) && ($_COOKIE['role'] === 'admin' || $_COOKIE['role'] === '1')): ?>
+                <li class="nav-item mt-3"><a class="nav-link" href="/select_role.php" style="color: #ef6c00;"><i class="bi bi-arrow-left-right me-3"></i>Mudar Perfil</a></li>
+            <?php endif; ?>
             <li class="nav-item mt-auto">
                 <a class="nav-link logout" href="../logout.php">
                     <i class="bi bi-box-arrow-left"></i> Sair
@@ -173,12 +175,12 @@ $result_lista = mysqli_query($conn, $query_lista);
                         <?php if($total_hoje > 0): ?>
                             <?php while($marcacao = mysqli_fetch_assoc($result_lista)): ?>
                                 <tr>
-                                    <td class="fw-bold text-highlight">
+                                    <td data-label="Hora" class="fw-bold text-highlight">
                                         <?= converterSlotParaHora($marcacao['slot_inicial']); ?>
                                     </td>
-                                    <td><?= htmlspecialchars($marcacao['nome_cliente']); ?></td>
-                                    <td><?= htmlspecialchars($marcacao['nome_servico']); ?></td>
-                                    <td>
+                                    <td data-label="Cliente"><?= htmlspecialchars($marcacao['nome_cliente']); ?></td>
+                                    <td data-label="Serviço"><?= htmlspecialchars($marcacao['nome_servico']); ?></td>
+                                    <td data-label="Estado">
                                         <?php 
                                             $estado = strtolower($marcacao['estado']);
                                             $badgeClass = 'bg-secondary-soft'; // Default

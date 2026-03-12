@@ -21,4 +21,3 @@ try {
     error_log("Erro de Conexão: " . $e->getMessage());
     die("Erro técnico na base de dados. Verifique as variáveis de ambiente.");
 }
-

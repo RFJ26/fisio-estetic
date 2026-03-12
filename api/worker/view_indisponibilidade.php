@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-
 include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
 require_once __DIR__ . '/../../src/helpers.php';
@@ -21,8 +20,10 @@ $mensagem = ""; $tipo_msg = "";
 // Lógica POST (Adicionar)
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nova_indisponibilidade'])) {
     $motivo = mysqli_real_escape_string($conn, $_POST['motivo']);
-    $data_inicio = $_POST['data_inicio']; $data_fim = $_POST['data_fim'];
-    $hora_in = $_POST['hora_inicio']; $hora_out = $_POST['hora_fim'];
+    $data_inicio = $_POST['data_inicio']; 
+    $data_fim = $_POST['data_fim'];
+    $hora_in = $_POST['hora_inicio']; 
+    $hora_out = $_POST['hora_fim'];
     
     $seg = isset($_POST['seg']) ? 1 : 0;
     $ter = isset($_POST['ter']) ? 1 : 0;
@@ -35,10 +36,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nova_indisponibilidade
     $slot_inicial = converterHoraParaSlot($hora_in, $hora_inicio_dia, $minutos_por_slot);
     $slot_final = converterHoraParaSlot($hora_out, $hora_inicio_dia, $minutos_por_slot) - 1;
 
-    if (strtotime($data_inicio) > strtotime($data_fim)) {
-        $mensagem = "A data de início não pode ser superior à data de fim."; $tipo_msg = "danger";
+    // Data Atual (só data, sem horas)
+    $data_hoje = date('Y-m-d');
+
+    // VALIDAÇÕES
+    if (strtotime($data_inicio) < strtotime($data_hoje)) {
+        // Bloqueio de datas passadas
+        $mensagem = "Não é possível registar um bloqueio com início numa data passada."; 
+        $tipo_msg = "danger";
+    } elseif (strtotime($data_inicio) > strtotime($data_fim)) {
+        $mensagem = "A data de início não pode ser superior à data de fim."; 
+        $tipo_msg = "danger";
     } elseif ($slot_inicial > $slot_final) {
-        $mensagem = "A hora de início deve ser anterior à hora de fim."; $tipo_msg = "danger";
+        $mensagem = "A hora de início deve ser anterior à hora de fim."; 
+        $tipo_msg = "danger";
     } else {
         $sql_insert = "INSERT INTO indisponibilidade 
             (id_funcionario, motivo, data_inicio, data_fim, slot_inicial, slot_final, segunda, terca, quarta, quinta, sexta, sabado, domingo) 
@@ -105,6 +116,9 @@ $lista = mysqli_query($conn, $query_lista);
             <li class="nav-item"><a class="nav-link" href="../service/list.php"><i class="bi bi-scissors me-3"></i>Serviços</a></li>
             <li class="nav-item"><a class="nav-link" href="../service_category/list.php"><i class="bi bi-tag me-3"></i>Categorias</a></li>
             <li class="nav-item"><a class="nav-link" href="../booking/list.php"><i class="bi bi-calendar-check me-3"></i>Marcações</a></li>
+            <?php if(isset($_COOKIE['role']) && ($_COOKIE['role'] === 'admin' || $_COOKIE['role'] === '1')): ?>
+                <li class="nav-item mt-3"><a class="nav-link" href="/select_role.php" style="color: #ef6c00;"><i class="bi bi-arrow-left-right me-3"></i>Mudar Perfil</a></li>
+            <?php endif; ?>
             <li class="nav-item mt-auto"><a class="nav-link logout" href="../logout.php"><i class="bi bi-box-arrow-left me-3"></i>Sair</a></li>
         </ul>
     </nav>
@@ -228,11 +242,11 @@ $lista = mysqli_query($conn, $query_lista);
                         <div class="row g-3 mb-4">
                             <div class="col-6">
                                 <label class="form-label-custom">Data Início</label>
-                                <input type="date" name="data_inicio" class="form-control form-control-custom" required>
+                                <input type="date" name="data_inicio" class="form-control form-control-custom" min="<?= date('Y-m-d') ?>" required>
                             </div>
                             <div class="col-6">
                                 <label class="form-label-custom">Data Fim</label>
-                                <input type="date" name="data_fim" class="form-control form-control-custom" required>
+                                <input type="date" name="data_fim" class="form-control form-control-custom" min="<?= date('Y-m-d') ?>" required>
                             </div>
                         </div>
                         <div class="mb-4">
@@ -289,6 +303,17 @@ $lista = mysqli_query($conn, $query_lista);
             } else {
                 hInicio.removeAttribute('readonly'); hFim.removeAttribute('readonly');
                 hInicio.classList.remove('bg-light'); hFim.classList.remove('bg-light');
+            }
+        });
+
+        // Garantir que a Data Fim não é anterior à Data Início no frontend
+        const dataInicioInput = document.querySelector('input[name="data_inicio"]');
+        const dataFimInput = document.querySelector('input[name="data_fim"]');
+
+        dataInicioInput.addEventListener('change', function() {
+            dataFimInput.min = this.value;
+            if(dataFimInput.value && dataFimInput.value < this.value) {
+                dataFimInput.value = this.value;
             }
         });
     </script>

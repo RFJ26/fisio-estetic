@@ -1,155 +1,195 @@
-/* src/css/service_category/list.css */
+:root {
+    --primary-color: #2e7d32;
+    --primary-hover: #1b5e20;
+    --bg-light: #f8f9fa;
+    --text-dark: #2c3e50;
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
 
-/* --- IMPORTANTE: CONFIGURAÇÃO GLOBAL --- */
 body {
-    font-family: 'Poppins', sans-serif; /* Aplica a fonte a TUDO */
-    background-color: #f8f9fa;
-    color: #333;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
 }
 
-/* Estilo dos Títulos para combinar com a Sidebar */
-h1, h2, h3 {
-    color: #2c3e50; /* Verde escuro institucional */
-    font-weight: 600; 
-    letter-spacing: -0.5px;
-}
-
-/* --- CORREÇÃO DE LAYOUT (Obrigatório) --- */
 .content {
-    margin-left: 260px; /* Largura da sidebar */
-    padding: 30px;
+    margin-left: 260px;
     width: calc(100% - 260px);
+    padding: 30px;
     min-height: 100vh;
     transition: all 0.3s ease;
 }
 
-/* --- HEADER E AÇÕES --- */
-.header-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-/* --- ESTILO DA TABELA (CARD) --- */
-.card-list {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.03);
-    border: 1px solid #f0f0f0;
-    overflow: hidden;
-    width: 100%;
-}
-
-.table-custom {
-    margin-bottom: 0;
-    width: 100%;
-    border-collapse: separate; 
-    border-spacing: 0;
-}
-
-.table-custom th {
-    background-color: #f9f9f9;
-    color: #888;
-    font-weight: 600;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 18px 24px;
-    border-bottom: 2px solid #eaeaea;
-}
-
-/* --- ALINHAMENTO DA TABELA --- */
-.table-custom td {
-    padding: 16px 24px;
-    border-bottom: 1px solid #f5f5f5;
-    vertical-align: middle !important; 
-    height: 70px; 
-}
-
-.table-custom tbody tr:last-child td {
-    border-bottom: none;
-}
-
-.table-custom tbody tr:hover td {
-    background-color: #fafafa;
-}
-
-/* --- BOTÃO NOVA CATEGORIA (VERDE) --- */
-/* MUDADO DE .btn-gold PARA .btn-create */
-.btn-create {
-    background-color: #0c6226; /* Verde Esmeralda */
-    color: white;
-    border: none;
-    font-weight: 500;
-    padding: 10px 24px;
+/* --- HEADER --- */
+.search-box { position: relative; width: 100%; }
+.search-box input {
+    padding-left: 42px;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(12, 98, 38, 0.25); /* Sombra verde */
+    border: 1px solid #e0e0e0;
+    height: 44px;
+    width: 100%;
+}
+.search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888; }
+
+.btn-add {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 22px;
+    border-radius: 10px;
+    text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    font-family: 'Poppins', sans-serif;
+    transition: 0.3s;
+    font-weight: 500;
+}
+.btn-add:hover { background-color: var(--primary-hover); transform: translateY(-2px); color: white; }
+
+/* --- TABLE --- */
+.table-container {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
 }
 
-.btn-create:hover {
-    background-color: #047857; /* Verde mais escuro no hover */
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(12, 98, 38, 0.35);
-    color: white;
+.custom-table thead th {
+    background-color: #f9f9f9;
+    color: #666;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    padding: 18px 20px;
+    border-bottom: 2px solid #eaeaea;
 }
 
-/* --- GRUPO DE BOTÕES DE AÇÃO --- */
-.action-buttons {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 8px;
+.custom-table td {
+    padding: 18px 20px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f5f5f5;
 }
 
-.btn-action {
-    width: 36px; 
+/* --- ACTION BUTTONS (PADRONIZADOS) --- */
+.action-buttons { display: flex; gap: 8px; justify-content: flex-end; }
+.btn-icon {
+    width: 36px;
     height: 36px;
-    display: inline-flex; 
-    align-items: center; 
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
     justify-content: center;
-    border-radius: 8px; 
-    transition: all 0.2s ease;
+    transition: 0.2s;
     text-decoration: none;
-    border: none;
-    font-size: 1rem;
 }
 
-/* 1. VISUALIZAR (Azul) */
-.btn-action.view { color: #0d6efd; background-color: #e7f1ff; }
-.btn-action.view:hover { background-color: #0d6efd; color: white; transform: translateY(-2px); }
+.btn-view { background: #f3e5f5; color: #7b1fa2; }
+.btn-view:hover { background: #7b1fa2; color: white; }
 
-/* 2. EDITAR (Verde) */
-.btn-action.edit { color: #059669; background-color: #ecfdf5; }
-.btn-action.edit:hover { background-color: #059669; color: white; transform: translateY(-2px); }
+.btn-edit { background: #e8f5e9; color: #2e7d32; }
+.btn-edit:hover { background: #2e7d32; color: white; }
 
-/* 3. APAGAR (Vermelho) */
-.btn-action.delete { color: #e63946; background-color: #fff5f5; }
-.btn-action.delete:hover { background-color: #e63946; color: white; transform: translateY(-2px); }
+.btn-delete { background: #ffebee; color: #d32f2f; }
+.btn-delete:hover { background: #d32f2f; color: white; }
 
-/* --- RESPONSIVIDADE (MOBILE) --- */
-@media (max-width: 992px) {
-    .content {
-        margin-left: 0;
-        width: 100%;
-        padding-top: 80px; 
-    }
+/* --- PAGINAÇÃO --- */
+.pagination {
+    gap: 4px; 
+}
 
-    .header-actions {
-        flex-direction: column;
-        align-items: flex-start;
+.pagination .page-link { 
+    color: var(--primary-color); 
+    border-color: #dee2e6; 
+    border-radius: 6px; 
+    box-shadow: none;
+    font-weight: 500;
+}
+
+.pagination .page-link:hover { 
+    background-color: #e8f5e9; 
+    color: var(--primary-hover); 
+    border-color: #dee2e6;
+}
+
+.pagination .page-item.active .page-link { 
+    background-color: var(--primary-color); 
+    border-color: var(--primary-color); 
+    color: #fff; 
+}
+
+.pagination .page-item.disabled .page-link { 
+    color: #6c757d; 
+    background-color: transparent;
+}
+
+/* --- RESPONSIVIDADE (MOBILE CARD) --- */
+@media (max-width: 991px) {
+    .content { 
+        margin-left: 0; 
+        width: 100%; 
+        padding: 80px 15px 20px 15px; 
     }
     
-    .header-actions .d-flex {
-        width: 100%;
-        justify-content: space-between;
+    .header-actions { margin-bottom: 1rem !important; }
+    .custom-table thead { display: none; }
+    .table-container { border: none; box-shadow: none; background: transparent; }
+
+    .custom-table tr { 
+        display: block; 
+        background: #fff;
+        border: 1px solid #e2e8f0; 
+        margin-bottom: 1rem; 
+        border-radius: 12px; 
+        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    }
+
+    .custom-table td { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        text-align: right; 
+        padding: 12px 16px; 
+        border-bottom: 1px solid #f1f5f9; 
+    }
+
+    .custom-table td::before {
+        content: attr(data-label);
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #64748b;
+        text-align: left;
+        margin-right: 15px;
+        flex-shrink: 0;
+    }
+
+    .custom-table td > div, 
+    .custom-table td > span {
+        text-align: right;
+    }
+
+    .custom-table td:last-child { 
+        border-bottom: none; 
+        background: #f8fafc; 
+        border-radius: 0 0 12px 12px;
+        justify-content: flex-end; 
+    }
+
+    .custom-table td:last-child::before {
+        display: none; 
+    }
+
+    .action-buttons { justify-content: flex-end; width: 100%; padding-top: 0; }
+    
+    /* Footer da paginação no mobile */
+    .card-footer {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+        padding: 20px !important;
+    }
+    
+    .pagination {
+        justify-content: center !important;
+        flex-wrap: wrap; 
     }
 }

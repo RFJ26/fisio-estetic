@@ -1,7 +1,7 @@
 /* =========================================
    VARIÁVEIS DE COR (Nova Identidade)
    ========================================= */
-   :root {
+:root {
     --sidebar-width: 260px;
     --brand-dark: #1a3c1b;      /* Verde Escuro */
     --primary-green: #0f6412;   /* Verde Vivo */
@@ -13,6 +13,8 @@
 body {
     background-color: var(--bg-light);
     font-family: 'Poppins', sans-serif;
+    color: #333;
+    overflow-x: hidden;
 }
 
 /* =========================================
@@ -38,7 +40,7 @@ body {
 }
 
 /* =========================================
-   CARTÃO DE EDIÇÃO
+   CARTÃO DE EDIÇÃO & TÍTULOS
    ========================================= */
 .edit-card {
     background: #fff;
@@ -50,7 +52,21 @@ body {
     margin: 0 auto; /* Centra o cartão */
 }
 
-/* Labels e Inputs */
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--brand-dark);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* =========================================
+   FORMULÁRIOS
+   ========================================= */
 .form-label {
     font-weight: 500;
     color: #444;
@@ -63,13 +79,27 @@ body {
     border-radius: 10px;
     border: 1px solid #dee2e6;
     transition: border-color 0.2s, box-shadow 0.2s;
+    background-color: #fcfcfc;
 }
 
 /* Foco Verde */
 .form-control:focus, .form-select:focus {
+    background-color: #fff;
     border-color: var(--primary-green);
     box-shadow: 0 0 0 4px var(--primary-soft);
     outline: none;
+}
+
+/* Input Group para o Preço (€) */
+.input-group-text {
+    border-radius: 10px 0 0 10px;
+    border: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+    color: #666;
+}
+
+.input-group .form-control {
+    border-radius: 0 10px 10px 0;
 }
 
 /* Container da Imagem Atual */
@@ -103,6 +133,7 @@ body {
     transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
+    gap: 8px; /* Espaço para o ícone */
 }
 
 .btn-save:hover {
@@ -120,9 +151,27 @@ body {
     padding: 10px 15px;
     border-radius: 8px;
     transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
 }
 
 .btn-cancel:hover { 
     color: #333; 
     background-color: #eee;
+}
+
+/* =========================================
+   RESPONSIVIDADE (BOTÕES MOBILE)
+   ========================================= */
+@media (max-width: 576px) {
+    .d-flex.justify-content-end.gap-3.pt-3 {
+        flex-direction: column-reverse;
+        gap: 10px !important;
+    }
+    
+    .btn-save, .btn-cancel {
+        width: 100%;
+        justify-content: center;
+        margin-right: 0;
+    }
 }

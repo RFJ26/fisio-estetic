@@ -168,6 +168,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <li class="nav-item"><a class="nav-link active" href="list.php"><i class="bi bi-scissors me-3"></i>Serviços</a></li>
             <li class="nav-item"><a class="nav-link" href="../service_category/list.php"><i class="bi bi-tag me-3"></i>Categorias</a></li>
             <li class="nav-item"><a class="nav-link" href="../booking/list.php"><i class="bi bi-calendar-check me-3"></i>Marcações</a></li>
+            <?php if(isset($_COOKIE['role']) && ($_COOKIE['role'] === 'admin' || $_COOKIE['role'] === '1')): ?>
+                <li class="nav-item mt-3"><a class="nav-link" href="/select_role.php" style="color: #ef6c00;"><i class="bi bi-arrow-left-right me-3"></i>Mudar Perfil</a></li>
+            <?php endif; ?>
             <li class="nav-item mt-auto"><a class="nav-link logout" href="../logout.php"><i class="bi bi-box-arrow-left me-3"></i>Sair</a></li>
         </ul>
     </nav>
@@ -175,7 +178,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="content">
         <div class="container-fluid">
             
-            <header class="d-flex justify-content-between align-items-center mb-4">
+            <header class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
                 <div>
                     <h2 class="fw-bold mb-1">Novo Serviço</h2>
                     <p class="text-muted mb-0">Registar tratamento e definir horários.</p>
@@ -188,7 +191,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </header>
 
             <?php if ($erro): ?>
-                <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+                <div class="alert alert-danger d-flex align-items-center mb-4 shadow-sm" role="alert">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i>
                     <div><?= $erro ?></div>
                 </div>
@@ -229,10 +232,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="col-md-4">
                             <label class="form-label">Duração</label>
                             <select name="num_slots" class="form-select" required>
-                                <?php for($k=1; $k<=12; $k++): 
+                                <option value="" selected disabled>Selecionar duração...</option>
+                                <?php 
+                                // Lógica para converter slots em Horas/Minutos
+                                for($k=1; $k<=12; $k++): 
+                                    $min_totais = $k * 15;
+                                    $horas = floor($min_totais / 60);
+                                    $minutos = $min_totais % 60;
+                                    
+                                    $label = "";
+                                    if ($horas > 0) $label .= $horas . "h";
+                                    if ($minutos > 0) $label .= ($horas > 0 ? " " : "") . $minutos . "m";
+
                                     $selected = (isset($_POST['num_slots']) && $_POST['num_slots'] == $k) ? 'selected' : '';
                                 ?>
-                                    <option value="<?= $k ?>" <?= $selected ?>><?= $k ?> slots (<?= ($k*15) ?> min)</option>
+                                    <option value="<?= $k ?>" <?= $selected ?>><?= $label ?></option>
                                 <?php endfor; ?>
                             </select>
                         </div>
@@ -254,7 +268,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <label class="form-label">Intervalo de Datas</label>
                             <div class="input-group">
                                 <input type="date" name="data_inicio" class="form-control" value="<?= isset($_POST['data_inicio']) ? $_POST['data_inicio'] : date('Y-m-d') ?>">
-                                <span class="input-group-text bg-white">até</span>
+                                <span class="input-group-text bg-white border-start-0 border-end-0">até</span>
                                 <input type="date" name="data_fim" class="form-control" value="<?= isset($_POST['data_fim']) ? $_POST['data_fim'] : date('Y-m-d', strtotime('+1 year')) ?>">
                             </div>
                         </div>
@@ -274,15 +288,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <div class="row g-4">
                         <div class="col-md-6">
-                            <div class="p-3 border rounded bg-light">
+                            <div class="p-4 border rounded-3 bg-light h-100">
                                 <div class="form-check form-switch mb-3">
                                     <input class="form-check-input" type="checkbox" name="ativar_manha" id="switchManha" onchange="toggleInputs('manha')">
                                     <label class="form-check-label fw-bold" for="switchManha">Ativar Manhã</label>
                                 </div>
                                 <div id="area-manha" style="opacity: 0.5; pointer-events: none; transition: opacity 0.3s;">
-                                    <div class="row g-2">
+                                    <div class="row g-3">
                                         <div class="col-6">
-                                            <label class="small text-muted mb-1">Início</label>
+                                            <label class="small text-muted mb-1 fw-medium">Início</label>
                                             <select name="manha_inicio" class="form-select form-select-sm time-select">
                                                 <option value="">--</option>
                                                 <?php foreach($lista_horarios as $id => $hora): ?>
@@ -291,7 +305,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             </select>
                                         </div>
                                         <div class="col-6">
-                                            <label class="small text-muted mb-1">Fim</label>
+                                            <label class="small text-muted mb-1 fw-medium">Fim</label>
                                             <select name="manha_fim" class="form-select form-select-sm time-select">
                                                 <option value="">--</option>
                                                 <?php foreach($lista_horarios as $id => $hora): ?>
@@ -305,15 +319,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
 
                         <div class="col-md-6">
-                            <div class="p-3 border rounded bg-light">
+                            <div class="p-4 border rounded-3 bg-light h-100">
                                 <div class="form-check form-switch mb-3">
                                     <input class="form-check-input" type="checkbox" name="ativar_tarde" id="switchTarde" onchange="toggleInputs('tarde')">
                                     <label class="form-check-label fw-bold" for="switchTarde">Ativar Tarde</label>
                                 </div>
                                 <div id="area-tarde" style="opacity: 0.5; pointer-events: none; transition: opacity 0.3s;">
-                                    <div class="row g-2">
+                                    <div class="row g-3">
                                         <div class="col-6">
-                                            <label class="small text-muted mb-1">Início</label>
+                                            <label class="small text-muted mb-1 fw-medium">Início</label>
                                             <select name="tarde_inicio" class="form-select form-select-sm time-select">
                                                 <option value="">--</option>
                                                 <?php foreach($lista_horarios as $id => $hora): ?>
@@ -322,7 +336,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             </select>
                                         </div>
                                         <div class="col-6">
-                                            <label class="small text-muted mb-1">Fim</label>
+                                            <label class="small text-muted mb-1 fw-medium">Fim</label>
                                             <select name="tarde_fim" class="form-select form-select-sm time-select">
                                                 <option value="">--</option>
                                                 <?php foreach($lista_horarios as $id => $hora): ?>
@@ -337,7 +351,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-end gap-2 mb-5">
+                <div class="d-flex justify-content-end gap-3 mb-5">
                     <a href="list.php" class="btn-cancel">Cancelar</a>
                     <button type="submit" class="btn-save">
                         <i class="bi bi-check-lg"></i> Gravar Serviço
@@ -355,7 +369,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if(toggle) toggle.addEventListener('click', () => sidebar.classList.toggle('active'));
 
         function toggleInputs(periodo) {
-            // Converter primeira letra para maiúscula para coincidir com o ID
             const periodoCap = periodo.charAt(0).toUpperCase() + periodo.slice(1);
             const switchEl = document.getElementById('switch' + periodoCap);
             const area = document.getElementById('area-' + periodo);
@@ -367,13 +380,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 area.style.opacity = '0.5';
                 area.style.pointerEvents = 'none';
                 
-                // Limpar selects quando desativar
                 const selects = area.getElementsByTagName('select');
                 for(let s of selects) s.value = "";
             }
         }
         
-        // Executar ao carregar para garantir estado correto se houve postback
         document.addEventListener('DOMContentLoaded', function() {
             if(document.getElementById('switchManha')) toggleInputs('manha');
             if(document.getElementById('switchTarde')) toggleInputs('tarde');

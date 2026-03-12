@@ -1,46 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ============================================================
+   1. CORES E VARIÁVEIS BASE
+   ============================================================ */
 :root {
-    --primary-color: #2e7d32;   /* Verde Principal */
-    --primary-hover: #1b5e20;   /* Verde Escuro */
+    --primary-color: #2e7d32;
+    --primary-hover: #1b5e20;
     --bg-light: #f8f9fa;
     --text-dark: #2c3e50;
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 body {
+    font-family: 'Poppins', sans-serif;
     background-color: var(--bg-light);
     color: var(--text-dark);
-    font-family: 'Poppins', sans-serif;
     overflow-x: hidden;
 }
 
-/* --- LAYOUT PRINCIPAL --- */
 .content {
-    margin-left: 260px; /* Largura da Sidebar */
+    margin-left: 260px;
     width: calc(100% - 260px);
     padding: 30px;
     min-height: 100vh;
     transition: all 0.3s ease;
 }
 
-.container-fluid {
-    width: 100%;
-    max-width: 100%;
-    padding: 0;
+/* ============================================================
+   2. FILTROS E PESQUISA (ESTILO ADMIN)
+   ============================================================ */
+.filter-bar {
+    border-color: #f0f0f0 !important;
 }
 
-/* --- CABEÇALHO E BARRA DE PESQUISA --- */
-.header-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-.search-box {
-    position: relative;
-    min-width: 320px;
+.search-box { 
+    position: relative; 
+    min-width: 250px; 
+    flex-grow: 1;
 }
 
 .search-box input {
@@ -49,165 +45,193 @@ body {
     border: 1px solid #e0e0e0;
     height: 44px;
     width: 100%;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-    transition: all 0.3s ease;
-    font-size: 0.95rem;
+    outline: none;
+    transition: 0.2s ease;
+    background: #fff;
+    color: var(--text-dark);
 }
 
 .search-box input:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.15);
-    outline: none;
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
 }
 
-.search-box i {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #888;
-    font-size: 1.1rem;
+.search-box i { 
+    position: absolute; 
+    left: 15px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    color: #888; 
 }
 
-/* --- BOTÃO NOVO FUNCIONÁRIO --- */
-.btn-add {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    font-weight: 500;
-    padding: 10px 22px;
+.filter-select {
+    height: 44px;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.25);
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    height: 44px; /* Mesma altura da barra de pesquisa */
+    border: 1px solid #e0e0e0;
+    color: #4b5563;
+    min-width: 140px;
+    cursor: pointer;
+    background-color: #fff;
 }
 
-.btn-add:hover {
-    background-color: var(--primary-hover);
-    transform: translateY(-2px);
-    color: white;
-    box-shadow: 0 6px 15px rgba(46, 125, 50, 0.35);
+.filter-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
 }
 
-/* --- TABELA E AVATAR --- */
+/* ============================================================
+   3. TABELA (ESTILO ADMIN)
+   ============================================================ */
 .table-container {
-    background: #ffffff;
+    background: #fff;
     border-radius: 16px;
     box-shadow: var(--card-shadow);
-    padding: 0; 
-    border: 1px solid #f0f0f0;
     overflow: hidden;
-    transition: opacity 0.2s ease-in-out;
+    border: 1px solid #f0f0f0;
 }
 
-.custom-table {
-    width: 100%;
+.custom-table { 
+    width: 100%; 
+    border-collapse: separate; 
+    border-spacing: 0; 
     margin-bottom: 0;
 }
 
 .custom-table thead th {
     background-color: #f9f9f9;
     color: #666;
-    font-weight: 600;
     text-transform: uppercase;
-    font-size: 0.85rem;
-    letter-spacing: 0.5px;
-    border-bottom: 2px solid #eaeaea;
+    font-size: 0.75rem;
     padding: 18px 20px;
+    border-bottom: 2px solid #eaeaea;
+    text-align: center !important; 
     vertical-align: middle;
 }
 
 .custom-table tbody td {
-    padding: 18px 20px;
-    vertical-align: middle;
-    color: #444;
+    padding: 16px 20px;
+    vertical-align: middle !important;
     border-bottom: 1px solid #f5f5f5;
+    text-align: center !important; 
+    color: var(--text-dark);
     font-size: 0.95rem;
 }
 
-.avatar-circle {
-    width: 45px;
-    height: 45px;
-    background-color: #e8f5e9;
-    color: var(--primary-color);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
+.custom-table tbody td .d-flex {
+    justify-content: center !important;
+}
+
+.custom-table tbody tr:hover td { 
+    background-color: #f8fafc; 
+}
+
+/* Horário na tabela */
+.text-gold {
+    color: var(--primary-color) !important;
+    font-weight: 700 !important;
     font-size: 1.1rem;
-    margin-right: 15px;
-    flex-shrink: 0;
+    display: block; 
 }
 
-/* --- BOTÕES DE AÇÃO (ÍCONES) --- */
-.action-buttons {
-    display: flex;
-    gap: 8px;
-    align-items: center;
+/* ============================================================
+   4. ESTADOS (BADGES ADMIN EXATAS)
+   ============================================================ */
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
 }
+.st-pendente, .st-por-confirmar { background: #fffbeb; color: #b45309; border: 1px solid #fcd34d; }
+.st-ativa, .st-confirmada       { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+.st-cancelada                   { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+.st-realizada                   { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
 
+/* ============================================================
+   5. BOTÕES DE AÇÃO UNIFICADOS
+   ============================================================ */
+.action-buttons { display: flex; gap: 8px; justify-content: center; }
 .btn-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    text-decoration: none;
-    border: none;
-    font-size: 1rem;
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    transition: 0.2s; text-decoration: none; border: none; font-size: 1.1rem; cursor: pointer;
 }
+.btn-confirm  { background: #dcfce7; color: #15803d; } 
+.btn-confirm:hover  { background: #15803d; color: white; transform: translateY(-2px); }
+.btn-complete { background: #e0e7ff; color: #4338ca; } 
+.btn-complete:hover { background: #4338ca; color: white; transform: translateY(-2px); }
+.btn-cancel   { background: #ffebee; color: #d32f2f; } 
+.btn-cancel:hover   { background: #d32f2f; color: white; transform: translateY(-2px); }
 
-/* Cores específicas de cada botão */
-.btn-indisp { background-color: #fff3e0; color: #ef6c00; } /* Laranja */
-.btn-indisp:hover { background-color: #ef6c00; color: white; }
-
-.btn-assign { background-color: #e3f2fd; color: #1976d2; } /* Azul */
-.btn-assign:hover { background-color: #1976d2; color: white; }
-
-.btn-view { background-color: #f3e5f5; color: #7b1fa2; } /* Roxo */
-.btn-view:hover { background-color: #7b1fa2; color: white; }
-
-.btn-edit { background-color: #e8f5e9; color: var(--primary-color); } /* Verde */
-.btn-edit:hover { background-color: var(--primary-color); color: white; }
-
-.btn-delete { background-color: #ffebee; color: #d32f2f; } /* Vermelho */
-.btn-delete:hover { background-color: #d32f2f; color: white; }
-
-/* --- PAGINAÇÃO --- */
-.pagination .page-link { color: var(--primary-color); border-color: #dee2e6; box-shadow: none; }
-.pagination .page-link:hover { background-color: #e8f5e9; color: var(--primary-hover); }
-.pagination .page-item.active .page-link { background-color: var(--primary-color); border-color: var(--primary-color); color: #fff; }
-.pagination .page-item.disabled .page-link { color: #6c757d; }
-
-/* --- RESPONSIVIDADE MOBILE --- */
-@media (max-width: 992px) {
-    .content {
-        margin-left: 0;
-        width: 100%;
-        padding: 20px;
-        padding-top: 80px;
+/* ============================================================
+   6. RESPONSIVO MOBILE (CARDS)
+   ============================================================ */
+@media (max-width: 991px) {
+    .content { 
+        margin-left: 0; 
+        width: 100%; 
+        padding: 80px 15px 20px 15px;
     }
-    .header-actions {
-        flex-direction: column;
-        align-items: flex-start;
+    
+    .custom-table thead { display: none; }
+    
+    .table-container { 
+        border: none; 
+        box-shadow: none; 
+        background: transparent; 
     }
-    .search-box {
-        min-width: 100%;
-        width: 100%;
+
+    .custom-table tr { 
+        display: block; 
+        background: #fff;
+        border: 1px solid #e2e8f0; 
+        margin-bottom: 1rem; 
+        border-radius: 12px; 
+        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
     }
-    .d-flex.gap-3.align-items-center {
-        width: 100%;
-        flex-direction: column;
-        align-items: stretch !important;
+
+    .custom-table td { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        text-align: right !important; 
+        padding: 12px 16px; 
+        border-bottom: 1px solid #f1f5f9; 
     }
-    .btn-add {
-        justify-content: center;
+
+    .custom-table td::before {
+        content: attr(data-label);
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #64748b;
+        text-align: left;
+        margin-right: 15px;
+        flex-shrink: 0; 
     }
+
+    .custom-table td > div, 
+    .custom-table td > span {
+        text-align: right;
+    }
+    
+    .custom-table td .d-flex {
+        align-items: flex-end !important;
+        justify-content: flex-end !important;
+    }
+
+    .custom-table td:last-child { 
+        border-bottom: none; 
+        background: #f8fafc; 
+        border-radius: 0 0 12px 12px;
+        justify-content: flex-end !important;
+    }
+
+    .custom-table td:last-child::before {
+        display: none; 
+    }
+
+    .action-buttons { justify-content: flex-end; width: 100%; }
 }

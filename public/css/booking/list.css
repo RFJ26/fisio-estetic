@@ -1,54 +1,26 @@
-/* ==========================================================================
-   VARIÁVEIS GLOBAIS E RESET
-   ========================================================================== */
 :root {
-    --sidebar-width: 260px;
+    --primary-color: #2e7d32;
+    --primary-hover: #1b5e20;
     --bg-light: #f8f9fa;
     --text-dark: #2c3e50;
-    --blue-edit: #2563eb;
-    --red-delete: #dc2626;
-    --green-create: #0c6226; /* Verde Principal */
-    --green-hover: #0a5020;
-    --green-light: #d1fae5;
-    --green-text: #065f46;
-}
-
-/* Fundamental para evitar que o padding quebre a largura dos elementos */
-*, *::before, *::after {
-    box-sizing: border-box;
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 body {
-    margin: 0;
-    background-color: var(--bg-light);
     font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-light);
     color: var(--text-dark);
-    overflow-x: hidden;
 }
 
-/* ==========================================================================
-   LAYOUT PRINCIPAL
-   ========================================================================== */
 .content {
-    margin-left: var(--sidebar-width);
-    width: calc(100% - var(--sidebar-width));
-    min-height: 100vh;
+    margin-left: 260px;
+    width: calc(100% - 260px);
     padding: 30px;
+    min-height: 100vh;
     transition: all 0.3s ease;
 }
 
-/* Responsividade para ecrãs de telemóvel/tablet */
-@media (max-width: 768px) {
-    .content {
-        margin-left: 0;
-        width: 100%;
-        padding: 80px 20px 20px 20px;
-    }
-}
-
-/* ==========================================================================
-   CABEÇALHO, PESQUISA E FILTROS
-   ========================================================================== */
+/* --- HEADER & FILTROS --- */
 .header-actions {
     display: flex;
     justify-content: space-between;
@@ -58,138 +30,73 @@ body {
     gap: 15px;
 }
 
-.header-actions h2 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--text-dark);
-    margin: 0;
-}
-
-.filter-form { 
-    display: flex; 
-    gap: 12px; 
-    flex-wrap: wrap; 
-    align-items: center;
-}
-
-.search-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-    flex-grow: 1;
-    min-width: 220px;
-}
-
-.search-icon {
-    position: absolute;
-    left: 12px;
-    color: #9ca3af;
-    font-size: 1rem;
-}
-
-/* Inputs de Pesquisa e Dropdowns Uniformizados */
-.filter-input {
+.search-box { position: relative; min-width: 250px; flex-grow: 1;}
+.search-box input {
+    padding-left: 42px;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    height: 44px;
     width: 100%;
-    padding: 10px 15px 10px 38px; /* Espaço para o ícone da lupa */
-    border-radius: 8px;
-    border: 1px solid #e5e7eb;
-    background-color: #fff;
-    color: var(--text-dark);
-    font-family: inherit;
-    font-size: 0.95rem;
-    transition: all 0.2s ease;
 }
+.search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888; }
 
 .filter-select {
-    padding: 10px 30px 10px 15px;
-    border-radius: 8px;
-    border: 1px solid #e5e7eb;
-    background-color: #fff;
+    height: 44px;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
     color: #4b5563;
+    min-width: 140px;
     cursor: pointer;
-    min-width: 150px;
-    font-family: inherit;
-    font-size: 0.95rem;
-    transition: all 0.2s ease;
 }
 
-.filter-input:focus, 
-.filter-select:focus {
-    border-color: var(--green-create);
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(12, 98, 38, 0.1);
-}
-
-/* Botão Nova Marcação */
-.btn-create {
-    background-color: var(--green-create);
-    color: white !important;
-    padding: 10px 24px;
-    border-radius: 8px;
-    font-weight: 500;
+.btn-add {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 22px;
+    border-radius: 10px;
+    text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    text-decoration: none;
-    box-shadow: 0 4px 6px -1px rgba(12, 98, 38, 0.2);
-    border: none;
-    transition: all 0.2s;
+    transition: 0.3s;
+    font-weight: 500;
+    height: 44px;
 }
+.btn-add:hover { background-color: var(--primary-hover); transform: translateY(-2px); color: white; }
 
-.btn-create:hover {
-    background-color: var(--green-hover);
-    transform: translateY(-1px);
-}
-
-/* ==========================================================================
-   TABELA E LISTAGEM
-   ========================================================================== */
-.card-list {
+/* --- TABLE CONFIG --- */
+.table-container {
     background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    border: 1px solid #eff0f2;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
     overflow: hidden;
-    width: 100%;
-    margin-top: 20px;
+    border: 1px solid #f0f0f0;
 }
 
-.table-responsive { overflow-x: auto; }
-.table-custom { width: 100%; border-collapse: collapse; }
-
-.table-custom th {
-    background-color: #f9fafb;
-    color: var(--green-create);
-    font-weight: 600;
-    font-size: 0.75rem;
+.custom-table thead th {
+    background-color: #f9f9f9;
+    color: #666;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 16px 24px;
-    border-bottom: 2px solid #e5e7eb;
-    text-align: left;
-    white-space: nowrap;
+    font-size: 0.75rem;
+    padding: 18px 20px;
+    border-bottom: 2px solid #eaeaea;
 }
 
-.table-custom td {
-    padding: 16px 24px;
-    border-bottom: 1px solid #f3f4f6;
+.custom-table td {
+    padding: 16px 20px;
     vertical-align: middle;
-    color: #374151;
+    border-bottom: 1px solid #f5f5f5;
 }
 
-.table-custom tr:hover td { background-color: #fcfcfd; }
-
-.date-day { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); line-height: 1; }
+/* Elementos Textuais da Tabela */
+.date-day { font-size: 1.2rem; font-weight: 700; color: var(--text-dark); line-height: 1; }
+.date-day small { font-size: 0.8rem; font-weight: 500; text-transform: uppercase; color: #888;}
 .date-time { 
-    font-size: 0.85rem; color: var(--green-create); font-weight: 600; margin-top: 4px;
-    background: #f0fdf4; padding: 2px 8px; border-radius: 6px; display: inline-block;
+    font-size: 0.85rem; color: var(--primary-color); font-weight: 600; margin-top: 4px;
+    background: #e8f5e9; padding: 2px 8px; border-radius: 6px; display: inline-block;
 }
-.client-name { font-weight: 600; color: var(--text-dark); display: block; }
-.service-name { font-weight: 500; color: #4b5563; }
 
-/* ==========================================================================
-   ESTADOS (BADGES)
-   ========================================================================== */
+/* --- ESTADOS (BADGES) --- */
 .status-badge {
     padding: 6px 12px;
     border-radius: 20px;
@@ -198,61 +105,143 @@ body {
     text-transform: uppercase;
     display: inline-block;
 }
-
 .st-pendente, .st-por-confirmar { background: #fffbeb; color: #b45309; border: 1px solid #fcd34d; }
 .st-ativa, .st-confirmada { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
 .st-cancelada { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
 .st-realizada { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
 
-/* ==========================================================================
-   BOTÕES DE AÇÃO NA TABELA
-   ========================================================================== */
-.col-actions { text-align: right; width: 1%; white-space: nowrap; }
-.action-group { display: flex; gap: 8px; justify-content: flex-end; }
-
+/* --- AÇÕES (BOTÕES UNIFICADOS) --- */
+.action-buttons { display: flex; gap: 8px; justify-content: flex-end; }
 .btn-icon {
-    width: 36px; height: 36px;
-    border-radius: 8px;
-    display: inline-flex; align-items: center; justify-content: center;
-    border: none; text-decoration: none; font-size: 1.1rem;
-    transition: all 0.2s;
-    cursor: pointer;
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    transition: 0.2s; text-decoration: none; border: none; font-size: 1.1rem;
 }
 
-.btn-view { background: #f3f4f6; color: #6b7280; }
-.btn-view:hover { background: #e5e7eb; color: #374151; }
-.btn-edit { background: #eff6ff; color: var(--blue-edit); }
-.btn-edit:hover { background: #dbeafe; }
-.btn-confirm { background: #dcfce7; color: #15803d; }
-.btn-confirm:hover { background: #bbf7d0; }
-.btn-complete { background: #e0e7ff; color: #4338ca; }
-.btn-complete:hover { background: #c7d2fe; }
-.btn-cancel { background: #fee2e2; color: var(--red-delete); }
-.btn-cancel:hover { background: #fecaca; }
+/* Cores Padronizadas */
+.btn-view { background: #f3e5f5; color: #7b1fa2; } /* Roxo */
+.btn-view:hover { background: #7b1fa2; color: white; }
 
-/* ==========================================================================
-   MODAL DE DETALHES
-   ========================================================================== */
-.modal-header { border-bottom: 2px solid #f3f4f6; padding: 20px; }
-.modal-title { color: var(--green-create); font-weight: 700; }
-.modal-label { color: var(--green-create); font-size: 0.75rem; text-transform: uppercase; font-weight: 700; display: block; }
-.modal-value { font-size: 1.05rem; color: #333; border-bottom: 1px dashed #e5e7eb; padding-bottom: 4px; margin-bottom: 12px; }
+.btn-edit { background: #e8f5e9; color: var(--primary-color); } /* Verde Default */
+.btn-edit:hover { background: var(--primary-color); color: white; }
 
-/* --- PAGINAÇÃO --- */
+.btn-confirm { background: #dcfce7; color: #15803d; } /* Verde Vivo */
+.btn-confirm:hover { background: #15803d; color: white; }
+
+.btn-complete { background: #e0e7ff; color: #4338ca; } /* Indigo */
+.btn-complete:hover { background: #4338ca; color: white; }
+
+.btn-cancel { background: #ffebee; color: #d32f2f; } /* Vermelho */
+.btn-cancel:hover { background: #d32f2f; color: white; }
+
+/* --- CORES DA PAGINAÇÃO --- */
+.pagination {
+    gap: 4px; /* Pequeno espaçamento entre os botões */
+}
+
 .pagination .page-link { 
-    color: var(--green-create); 
-    border-color: #dee2e6; 
-    box-shadow: none; 
+    color: var(--primary-color); 
+    border-color: #e2e8f0; 
+    border-radius: 6px; /* Bordas mais suaves */
+    box-shadow: none;
+    font-weight: 500;
 }
+
 .pagination .page-link:hover { 
-    background-color: var(--green-light); 
-    color: var(--green-hover); 
+    background-color: #e8f5e9; 
+    color: var(--primary-hover); 
+    border-color: #e2e8f0;
 }
+
 .pagination .page-item.active .page-link { 
-    background-color: var(--green-create); 
-    border-color: var(--green-create); 
+    background-color: var(--primary-color); 
+    border-color: var(--primary-color); 
     color: #fff; 
 }
+
 .pagination .page-item.disabled .page-link { 
-    color: #6c757d; 
+    color: #94a3b8; 
+    background-color: transparent;
+}
+
+
+/* --- RESPONSIVIDADE UNIVERSAL (MOBILE CARD) --- */
+@media (max-width: 991px) {
+    .content { 
+        margin-left: 0; 
+        width: 100%; 
+        padding: 80px 15px 20px 15px; /* Ajuste para não colar as bordas ao ecrã */
+    }
+    
+    .header-actions { margin-bottom: 1rem !important; }
+
+    /* Esconde o cabeçalho da tabela */
+    .custom-table thead { display: none; }
+    
+    /* Remove as bordas laterais do container da tabela no mobile */
+    .table-container { border: none; box-shadow: none; background: transparent; }
+
+    /* Transforma cada linha num "Cartão" */
+    .custom-table tr { 
+        display: block; 
+        background: #fff;
+        border: 1px solid #e2e8f0; 
+        margin-bottom: 1rem; 
+        border-radius: 12px; 
+        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    }
+
+    /* O Segredo: Flexbox no TD para alinhar a Label e o Conteúdo */
+    .custom-table td { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        text-align: right; 
+        padding: 12px 16px; 
+        border-bottom: 1px solid #f1f5f9; 
+    }
+
+    /* Estilo da Label gerada pelo data-label */
+    .custom-table td::before {
+        content: attr(data-label);
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #64748b;
+        text-align: left;
+        margin-right: 15px;
+        flex-shrink: 0; /* Impede a label de ser esmagada */
+    }
+
+    /* Garante que os blocos de texto alinham à direita */
+    .custom-table td > div, 
+    .custom-table td > span {
+        text-align: right;
+    }
+
+    /* Área dos Botões de Ação no fundo do cartão */
+    .custom-table td:last-child { 
+        border-bottom: none; 
+        background: #f8fafc; /* Cor de fundo ligeiramente diferente para destacar os botões */
+        border-radius: 0 0 12px 12px;
+        justify-content: flex-end; /* Encosta os botões à direita */
+    }
+
+    .custom-table td:last-child::before {
+        display: none; /* Esconde a palavra "Ações" se preferires um look mais limpo */
+    }
+
+    .action-buttons { justify-content: flex-end; width: 100%; }
+    /* O card-footer onde está a paginação precisa de se alinhar em coluna no telemóvel */
+    .card-footer {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+        padding: 20px !important;
+    }
+    
+    .pagination {
+        justify-content: center !important;
+        flex-wrap: wrap; /* Permite que a paginação quebre a linha se o ecrã for muito pequeno */
+    }
 }

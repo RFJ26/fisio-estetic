@@ -4,35 +4,52 @@ session_start();
 include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
 require_once __DIR__ . '/../../src/helpers.php'; 
+
 $cliente = null;
 $result_marcacoes = null;
+$prox_marcacoes = null;
+$total_futuras = 0;
+$total_historico = 0;
 
 if(isset($_GET['id'])) {
     $id = mysqli_real_escape_string($conn, $_GET['id']);
     
-    // 1. Dados do Cliente (ADICIONADO email_verificado NA QUERY)
+    // 1. Dados do Cliente
     $sql = "SELECT id, nome, email, telefone, nif, created_at, obs, email_verificado FROM cliente WHERE id = '$id'";
     $query = mysqli_query($conn, $sql);
     
     if(mysqli_num_rows($query) > 0){
         $cliente = mysqli_fetch_array($query);
 
-        // 2. Histórico de Marcações do Cliente (SEM ABREVIAÇÕES)
-        $sql_marcacoes = "SELECT 
-                            marcacao.id, 
-                            marcacao.data, 
-                            marcacao.slot_inicial, 
-                            marcacao.estado,
-                            servico.designacao AS nome_servico,
-                            funcionario.nome AS nome_funcionario
-                          FROM marcacao
-                          INNER JOIN servico_funcionario ON marcacao.id_servico_funcionario = servico_funcionario.id
-                          INNER JOIN servico ON servico_funcionario.id_servico = servico.id
-                          INNER JOIN funcionario ON servico_funcionario.id_funcionario = funcionario.id
-                          WHERE marcacao.id_cliente = '$id'
-                          ORDER BY marcacao.data DESC, marcacao.slot_inicial DESC";
-        
-        $result_marcacoes = mysqli_query($conn, $sql_marcacoes);
+        // 2. Histórico Total (Todas as marcações)
+        $sql_hist = "SELECT 
+                        marcacao.id, marcacao.data, marcacao.slot_inicial, marcacao.estado,
+                        servico.designacao AS nome_servico,
+                        funcionario.nome AS nome_funcionario
+                      FROM marcacao
+                      INNER JOIN servico_funcionario ON marcacao.id_servico_funcionario = servico_funcionario.id
+                      INNER JOIN servico ON servico_funcionario.id_servico = servico.id
+                      INNER JOIN funcionario ON servico_funcionario.id_funcionario = funcionario.id
+                      WHERE marcacao.id_cliente = '$id'
+                      ORDER BY marcacao.data DESC, marcacao.slot_inicial DESC";
+        $result_marcacoes = mysqli_query($conn, $sql_hist);
+        $total_historico = mysqli_num_rows($result_marcacoes);
+
+        // 3. Apenas Marcações Futuras (Agenda Futura)
+        $sql_prox = "SELECT 
+                        marcacao.id, marcacao.data, marcacao.slot_inicial, marcacao.estado,
+                        servico.designacao AS nome_servico,
+                        funcionario.nome AS nome_funcionario
+                      FROM marcacao
+                      INNER JOIN servico_funcionario ON marcacao.id_servico_funcionario = servico_funcionario.id
+                      INNER JOIN servico ON servico_funcionario.id_servico = servico.id
+                      INNER JOIN funcionario ON servico_funcionario.id_funcionario = funcionario.id
+                      WHERE marcacao.id_cliente = '$id' 
+                      AND marcacao.data >= CURDATE()
+                      AND marcacao.estado != 'cancelada'
+                      ORDER BY marcacao.data ASC, marcacao.slot_inicial ASC";
+        $prox_marcacoes = mysqli_query($conn, $sql_prox);
+        $total_futuras = mysqli_num_rows($prox_marcacoes);
     }
 }
 ?>
@@ -57,47 +74,15 @@ if(isset($_GET['id'])) {
     </button>
 
     <nav class="sidebar d-flex flex-column">
-        <div class="logo-area">
-            <h2>Fisioestetic</h2>
-        </div>
-        
+        <div class="logo-area"><h2>Fisioestetic</h2></div>
         <ul class="nav flex-column mt-4">
-            <li class="nav-item">
-                <a class="nav-link" href="../adm/dashboard.php">
-                    <i class="bi bi-grid-1x2-fill me-3"></i>Início
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="../worker/list.php">
-                    <i class="bi bi-person-badge me-3"></i>Funcionários
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" href="list.php">
-                    <i class="bi bi-people me-3"></i>Clientes
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="../service/list.php">
-                    <i class="bi bi-scissors me-3"></i>Serviços
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="../service_category/list.php">
-                    <i class="bi bi-tag me-3"></i>Categorias
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="../booking/list.php">
-                    <i class="bi bi-calendar-check me-3"></i>Marcações
-                </a>
-            </li>
-            
-            <li class="nav-item mt-auto">
-                <a class="nav-link logout" href="../logout.php">
-                    <i class="bi bi-box-arrow-left me-3"></i>Sair
-                </a>
-            </li>
+            <li class="nav-item"><a class="nav-link" href="../adm/dashboard.php"><i class="bi bi-grid-1x2-fill me-3"></i>Início</a></li>
+            <li class="nav-item"><a class="nav-link" href="../worker/list.php"><i class="bi bi-person-badge me-3"></i>Funcionários</a></li>
+            <li class="nav-item"><a class="nav-link active" href="list.php"><i class="bi bi-people me-3"></i>Clientes</a></li>
+            <li class="nav-item"><a class="nav-link" href="../service/list.php"><i class="bi bi-scissors me-3"></i>Serviços</a></li>
+            <li class="nav-item"><a class="nav-link" href="../service_category/list.php"><i class="bi bi-tag me-3"></i>Categorias</a></li>
+            <li class="nav-item"><a class="nav-link" href="../booking/list.php"><i class="bi bi-calendar-check me-3"></i>Marcações</a></li>
+            <li class="nav-item mt-auto"><a class="nav-link logout" href="../logout.php"><i class="bi bi-box-arrow-left me-3"></i>Sair</a></li>
         </ul>
     </nav>
 
@@ -127,14 +112,13 @@ if(isset($_GET['id'])) {
                         <div class="view-label">Email</div>
                         <div class="view-value d-flex align-items-center gap-2">
                             <?= !empty($cliente['email']) ? htmlspecialchars($cliente['email']) : '<span class="text-muted">-</span>' ?>
-                            
                             <?php if(!empty($cliente['email'])): ?>
                                 <?php if(isset($cliente['email_verificado']) && $cliente['email_verificado'] == 1): ?>
-                                    <span class="badge rounded-pill text-success bg-success-subtle border border-success-subtle px-2 py-1" style="font-size: 0.75rem;" title="Email validado pelo cliente">
+                                    <span class="badge rounded-pill text-success bg-success-subtle border border-success-subtle px-2 py-1" style="font-size: 0.75rem;">
                                         <i class="bi bi-check-circle-fill me-1"></i> Validada
                                     </span>
                                 <?php else: ?>
-                                    <span class="badge rounded-pill text-warning bg-warning-subtle border border-warning-subtle px-2 py-1" style="font-size: 0.75rem;" title="A aguardar validação de email">
+                                    <span class="badge rounded-pill text-warning bg-warning-subtle border border-warning-subtle px-2 py-1" style="font-size: 0.75rem;">
                                         <i class="bi bi-clock-fill me-1"></i> Pendente
                                     </span>
                                 <?php endif; ?>
@@ -159,7 +143,7 @@ if(isset($_GET['id'])) {
 
                     <div class="col-12 mb-2">
                         <div class="view-label">Observações</div>
-                        <div class="view-value" style="min-height: 60px;">
+                        <div class="view-value" style="min-height: 60px; border-bottom: none;">
                             <?= !empty($cliente['obs']) ? nl2br(htmlspecialchars($cliente['obs'])) : '<span class="text-muted fst-italic">Sem observações registadas.</span>' ?>
                         </div>
                     </div>
@@ -169,24 +153,22 @@ if(isset($_GET['id'])) {
                     <a href="edit.php?id=<?= $cliente['id'] ?>" class="btn-edit-action">
                         <i class="bi bi-pencil-square me-2"></i>Editar
                     </a>
-                    <a href="delete.php?id=<?= $cliente['id'] ?>" class="btn-delete-action" onclick="return confirm('Tem a certeza que deseja apagar este cliente?');">
+                    <a href="delete.php?id=<?= $cliente['id'] ?>" class="btn-delete-action" onclick="return confirm('Tem a certeza?');">
                         <i class="bi bi-trash me-2"></i>Apagar
                     </a>
-                </div>
+                </div> 
             </div>
 
-            <button class="toggle-bar" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHistorico" aria-expanded="false" aria-controls="collapseHistorico">
-                <div class="toggle-title">
-                    <div class="toggle-icon-box">
-                        <i class="bi bi-clock-history"></i>
-                    </div>
-                    <span>Histórico de Marcações</span>
-                </div>
-                <i class="bi bi-chevron-down"></i>
+            <button class="toggle-bar fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHistorico" aria-expanded="false">
+                <span class="d-flex align-items-center">
+                    <i class="bi bi-clock-history me-3 fs-5 text-success"></i>
+                    <span>Histórico de marcações <span style="color: var(--brand-primary); opacity: 0.8;">(<?= $total_historico ?>)</span></span>
+                </span>
+                <i class="bi bi-chevron-down text-muted"></i>
             </button>
 
             <div class="collapse collapse-container" id="collapseHistorico">
-                <?php if($result_marcacoes && mysqli_num_rows($result_marcacoes) > 0): ?>
+                <?php if($total_historico > 0): ?>
                     <div class="table-responsive">
                         <table class="modern-table">
                             <thead>
@@ -198,32 +180,22 @@ if(isset($_GET['id'])) {
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php while($marc = mysqli_fetch_assoc($result_marcacoes)): ?>
+                                <?php while($marc = mysqli_fetch_assoc($result_marcacoes)): 
+                                    $est = strtolower($marc['estado']);
+                                    // Lógica de Cores
+                                    $status_class = 'status-default';
+                                    if($est == 'realizada') $status_class = 'status-success';
+                                    if($est == 'ativa')   $status_class = 'status-pending';
+                                    if($est == 'por confirmar')  $status_class = 'status-danger';
+                                ?>
                                     <tr>
                                         <td>
-                                            <div class="date-highlight">
-                                                <?= formatarData($marc['data']) ?>
-                                            </div>
-                                            <div class="time-sub">
-                                                <i class="bi bi-clock"></i>
-                                                <?= converterSlotParaHora($marc['slot_inicial']) ?>
-                                            </div>
+                                            <div class="date-highlight"><?= formatarData($marc['data']) ?></div>
+                                            <div class="time-sub"><i class="bi bi-clock"></i> <?= converterSlotParaHora($marc['slot_inicial']) ?></div>
                                         </td>
-                                        <td class="fw-medium text-dark">
-                                            <?= htmlspecialchars($marc['nome_servico']) ?>
-                                        </td>
-                                        <td class="text-secondary">
-                                            <?= htmlspecialchars($marc['nome_funcionario']) ?>
-                                        </td>
-                                        <td>
-                                            <?php if($marc['estado'] == 'confirmada'): ?>
-                                                <span class="status-pill status-success">Confirmada</span>
-                                            <?php elseif($marc['estado'] == 'pendente'): ?>
-                                                <span class="status-pill status-pending">Pendente</span>
-                                            <?php else: ?>
-                                                <span class="status-pill status-default"><?= ucfirst($marc['estado']) ?></span>
-                                            <?php endif; ?>
-                                        </td>
+                                        <td class="fw-medium text-dark"><?= htmlspecialchars($marc['nome_servico']) ?></td>
+                                        <td class="text-secondary"><?= htmlspecialchars($marc['nome_funcionario']) ?></td>
+                                        <td><span class="status-pill <?= $status_class ?>"><?= ucfirst($est) ?></span></td>
                                     </tr>
                                 <?php endwhile; ?>
                             </tbody>
@@ -231,19 +203,63 @@ if(isset($_GET['id'])) {
                     </div>
                 <?php else: ?>
                     <div class="bg-white p-5 rounded-4 text-center shadow-sm mt-3">
-                        <div class="mb-3 text-secondary opacity-25">
-                            <i class="bi bi-journal-x display-1"></i>
-                        </div>
                         <h5 class="fw-bold text-secondary">Sem histórico</h5>
-                        <p class="text-muted small">Este cliente ainda não efetuou nenhuma marcação.</p>
                     </div>
                 <?php endif; ?>
             </div>
 
+            <button class="toggle-bar fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProx" aria-expanded="false">
+                <span class="d-flex align-items-center">
+                    <i class="bi bi-calendar-week me-3 fs-5 text-success"></i>
+                    <span>Ver Agenda Futura <span style="color: var(--brand-primary); opacity: 0.8;">(<?= $total_futuras ?>)</span></span>
+                </span>
+                <i class="bi bi-chevron-down text-muted"></i>
+            </button>
+
+            <div class="collapse collapse-container" id="collapseProx">
+                <?php if($total_futuras > 0): ?>
+                    <div class="table-responsive">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>Data & Hora</th>
+                                    <th>Serviço</th>
+                                    <th>Funcionário</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php while($marc_f = mysqli_fetch_assoc($prox_marcacoes)): 
+                                    $est_f = strtolower($marc_f['estado']);
+                                    // Lógica de Cores
+                                    $status_class_f = 'status-default';
+                                    if($est_f == 'realizada') $status_class_f = 'status-success';
+                                    if($est_f == 'ativa')   $status_class_f = 'status-pending';
+                                    if($est_f == 'por confirmar')  $status_class_f = 'status-danger';
+                                ?>
+                                    <tr>
+                                        <td>
+                                            <div class="date-highlight"><?= formatarData($marc_f['data']) ?></div>
+                                            <div class="time-sub"><i class="bi bi-clock"></i> <?= converterSlotParaHora($marc_f['slot_inicial']) ?></div>
+                                        </td>
+                                        <td class="fw-medium text-dark"><?= htmlspecialchars($marc_f['nome_servico']) ?></td>
+                                        <td class="text-secondary"><?= htmlspecialchars($marc_f['nome_funcionario']) ?></td>
+                                        <td><span class="status-pill <?= $status_class_f ?>"><?= ucfirst($est_f) ?></span></td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else: ?>
+                    <div class="bg-white p-5 rounded-4 text-center shadow-sm mt-3">
+                        <h5 class="fw-bold text-secondary">Sem marcações futuras</h5>
+                    </div>
+                <?php endif; ?>
+            </div>            
+
             <?php else: ?>
                 <div class="alert alert-warning text-center p-5 mt-4">
                     <h4>Cliente não encontrado</h4>
-                    <p>O registo que procura não existe ou foi removido.</p>
                     <a href="list.php" class="btn btn-primary mt-3">Voltar à Lista</a>
                 </div>
             <?php endif; ?>
@@ -255,22 +271,12 @@ if(isset($_GET['id'])) {
     <script>
         const sidebar = document.querySelector('.sidebar');
         const toggle = document.getElementById('sidebarToggle');
-
         if(toggle){
             toggle.addEventListener('click', (e) => {
                 e.stopPropagation();
                 sidebar.classList.toggle('active');
             });
         }
-        
-        // Fechar sidebar ao clicar fora no mobile
-        document.addEventListener('click', (e) => {
-            if (window.innerWidth <= 991) {
-                if (!sidebar.contains(e.target) && !toggle.contains(e.target) && sidebar.classList.contains('active')) {
-                    sidebar.classList.remove('active');
-                }
-            }
-        });
     </script>
 </body>
 </html>

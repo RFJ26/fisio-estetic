@@ -1,11 +1,14 @@
 <?php
-// Verifica se o utilizador está logado e se é admin
-if (!isset($_COOKIE['role']) || ($_COOKIE['role'] !== 'admin' && $_COOKIE['role'] !== '1')) {
+session_start();
+
+if (!isset($_SESSION['role']) || 
+   ($_SESSION['role'] !== 'admin' && $_SESSION['role'] !== '1')) {
     header("Location: /index.php");
     exit();
 }
 
-$nome = $_COOKIE['nome'] ?? 'Administrador';
+$nome = $_SESSION['nome'] ?? 'Administrador';
+
 ?>
 <!DOCTYPE html>
 <html lang="pt">

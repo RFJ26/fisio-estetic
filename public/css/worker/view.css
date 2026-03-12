@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
 :root {
     --brand-dark: #1a3c1b;
     --brand-primary: #2e7d32;
@@ -5,122 +7,93 @@
     --bg-light: #f8f9fa;
     --text-main: #2c3e50;
     --text-muted: #6c757d;
-    --sidebar-width: 260px;
+    --sidebar-width: 250px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
-body {
-    background-color: var(--bg-light);
-    font-family: 'Poppins', sans-serif;
-    color: var(--text-main);
-    overflow-x: hidden;
+body { background-color: var(--bg-light); font-family: 'Poppins', sans-serif; color: var(--text-main); overflow-x: hidden; }
+
+/* --- LAYOUT PRINCIPAL --- */
+.content { margin-left: var(--sidebar-width); padding: 40px; min-height: 100vh; }
+.content .container-fluid { max-width: 1000px; margin: 0 auto; }
+
+header { margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid #e9ecef; }
+header h1, header h2 { font-size: 1.75rem; font-weight: 600; color: #1a1a1a; margin-bottom: 5px;}
+
+.btn-back { display: inline-flex; align-items: center; gap: 8px; background: white; color: #4b5563; border: 1px solid #e5e7eb; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: 500; transition: all 0.2s; }
+.btn-back:hover { background: #f3f4f6; transform: translateX(-3px); }
+
+/* --- CARTÃO DE VISUALIZAÇÃO --- */
+.view-card { background: #ffffff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); padding: 40px; border: 1px solid #f3f4f6; }
+.view-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #9ca3af; margin-bottom: 8px; letter-spacing: 0.8px; }
+.view-value { font-size: 1.05rem; color: #1f2937; padding-bottom: 12px; border-bottom: 1px solid #f3f4f6; margin-bottom: 15px; }
+
+/* --- AÇÕES --- */
+.card-actions { display: flex; justify-content: flex-start; align-items: center; gap: 15px; margin-top: 30px; padding-top: 30px; border-top: 1px solid #f3f4f6; }
+.btn-edit-action { background: #495057; color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: 500; }
+.btn-assign-action { background: var(--brand-dark); color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: 500; }
+.btn-delete-action { background: #fee2e2; color: #dc2626; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: 500; border: 1px solid transparent; }
+
+/* ==========================================================================
+   DROPDOWNS PADRONIZADOS
+   ========================================================================== */
+.toggle-bar {
+    width: 100%; margin-top: 30px; background: white; border: 1px solid #e5e7eb; border-radius: 12px;
+    padding: 15px 25px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: 0.3s; box-shadow: var(--shadow-sm);
 }
+.toggle-bar:hover { border-color: var(--brand-primary); transform: translateY(-2px); }
+.toggle-title { display: flex; align-items: center; gap: 12px; }
+.toggle-title span { font-weight: 600 !important; color: var(--text-main); }
+.toggle-icon-box { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
 
-/* --- Layout --- */
-.content {
-    margin-left: var(--sidebar-width);
-    width: calc(100% - var(--sidebar-width));
-    padding: 40px;
-    transition: all 0.3s ease;
-}
+/* A BÍBLIA DAS CORES DOS ÍCONES */
+.icon-box-green { background-color: #e8f5e9 !important; color: #2e7d32 !important; } /* Pessoas */
+.icon-box-blue { background-color: #e3f2fd !important; color: #1976d2 !important; } /* Agenda Futura */
+.icon-box-purple { background-color: #f3e5f5 !important; color: #7b1fa2 !important; } /* Histórico */
+.icon-box-orange { background-color: #fff3e0 !important; color: #ef6c00 !important; } /* Alertas/Categorias */
 
-.view-card {
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.04);
-    padding: 40px;
-    border: 1px solid #eef0f3;
-    max-width: 900px;
-    margin: 0 auto;
-}
+.toggle-bar i.bi-chevron-down { transition: transform 0.3s; color: var(--text-muted); }
+.toggle-bar[aria-expanded="true"] i.bi-chevron-down { transform: rotate(180deg); color: var(--brand-primary); }
+.collapse-container { margin-top: 15px; }
+.no-data-info { padding: 30px; text-align: center; color: var(--text-muted); background: #fff; border-radius: 12px; border: 1px solid #e5e7eb; margin-top: 10px; }
 
-/* --- Labels e Valores --- */
-.view-label {
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: #9ca3af;
-    margin-bottom: 8px;
-    letter-spacing: 0.8px;
-}
+/* ==========================================================================
+   TABELAS MODERNAS E ESTADOS
+   ========================================================================== */
+.modern-table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
+.modern-table thead th { font-size: 0.75rem; color: var(--text-muted); padding: 0 20px; text-align: left; text-transform: uppercase; font-weight: 600;}
+.modern-table td { background: white; padding: 20px; border: none; box-shadow: var(--shadow-sm); vertical-align: middle; }
+.modern-table td:first-child { border-radius: 10px 0 0 10px; }
+.modern-table td:last-child { border-radius: 0 10px 10px 0; }
 
-.view-value {
-    color: var(--text-main);
-    padding-bottom: 10px;
-    border-bottom: 1px solid #f3f4f6;
-    margin-bottom: 15px;
-    min-height: 35px;
-    display: flex;
-    align-items: center;
-}
+.date-highlight { font-weight: 600; color: var(--text-main); }
+.time-sub { color: var(--text-muted); font-size: 0.85rem; display: flex; align-items: center; gap: 5px; margin-top: 2px;}
 
-/* --- Botões --- */
-.btn-back {
-    color: var(--text-muted);
-    border: 1px solid #dee2e6;
-    background: white;
-    padding: 8px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    display: inline-flex;
-    align-items: center;
-}
+/* BADGES DE ESTADO (Colors unificadas) */
+.status-pill { padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; display: inline-block; letter-spacing: 0.05em; }
+.status-success { background: #dcfce7; color: #166534; } /* Realizada / Administrador (Verde) */
+.status-pending { background: #fef9c3; color: #854d0e; } /* Ativa (Amarelo) */
+.status-danger  { background: #fee2e2; color: #dc2626; } /* Por Confirmar (Vermelho) */
+.status-cancel  { background: #f3f4f6; color: #9ca3af; text-decoration: line-through;} /* Cancelada (Riscado) */
+.status-default { background: #f3f4f6; color: #4b5563; } /* Outros / Funcionário */
 
-.card-actions {
-    display: flex;
-    gap: 15px;
-    margin-top: 30px;
-    padding-top: 30px;
-    border-top: 1px solid #f0f0f0;
-}
-
-.btn-assign-action { background-color: var(--brand-dark); color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: 500; }
-.btn-edit-action { background-color: #495057; color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: 500; }
-.btn-delete-action { background-color: #fee2e2; color: #dc2626; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: 500; }
-
-/* --- Área de Marcações --- */
-.btn-toggle-area {
-    width: 100%;
-    max-width: 900px;
-    margin: 30px auto 0 auto;
-    background: #ffffff;
-    border: 1px solid #eef0f3;
-    padding: 20px 25px;
-    border-radius: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: var(--text-main);
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-}
-
-.btn-toggle-area[aria-expanded="true"] i.bi-chevron-down { transform: rotate(180deg); }
-
-.collapse-card {
-    background: white;
-    border-radius: 12px;
-    padding: 30px;
-    border: 1px solid #eef0f3;
-    max-width: 900px;
-    margin: 15px auto 0 auto;
-}
-
-/* --- Tabela e Badges --- */
-.table-stylish { width: 100%; border-collapse: separate; margin-top: 10px; }
-.table-stylish thead th { font-size: 0.75rem; text-transform: uppercase; color: #adb5bd; padding: 15px 20px; border-bottom: 1px solid #f0f0f0; }
-.table-stylish td { padding: 18px 20px; border-bottom: 1px solid #f8f9fa; font-size: 0.95rem; }
-
-.badge-pill { padding: 6px 12px; border-radius: 50px; font-weight: 600; font-size: 0.7rem; text-transform: uppercase; }
-.badge-success-soft { background-color: #d1fae5; color: #065f46; } /* Confirmada */
-.badge-warning-soft { background-color: #fef3c7; color: #92400e; } /* Pendente */
-.badge-danger-soft  { background-color: #fee2e2; color: #dc2626; } /* Cancelada */
-.badge-secondary-soft { background-color: #f3f4f6; color: #4b5563; }
-
-/* Mobile */
-@media (max-width: 992px) {
-    .content { margin-left: 0; width: 100%; padding: 20px; padding-top: 80px; }
+/* ==========================================================================
+   MOBILE - TABELA EM CARDBOOK (Responsivo)
+   ========================================================================== */
+@media (max-width: 991px) {
+    .content { margin-left: 0; padding: 20px; padding-top: 80px; width: 100%; }
     .card-actions { flex-direction: column; }
-    .btn-delete-action.ms-auto { margin-left: 0 !important; }
+    .btn-edit-action, .btn-assign-action, .btn-delete-action { width: 100%; text-align: center; }
+    .btn-delete-action.ms-md-auto { margin-left: 0 !important; }
+    .sidebar { left: -250px; position: fixed; height: 100vh; z-index: 1050; transition: left 0.3s ease; }
+    .sidebar.active { left: 0; }
+    #sidebarToggle { position: fixed; top: 20px; left: 20px; z-index: 1100; background: var(--brand-primary); color: white; border: none; padding: 10px; border-radius: 5px; }
+
+    /* Transformar tabela em cards no mobile */
+    .modern-table thead { display: none; }
+    .modern-table tr { display: block; margin-bottom: 1rem; border: 1px solid #e5e7eb; border-radius: 12px; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+    .modern-table td { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f3f4f6; padding: 12px 16px; text-align: right; border-radius: 0 !important; box-shadow: none !important; }
+    .modern-table td::before { content: attr(data-label); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; color: #6b7280; margin-right: 15px; text-align: left; }
+    .modern-table td:last-child { border-bottom: none; border-radius: 0 0 12px 12px !important; }
+    .modern-table td:first-child { border-radius: 12px 12px 0 0 !important; }
 }

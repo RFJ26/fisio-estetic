@@ -82,6 +82,13 @@ if(isset($_GET['id'])) {
             <li class="nav-item"><a class="nav-link" href="../service/list.php"><i class="bi bi-scissors me-3"></i>Serviços</a></li>
             <li class="nav-item"><a class="nav-link" href="../service_category/list.php"><i class="bi bi-tag me-3"></i>Categorias</a></li>
             <li class="nav-item"><a class="nav-link" href="../booking/list.php"><i class="bi bi-calendar-check me-3"></i>Marcações</a></li>
+            
+            <?php if(isset($_COOKIE['role']) && ($_COOKIE['role'] === 'admin' || $_COOKIE['role'] === '1')): ?>
+                <li class="nav-item mt-3">
+                    <a class="nav-link" href="/select_role.php" style="color: #ef6c00;"><i class="bi bi-arrow-left-right me-3"></i>Mudar Perfil</a>
+                </li>
+            <?php endif; ?>
+            
             <li class="nav-item mt-auto"><a class="nav-link logout" href="../logout.php"><i class="bi bi-box-arrow-left me-3"></i>Sair</a></li>
         </ul>
     </nav>
@@ -95,20 +102,20 @@ if(isset($_GET['id'])) {
                     <p class="text-muted">Informação completa do registo.</p>
                 </div>
                 <a href="list.php" class="btn-back">
-                    <i class="bi bi-arrow-left"></i> Voltar
+                    <i class="bi bi-arrow-left me-2"></i> Voltar
                 </a>
             </header>
 
             <?php if($cliente): ?>
             
             <div class="view-card">
-                <div class="row">
-                    <div class="col-12 mb-4">
+                <div class="row g-4">
+                    <div class="col-12">
                         <div class="view-label">Nome Completo</div>
                         <div class="view-value fw-bold fs-5"><?= htmlspecialchars($cliente['nome']) ?></div>
                     </div>
 
-                    <div class="col-md-6 mb-4">
+                    <div class="col-md-6">
                         <div class="view-label">Email</div>
                         <div class="view-value d-flex align-items-center gap-2">
                             <?= !empty($cliente['email']) ? htmlspecialchars($cliente['email']) : '<span class="text-muted">-</span>' ?>
@@ -126,22 +133,22 @@ if(isset($_GET['id'])) {
                         </div>
                     </div>
 
-                    <div class="col-md-6 mb-4">
+                    <div class="col-md-6">
                         <div class="view-label">Telefone</div>
                         <div class="view-value"><?= !empty($cliente['telefone']) ? htmlspecialchars($cliente['telefone']) : '<span class="text-muted">-</span>' ?></div>
                     </div>
 
-                    <div class="col-md-6 mb-4">
+                    <div class="col-md-6">
                         <div class="view-label">NIF</div>
                         <div class="view-value"><?= !empty($cliente['nif']) ? htmlspecialchars($cliente['nif']) : '<span class="text-muted">-</span>' ?></div>
                     </div>
 
-                    <div class="col-md-6 mb-4">
+                    <div class="col-md-6">
                         <div class="view-label">Data de Registo</div>
                         <div class="view-value"><?= formatarData($cliente['created_at']) ?></div>
                     </div>
 
-                    <div class="col-12 mb-2">
+                    <div class="col-12">
                         <div class="view-label">Observações</div>
                         <div class="view-value" style="min-height: 60px; border-bottom: none;">
                             <?= !empty($cliente['obs']) ? nl2br(htmlspecialchars($cliente['obs'])) : '<span class="text-muted fst-italic">Sem observações registadas.</span>' ?>
@@ -153,66 +160,19 @@ if(isset($_GET['id'])) {
                     <a href="edit.php?id=<?= $cliente['id'] ?>" class="btn-edit-action">
                         <i class="bi bi-pencil-square me-2"></i>Editar
                     </a>
-                    <a href="delete.php?id=<?= $cliente['id'] ?>" class="btn-delete-action" onclick="return confirm('Tem a certeza?');">
+                    <a href="delete.php?id=<?= $cliente['id'] ?>" class="btn-delete-action ms-md-auto" onclick="return confirm('Tem a certeza de que deseja apagar este cliente?');">
                         <i class="bi bi-trash me-2"></i>Apagar
                     </a>
                 </div> 
             </div>
 
-            <button class="toggle-bar fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHistorico" aria-expanded="false">
-                <span class="d-flex align-items-center">
-                    <i class="bi bi-clock-history me-3 fs-5 text-success"></i>
-                    <span>Histórico de marcações <span style="color: var(--brand-primary); opacity: 0.8;">(<?= $total_historico ?>)</span></span>
-                </span>
-                <i class="bi bi-chevron-down text-muted"></i>
-            </button>
-
-            <div class="collapse collapse-container" id="collapseHistorico">
-                <?php if($total_historico > 0): ?>
-                    <div class="table-responsive">
-                        <table class="modern-table">
-                            <thead>
-                                <tr>
-                                    <th>Data & Hora</th>
-                                    <th>Serviço</th>
-                                    <th>Funcionário</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php while($marc = mysqli_fetch_assoc($result_marcacoes)): 
-                                    $est = strtolower($marc['estado']);
-                                    // Lógica de Cores
-                                    $status_class = 'status-default';
-                                    if($est == 'realizada') $status_class = 'status-success';
-                                    if($est == 'ativa')   $status_class = 'status-pending';
-                                    if($est == 'por confirmar')  $status_class = 'status-danger';
-                                ?>
-                                    <tr>
-                                        <td>
-                                            <div class="date-highlight"><?= formatarData($marc['data']) ?></div>
-                                            <div class="time-sub"><i class="bi bi-clock"></i> <?= converterSlotParaHora($marc['slot_inicial']) ?></div>
-                                        </td>
-                                        <td class="fw-medium text-dark"><?= htmlspecialchars($marc['nome_servico']) ?></td>
-                                        <td class="text-secondary"><?= htmlspecialchars($marc['nome_funcionario']) ?></td>
-                                        <td><span class="status-pill <?= $status_class ?>"><?= ucfirst($est) ?></span></td>
-                                    </tr>
-                                <?php endwhile; ?>
-                            </tbody>
-                        </table>
+            <button class="toggle-bar" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProx" aria-expanded="false">
+                <div class="toggle-title">
+                    <div class="toggle-icon-box icon-box-blue">
+                        <i class="bi bi-calendar-week-fill"></i>
                     </div>
-                <?php else: ?>
-                    <div class="bg-white p-5 rounded-4 text-center shadow-sm mt-3">
-                        <h5 class="fw-bold text-secondary">Sem histórico</h5>
-                    </div>
-                <?php endif; ?>
-            </div>
-
-            <button class="toggle-bar fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProx" aria-expanded="false">
-                <span class="d-flex align-items-center">
-                    <i class="bi bi-calendar-week me-3 fs-5 text-success"></i>
-                    <span>Ver Agenda Futura <span style="color: var(--brand-primary); opacity: 0.8;">(<?= $total_futuras ?>)</span></span>
-                </span>
+                    <span>Ver Agenda Futura <span style="color: #1976d2; opacity: 0.8; font-size: 0.9rem;">(<?= $total_futuras ?>)</span></span>
+                </div>
                 <i class="bi bi-chevron-down text-muted"></i>
             </button>
 
@@ -225,42 +185,98 @@ if(isset($_GET['id'])) {
                                     <th>Data & Hora</th>
                                     <th>Serviço</th>
                                     <th>Funcionário</th>
-                                    <th>Estado</th>
+                                    <th class="text-end pe-4">Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php while($marc_f = mysqli_fetch_assoc($prox_marcacoes)): 
                                     $est_f = strtolower($marc_f['estado']);
-                                    // Lógica de Cores
                                     $status_class_f = 'status-default';
                                     if($est_f == 'realizada') $status_class_f = 'status-success';
                                     if($est_f == 'ativa')   $status_class_f = 'status-pending';
                                     if($est_f == 'por confirmar')  $status_class_f = 'status-danger';
+                                    if($est_f == 'cancelada')  $status_class_f = 'status-cancel';
                                 ?>
                                     <tr>
-                                        <td>
+                                        <td data-label="Data & Hora">
                                             <div class="date-highlight"><?= formatarData($marc_f['data']) ?></div>
-                                            <div class="time-sub"><i class="bi bi-clock"></i> <?= converterSlotParaHora($marc_f['slot_inicial']) ?></div>
+                                            <div class="time-sub"><i class="bi bi-clock me-1 text-muted"></i> <?= converterSlotParaHora($marc_f['slot_inicial']) ?></div>
                                         </td>
-                                        <td class="fw-medium text-dark"><?= htmlspecialchars($marc_f['nome_servico']) ?></td>
-                                        <td class="text-secondary"><?= htmlspecialchars($marc_f['nome_funcionario']) ?></td>
-                                        <td><span class="status-pill <?= $status_class_f ?>"><?= ucfirst($est_f) ?></span></td>
+                                        <td data-label="Serviço" class="fw-medium text-dark"><?= htmlspecialchars($marc_f['nome_servico']) ?></td>
+                                        <td data-label="Funcionário" class="text-secondary"><?= htmlspecialchars($marc_f['nome_funcionario']) ?></td>
+                                        <td data-label="Estado" class="text-md-end pe-md-4">
+                                            <span class="status-pill <?= $status_class_f ?>"><?= ucfirst($est_f) ?></span>
+                                        </td>
                                     </tr>
                                 <?php endwhile; ?>
                             </tbody>
                         </table>
                     </div>
                 <?php else: ?>
-                    <div class="bg-white p-5 rounded-4 text-center shadow-sm mt-3">
-                        <h5 class="fw-bold text-secondary">Sem marcações futuras</h5>
+                    <div class="no-data-info">
+                        Sem marcações futuras agendadas.
                     </div>
                 <?php endif; ?>
             </div>            
 
+            <button class="toggle-bar" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHistorico" aria-expanded="false">
+                <div class="toggle-title">
+                    <div class="toggle-icon-box icon-box-purple">
+                        <i class="bi bi-clock-history"></i>
+                    </div>
+                    <span>Histórico de Marcações <span style="color: #7b1fa2; opacity: 0.8; font-size: 0.9rem;">(<?= $total_historico ?>)</span></span>
+                </div>
+                <i class="bi bi-chevron-down text-muted"></i>
+            </button>
+
+            <div class="collapse collapse-container" id="collapseHistorico">
+                <?php if($total_historico > 0): ?>
+                    <div class="table-responsive">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>Data & Hora</th>
+                                    <th>Serviço</th>
+                                    <th>Funcionário</th>
+                                    <th class="text-end pe-4">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php while($marc = mysqli_fetch_assoc($result_marcacoes)): 
+                                    $est = strtolower($marc['estado']);
+                                    $status_class = 'status-default';
+                                    if($est == 'realizada') $status_class = 'status-success';
+                                    if($est == 'ativa')   $status_class = 'status-pending';
+                                    if($est == 'por confirmar')  $status_class = 'status-danger';
+                                    if($est == 'cancelada')  $status_class = 'status-cancel';
+                                ?>
+                                    <tr>
+                                        <td data-label="Data & Hora">
+                                            <div class="date-highlight"><?= formatarData($marc['data']) ?></div>
+                                            <div class="time-sub"><i class="bi bi-clock me-1 text-muted"></i> <?= converterSlotParaHora($marc['slot_inicial']) ?></div>
+                                        </td>
+                                        <td data-label="Serviço" class="fw-medium text-dark"><?= htmlspecialchars($marc['nome_servico']) ?></td>
+                                        <td data-label="Funcionário" class="text-secondary"><?= htmlspecialchars($marc['nome_funcionario']) ?></td>
+                                        <td data-label="Estado" class="text-md-end pe-md-4">
+                                            <span class="status-pill <?= $status_class ?>"><?= ucfirst($est) ?></span>
+                                        </td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else: ?>
+                    <div class="no-data-info">
+                        Sem histórico de marcações.
+                    </div>
+                <?php endif; ?>
+            </div>
+
             <?php else: ?>
-                <div class="alert alert-warning text-center p-5 mt-4">
+                <div class="alert alert-warning text-center p-5 mt-4" style="border-radius: 12px; border: 1px solid #ffeeba;">
+                    <i class="bi bi-exclamation-triangle-fill d-block fs-1 mb-3 text-warning"></i>
                     <h4>Cliente não encontrado</h4>
-                    <a href="list.php" class="btn btn-primary mt-3">Voltar à Lista</a>
+                    <a href="list.php" class="btn btn-primary mt-3 border-0" style="background-color: var(--brand-primary);">Voltar à Lista</a>
                 </div>
             <?php endif; ?>
 
@@ -277,6 +293,13 @@ if(isset($_GET['id'])) {
                 sidebar.classList.toggle('active');
             });
         }
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 991) {
+                if (!sidebar.contains(e.target) && !toggle.contains(e.target) && sidebar.classList.contains('active')) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
     </script>
 </body>
 </html>

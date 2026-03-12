@@ -8,22 +8,25 @@ require_once __DIR__ . '/../../src/helpers.php'; // Necessário para o formatarD
 $categoria = null;
 $result_servicos = null;
 $result_marcacoes = null;
+$total_servicos = 0;
+$total_futuras = 0;
 
 if(isset($_GET['id'])) {
     $id = mysqli_real_escape_string($conn, $_GET['id']);
     
-    // 1. Dados da Categoria (SEM ABREVIAÇÕES)
-    $sql = "SELECT categoria.id, categoria.designacao, categoria.created_at FROM categoria WHERE categoria.id = '$id'";
+    // 1. Dados da Categoria
+    $sql = "SELECT id, designacao, created_at FROM categoria WHERE id = '$id'";
     $query = mysqli_query($conn, $sql);
     
     if($query && mysqli_num_rows($query) > 0){
         $categoria = mysqli_fetch_array($query);
 
-        // 2. Serviços Associados (SEM ABREVIAÇÕES)
-        $sql_servicos = "SELECT servico.designacao, servico.num_slots, servico.preco FROM servico WHERE servico.id_categoria = '$id' ORDER BY servico.designacao ASC";
+        // 2. Serviços Associados
+        $sql_servicos = "SELECT designacao, num_slots, preco FROM servico WHERE id_categoria = '$id' ORDER BY designacao ASC";
         $result_servicos = mysqli_query($conn, $sql_servicos);
+        $total_servicos = mysqli_num_rows($result_servicos);
 
-        // 3. Próximas Marcações (SEM ABREVIAÇÕES e com as relações corretas)
+        // 3. Próximas Marcações
         $hoje = date('Y-m-d');
         $sql_marcacoes = "SELECT 
                             marcacao.data, 
@@ -35,8 +38,9 @@ if(isset($_GET['id'])) {
                           INNER JOIN servico ON servico_funcionario.id_servico = servico.id
                           WHERE servico.id_categoria = '$id' AND marcacao.data >= '$hoje'
                           ORDER BY marcacao.data ASC, marcacao.slot_inicial ASC
-                          LIMIT 5";
+                          LIMIT 10"; // Aumentei o limite para mostrar mais algumas se houver
         $result_marcacoes = mysqli_query($conn, $sql_marcacoes);
+        $total_futuras = mysqli_num_rows($result_marcacoes);
     }
 }
 ?>
@@ -72,9 +76,13 @@ if(isset($_GET['id'])) {
             <li class="nav-item"><a class="nav-link" href="../service/list.php"><i class="bi bi-scissors me-3"></i>Serviços</a></li>
             <li class="nav-item"><a class="nav-link active" href="list.php"><i class="bi bi-tag me-3"></i>Categorias</a></li>
             <li class="nav-item"><a class="nav-link" href="../booking/list.php"><i class="bi bi-calendar-check me-3"></i>Marcações</a></li>
+            
             <?php if(isset($_COOKIE['role']) && ($_COOKIE['role'] === 'admin' || $_COOKIE['role'] === '1')): ?>
-                <li class="nav-item mt-3"><a class="nav-link" href="/select_role.php" style="color: #ef6c00;"><i class="bi bi-arrow-left-right me-3"></i>Mudar Perfil</a></li>
+                <li class="nav-item mt-3">
+                    <a class="nav-link" href="/select_role.php" style="color: #ef6c00;"><i class="bi bi-arrow-left-right me-3"></i>Mudar Perfil</a>
+                </li>
             <?php endif; ?>
+            
             <li class="nav-item mt-auto"><a class="nav-link logout" href="../logout.php"><i class="bi bi-box-arrow-left me-3"></i>Sair</a></li>
         </ul>
     </nav>
@@ -88,20 +96,20 @@ if(isset($_GET['id'])) {
                     <p class="text-muted">Informação completa da categoria e serviços.</p>
                 </div>
                 <a href="list.php" class="btn-back">
-                    <i class="bi bi-arrow-left"></i> Voltar
+                    <i class="bi bi-arrow-left me-2"></i> Voltar
                 </a>
             </header>
 
             <?php if($categoria): ?>
             
             <div class="view-card">
-                <div class="row">
-                    <div class="col-md-6 mb-4">
+                <div class="row g-4">
+                    <div class="col-md-6">
                         <div class="view-label">Nome da Categoria</div>
                         <div class="view-value fw-bold fs-5"><?= htmlspecialchars($categoria['designacao']) ?></div>
                     </div>
 
-                    <div class="col-md-6 mb-4">
+                    <div class="col-md-6">
                         <div class="view-label">Data de Criação</div>
                         <div class="view-value">
                             <?= formatarData($categoria['created_at']) ?>
@@ -113,44 +121,54 @@ if(isset($_GET['id'])) {
                     <a href="edit.php?id=<?= $categoria['id'] ?>" class="btn-edit-action">
                         <i class="bi bi-pencil-square me-2"></i>Editar
                     </a>
-                    <a href="delete.php?id=<?= $categoria['id'] ?>" class="btn-delete-action" onclick="return confirm('Tem a certeza que deseja apagar esta categoria?');">
+                    <a href="delete.php?id=<?= $categoria['id'] ?>" class="btn-delete-action ms-md-auto" onclick="return confirm('Tem a certeza que deseja apagar esta categoria?');">
                         <i class="bi bi-trash me-2"></i>Apagar
                     </a>
                 </div>
             </div>
 
-            <button class="toggle-bar collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseServicos" aria-expanded="false" aria-controls="collapseServicos">
+            <button class="toggle-bar" type="button" data-bs-toggle="collapse" data-bs-target="#collapseServicos" aria-expanded="false">
                 <div class="toggle-title">
-                    <div class="toggle-icon-box" style="background-color: #e8f5e9; color: #2e7d32;">
+                    <div class="toggle-icon-box icon-box-purple">
                         <i class="bi bi-scissors"></i>
                     </div>
-                    <span>Serviços Associados</span>
+                    <span>Serviços Associados <span style="color: var(--brand-primary); opacity: 0.8; font-size: 0.9rem;">(<?= $total_servicos ?>)</span></span>
                 </div>
-                <i class="bi bi-chevron-down"></i>
+                <i class="bi bi-chevron-down text-muted"></i>
             </button>
 
             <div class="collapse collapse-container" id="collapseServicos">
-                <?php if($result_servicos && mysqli_num_rows($result_servicos) > 0): ?>
+                <?php if($total_servicos > 0): ?>
                     <div class="table-responsive">
                         <table class="modern-table">
                             <thead>
                                 <tr>
                                     <th>Serviço</th>
-                                    <th>Duração (Slots)</th>
-                                    <th>Preço</th>
+                                    <th>Duração Estimada</th>
+                                    <th class="text-end pe-4">Preço</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php while($serv = mysqli_fetch_assoc($result_servicos)): ?>
+                                <?php while($serv = mysqli_fetch_assoc($result_servicos)): 
+                                    // CÁLCULO DE TEMPO: Slots * 15 min
+                                    $minutos_totais = $serv['num_slots'] * 15;
+                                    $horas = floor($minutos_totais / 60);
+                                    $min_restantes = $minutos_totais % 60;
+                                    
+                                    $tempo_str = '';
+                                    if ($horas > 0) $tempo_str .= $horas . 'h ';
+                                    if ($min_restantes > 0 || $horas == 0) $tempo_str .= $min_restantes . ' min';
+                                ?>
                                     <tr>
-                                        <td class="fw-medium text-dark">
+                                        <td data-label="Serviço" class="fw-medium text-dark">
                                             <?= htmlspecialchars($serv['designacao']) ?>
                                         </td>
-                                        <td class="text-secondary">
-                                            <?= htmlspecialchars($serv['num_slots']) ?>
+                                        <td data-label="Duração" class="text-secondary">
+                                            <i class="bi bi-clock-history me-1"></i> <?= trim($tempo_str) ?> 
+                                            <span class="text-muted ms-1" style="font-size: 0.8rem; opacity: 0.7;">(<?= htmlspecialchars($serv['num_slots']) ?> slots)</span>
                                         </td>
-                                        <td>
-                                            <span class="fw-bold" style="color: #2e7d32;">
+                                        <td data-label="Preço" class="text-md-end pe-md-4">
+                                            <span class="fw-bold" style="color: #2e7d32; font-size: 1.1rem;">
                                                 <?= number_format($serv['preco'], 2, ',', '.') ?> €
                                             </span>
                                         </td>
@@ -160,60 +178,58 @@ if(isset($_GET['id'])) {
                         </table>
                     </div>
                 <?php else: ?>
-                    <div class="bg-white p-5 rounded-4 text-center shadow-sm mt-3">
-                        <div class="mb-3 text-secondary opacity-25">
-                            <i class="bi bi-inbox display-1"></i>
-                        </div>
-                        <h5 class="fw-bold text-secondary">Sem serviços</h5>
-                        <p class="text-muted small">Ainda não existem serviços associados a esta categoria.</p>
+                    <div class="no-data-info">
+                        Ainda não existem serviços associados a esta categoria.
                     </div>
                 <?php endif; ?>
             </div>
 
-            <button class="toggle-bar mt-4 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMarcacoes" aria-expanded="false" aria-controls="collapseMarcacoes">
+            <button class="toggle-bar mt-4" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMarcacoes" aria-expanded="false">
                 <div class="toggle-title">
-                    <div class="toggle-icon-box" style="background-color: #e3f2fd; color: #1565c0;">
-                        <i class="bi bi-calendar-check"></i>
+                    <div class="toggle-icon-box icon-box-blue">
+                        <i class="bi bi-calendar-week-fill"></i>
                     </div>
-                    <span>Próximas Marcações</span>
+                    <span>Próximas Marcações <span style="color: #1976d2; opacity: 0.8; font-size: 0.9rem;">(<?= $total_futuras ?>)</span></span>
                 </div>
-                <i class="bi bi-chevron-down"></i>
+                <i class="bi bi-chevron-down text-muted"></i>
             </button>
 
             <div class="collapse collapse-container" id="collapseMarcacoes">
-                <?php if($result_marcacoes && mysqli_num_rows($result_marcacoes) > 0): ?>
+                <?php if($total_futuras > 0): ?>
                     <div class="table-responsive">
                         <table class="modern-table">
                             <thead>
                                 <tr>
                                     <th>Data & Hora</th>
                                     <th>Serviço</th>
-                                    <th>Estado</th>
+                                    <th class="text-end pe-4">Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php while($marc = mysqli_fetch_assoc($result_marcacoes)): ?>
+                                <?php while($marc = mysqli_fetch_assoc($result_marcacoes)): 
+                                    $est = strtolower($marc['estado']);
+                                    // Cores de Estado
+                                    $badge = 'status-default';
+                                    if(in_array($est, ['realizada', 'confirmada'])) $badge = 'status-success';
+                                    if(in_array($est, ['ativa', 'pendente'])) $badge = 'status-pending';
+                                    if($est == 'por confirmar') $badge = 'status-danger';
+                                    if($est == 'cancelada') $badge = 'status-cancel';
+                                ?>
                                     <tr>
-                                        <td>
+                                        <td data-label="Data & Hora">
                                             <div class="date-highlight">
                                                 <?= formatarData($marc['data']) ?>
                                             </div>
                                             <div class="time-sub">
-                                                <i class="bi bi-clock"></i>
+                                                <i class="bi bi-clock me-1 text-muted"></i>
                                                 <?= converterSlotParaHora($marc['slot_inicial']) ?>
                                             </div>
                                         </td>
-                                        <td class="fw-medium text-dark">
+                                        <td data-label="Serviço" class="fw-medium text-dark">
                                             <?= htmlspecialchars($marc['nome_servico']) ?>
                                         </td>
-                                        <td>
-                                            <?php if($marc['estado'] == 'confirmada'): ?>
-                                                <span class="status-pill status-success">Confirmada</span>
-                                            <?php elseif($marc['estado'] == 'pendente'): ?>
-                                                <span class="status-pill status-pending">Pendente</span>
-                                            <?php else: ?>
-                                                <span class="status-pill status-default"><?= ucfirst($marc['estado']) ?></span>
-                                            <?php endif; ?>
+                                        <td data-label="Estado" class="text-md-end pe-md-4">
+                                            <span class="status-pill <?= $badge ?>"><?= ucfirst($est) ?></span>
                                         </td>
                                     </tr>
                                 <?php endwhile; ?>
@@ -221,21 +237,17 @@ if(isset($_GET['id'])) {
                         </table>
                     </div>
                 <?php else: ?>
-                    <div class="bg-white p-5 rounded-4 text-center shadow-sm mt-3">
-                        <div class="mb-3 text-secondary opacity-25">
-                            <i class="bi bi-calendar-x display-1"></i>
-                        </div>
-                        <h5 class="fw-bold text-secondary">Sem marcações</h5>
-                        <p class="text-muted small">Não existem agendamentos futuros para esta categoria.</p>
+                    <div class="no-data-info">
+                        Não existem agendamentos futuros para os serviços desta categoria.
                     </div>
                 <?php endif; ?>
             </div>
 
             <?php else: ?>
-                <div class="alert alert-warning text-center p-5 mt-4">
+                <div class="alert alert-warning text-center p-5 mt-4" style="border-radius: 12px; border: 1px solid #ffeeba;">
+                    <i class="bi bi-exclamation-triangle-fill d-block fs-1 mb-3 text-warning"></i>
                     <h4>Categoria não encontrada</h4>
-                    <p>O registo que procura não existe ou foi removido.</p>
-                    <a href="list.php" class="btn btn-primary mt-3">Voltar à Lista</a>
+                    <a href="list.php" class="btn btn-primary mt-3 border-0" style="background-color: var(--brand-primary);">Voltar à Lista</a>
                 </div>
             <?php endif; ?>
 
@@ -254,30 +266,12 @@ if(isset($_GET['id'])) {
             });
         }
         
-        // Fechar sidebar ao clicar fora no mobile
         document.addEventListener('click', (e) => {
             if (window.innerWidth <= 991) {
                 if (!sidebar.contains(e.target) && !toggle.contains(e.target) && sidebar.classList.contains('active')) {
                     sidebar.classList.remove('active');
                 }
             }
-        });
-
-        // Efeito de rotação na seta (ícone chevron) do toggle-bar quando o collapse abre e fecha
-        document.querySelectorAll('.toggle-bar').forEach(button => {
-            button.addEventListener('click', function() {
-                const icon = this.querySelector('.bi-chevron-down');
-                if(icon) {
-                    // O setTimeout garante que esperamos o Bootstrap atualizar a class 'collapsed'
-                    setTimeout(() => {
-                        if (this.classList.contains('collapsed')) {
-                            icon.style.transform = 'rotate(0deg)';
-                        } else {
-                            icon.style.transform = 'rotate(180deg)';
-                        }
-                    }, 50);
-                }
-            });
         });
     </script>
 </body>

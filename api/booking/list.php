@@ -14,7 +14,7 @@ mysqli_set_charset($conn, "utf8");
 $hoje = date('Y-m-d');
 
 // Auto-atualização de estados
-$query_auto_update = "UPDATE marcacao SET estado = 'realizada' WHERE data < '$hoje' AND estado IN ('ativa', 'por confirmar', 'pendente')";
+$query_auto_update = "UPDATE marcacao SET estado = 'realizada' WHERE data < '$hoje' AND estado IN ('ativa', 'por confirmar')";
 mysqli_query($conn, $query_auto_update);
 
 // Ações dos botões (Confirmar, Cancelar, Concluir)
@@ -49,9 +49,11 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
     }
 }
 
-// Filtros e Pesquisa
+// Filtros, Pesquisa e Ordenação
 $filtro_data = $_GET['data'] ?? 'future';
 $filtro_estado = $_GET['estado'] ?? 'all';
+$filtro_ocultar = isset($_GET['ocultar']) && is_array($_GET['ocultar']) ? $_GET['ocultar'] : []; 
+$filtro_ordem = $_GET['ordenacao'] ?? 'asc'; 
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
 $condicao = "WHERE 1=1";
@@ -64,9 +66,30 @@ if ($filtro_estado != 'all') {
     $condicao .= " AND marcacao.estado = '$est'";
 }
 
+// Lógica para Ocultar Estados
+if (!empty($filtro_ocultar)) {
+    $estados_ocultos = [];
+    foreach ($filtro_ocultar as $occ) {
+        if (in_array($occ, ['ativa', 'cancelada', 'realizada', 'por confirmar'])) {
+            $estados_ocultos[] = "'" . mysqli_real_escape_string($conn, $occ) . "'";
+        }
+    }
+    
+    if (count($estados_ocultos) > 0) {
+        $lista_in = implode(",", $estados_ocultos);
+        $condicao .= " AND marcacao.estado NOT IN ($lista_in)";
+    }
+}
+
 if (!empty($search)) {
     $s = mysqli_real_escape_string($conn, $search);
     $condicao .= " AND (cliente.nome LIKE '%$s%' OR funcionario.nome LIKE '%$s%' OR servico.designacao LIKE '%$s%')";
+}
+
+// Definir a cláusula ORDER BY
+$clausula_ordem = "ORDER BY marcacao.data ASC, marcacao.slot_inicial ASC";
+if ($filtro_ordem === 'desc') {
+    $clausula_ordem = "ORDER BY marcacao.data DESC, marcacao.slot_inicial DESC";
 }
 
 // Paginação
@@ -101,7 +124,7 @@ $query = "
     INNER JOIN funcionario ON servico_funcionario.id_funcionario = funcionario.id
     INNER JOIN servico ON servico_funcionario.id_servico = servico.id
     $condicao
-    ORDER BY marcacao.data ASC, marcacao.slot_inicial ASC
+    $clausula_ordem
     LIMIT $registos_por_pagina OFFSET $offset
 ";
 $resultado = mysqli_query($conn, $query);
@@ -124,6 +147,12 @@ $query_string_filtros = http_build_query($params);
     
     <link rel="stylesheet" href="../css/sidebar.css">
     <link rel="stylesheet" href="../css/booking/list.css"> 
+    
+    <style>
+        .dropdown-menu-checkboxes .form-check { padding-left: 2rem; margin-bottom: 0.2rem; }
+        .dropdown-menu-checkboxes .form-check-label { cursor: pointer; width: 100%; display: block; }
+        .dropdown-menu-checkboxes .form-check-input { cursor: pointer; }
+    </style>
 </head>
 <body>
 
@@ -163,14 +192,14 @@ $query_string_filtros = http_build_query($params);
 
 <div class="filter-bar bg-white p-3 rounded-4 shadow-sm border mb-4" style="border-color: #f0f0f0 !important;">
     <form method="GET" class="row g-3 align-items-center" id="form-filtros">
-        <div class="col-12 col-md-6 col-lg-5">
+        <div class="col-12 col-md-12 col-lg-3">
             <div class="search-box">
                 <i class="bi bi-search"></i>
                 <input type="text" id="campo-pesquisa" name="search" autocomplete="off" placeholder="Procurar cliente..." value="<?= htmlspecialchars($search) ?>">
             </div>
         </div>
         
-        <div class="col-6 col-md-3 col-lg-3">
+        <div class="col-6 col-md-3 col-lg-2">
             <select name="data" id="filtro-data" class="form-select filter-select w-100">
                 <option value="future" <?= $filtro_data == 'future' ? 'selected' : '' ?>>Futuras</option>
                 <option value="today" <?= $filtro_data == 'today' ? 'selected' : '' ?>>Hoje</option>
@@ -178,11 +207,54 @@ $query_string_filtros = http_build_query($params);
             </select>
         </div>
         
-        <div class="col-6 col-md-3 col-lg-4">
+        <div class="col-6 col-md-3 col-lg-2">
             <select name="estado" id="filtro-estado" class="form-select filter-select w-100">
-                <option value="all" <?= $filtro_estado == 'all' ? 'selected' : '' ?>>Todos Estados</option>
-                <option value="por confirmar" <?= $filtro_estado == 'por confirmar' ? 'selected' : '' ?>>Pendentes</option>
-                <option value="ativa" <?= $filtro_estado == 'ativa' ? 'selected' : '' ?>>Confirmadas</option>
+                <option value="all" <?= $filtro_estado == 'all' ? 'selected' : '' ?>>Todos</option>
+                <option value="por confirmar" <?= $filtro_estado == 'por confirmar' ? 'selected' : '' ?>>Por Confirmar</option>
+                <option value="ativa" <?= $filtro_estado == 'ativa' ? 'selected' : '' ?>>Por realizar</option>
+                <option value="realizada" <?= $filtro_estado == 'realizada' ? 'selected' : '' ?>>Realizadas</option>
+                <option value="cancelada" <?= $filtro_estado == 'cancelada' ? 'selected' : '' ?>>Canceladas</option>
+            </select>
+        </div>
+
+        <div class="col-6 col-md-3 col-lg-2">
+            <div class="dropdown w-100">
+                <button class="form-select filter-select text-start w-100 d-flex justify-content-between align-items-center bg-white" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #dc2626;" id="btn-ocultar-dropdown">
+                    <?= count($filtro_ocultar) > 0 ? count($filtro_ocultar) . ' Oculto(s)' : 'Ocultar...' ?>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-checkboxes w-100 shadow-sm p-2" onclick="event.stopPropagation()">
+                    <li>
+                        <div class="form-check">
+                            <input class="form-check-input filtro-ocultar-chk" type="checkbox" name="ocultar[]" value="cancelada" id="chk-canc" <?= in_array('cancelada', $filtro_ocultar) ? 'checked' : '' ?>>
+                            <label class="form-check-label" for="chk-canc">Canceladas</label>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="form-check">
+                            <input class="form-check-input filtro-ocultar-chk" type="checkbox" name="ocultar[]" value="realizada" id="chk-real" <?= in_array('realizada', $filtro_ocultar) ? 'checked' : '' ?>>
+                            <label class="form-check-label" for="chk-real">Realizadas</label>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="form-check">
+                            <input class="form-check-input filtro-ocultar-chk" type="checkbox" name="ocultar[]" value="por confirmar" id="chk-pend" <?= in_array('por confirmar', $filtro_ocultar) ? 'checked' : '' ?>>
+                            <label class="form-check-label" for="chk-pend">Por Confirmar</label>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="form-check">
+                            <input class="form-check-input filtro-ocultar-chk" type="checkbox" name="ocultar[]" value="ativa" id="chk-ativa" <?= in_array('ativa', $filtro_ocultar) ? 'checked' : '' ?>>
+                            <label class="form-check-label" for="chk-ativa">Por realizar</label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-3 col-lg-3">
+            <select name="ordenacao" id="filtro-ordem" class="form-select filter-select w-100">
+                <option value="asc" <?= $filtro_ordem == 'asc' ? 'selected' : '' ?>>Mais Antigas Primeiro</option>
+                <option value="desc" <?= $filtro_ordem == 'desc' ? 'selected' : '' ?>>Mais Recentes Primeiro</option>
             </select>
         </div>
         
@@ -210,15 +282,33 @@ $query_string_filtros = http_build_query($params);
 
                                 <?php while($row = mysqli_fetch_assoc($resultado)): 
                                     $est = mb_strtolower(trim($row['estado']), 'UTF-8'); 
-                                    $status_class = 'st-' . str_replace(' ', '-', $est);
+                                    
+                                    // Mapeamento original para as classes do teu list.css
+                                    if ($est === 'por confirmar') {
+                                        $status_class = 'st-pendente';
+                                    } else {
+                                        $status_class = 'st-' . str_replace(' ', '-', $est);
+                                    }
+
+                                    // Display do texto do estado na tabela
+                                    $display_estado = $row['estado'];
+                                    if ($est === 'ativa') {
+                                        $display_estado = 'Por realizar';
+                                    }
+
                                     $hora = function_exists('converterSlotParaHora') ? converterSlotParaHora($row['slot_inicial']) : $row['slot_inicial'];
                                     $data = date('d/m/Y', strtotime($row['data']));
-                                    $is_readonly = in_array($est, ['realizada', 'concluida', 'cancelada']);
+                                    
+                                    // Bloqueia edição/cancelamento em estados finais
+                                    $is_readonly = in_array($est, ['realizada', 'cancelada']);
                                     $pode_concluir = ($row['data'] <= $hoje); 
                                 ?>
                                     <tr>
                                         <td data-label="Data / Hora">
-                                            <div class="date-day"><?= date('d', strtotime($row['data'])) ?> <small><?= date('M', strtotime($row['data'])) ?></small></div>
+                                            <div class="date-day">
+                                                <?= date('d', strtotime($row['data'])) ?> 
+                                                <small><?= date('M Y', strtotime($row['data'])) ?></small>
+                                            </div>
                                             <div class="date-time"><i class="bi bi-clock me-1"></i><?= $hora ?></div>
                                         </td>
                                         <td data-label="Cliente">
@@ -230,7 +320,7 @@ $query_string_filtros = http_build_query($params);
                                             <small class="text-muted fst-italic"><?= htmlspecialchars($row['nome_funcionario']) ?></small>
                                         </td>
                                         <td data-label="Estado">
-                                            <span class="status-badge <?= $status_class ?>"><?= $row['estado'] ?></span>
+                                            <span class="status-badge <?= $status_class ?> text-capitalize"><?= $display_estado ?></span>
                                         </td>
                                         <td data-label="Ações" class="text-end pe-4">
                                             <div class="action-buttons">
@@ -238,7 +328,7 @@ $query_string_filtros = http_build_query($params);
                                                     data-cliente="<?= htmlspecialchars($row['nome_cliente']) ?>"
                                                     data-servico="<?= htmlspecialchars($row['nome_servico']) ?>"
                                                     data-profissional="<?= htmlspecialchars($row['nome_funcionario']) ?>"
-                                                    data-data="<?= $data ?>" data-hora="<?= $hora ?>" data-estado="<?= $row['estado'] ?>" title="Ver">
+                                                    data-data="<?= $data ?>" data-hora="<?= $hora ?>" data-estado="<?= $display_estado ?>" title="Ver">
                                                     <i class="bi bi-eye"></i>
                                                 </button>
 
@@ -246,11 +336,11 @@ $query_string_filtros = http_build_query($params);
                                                     <a href="edit.php?id=<?= $row['id'] ?>" class="btn-icon btn-edit" title="Editar"><i class="bi bi-pencil-square"></i></a>
                                                 <?php endif; ?>
 
-                                                <?php if(in_array($est, ['por confirmar', 'pendente'])): ?>
+                                                <?php if($est === 'por confirmar'): ?>
                                                     <a href="list.php?action=confirm&id=<?= $row['id'] ?>" class="btn-icon btn-confirm" title="Confirmar"><i class="bi bi-check-lg"></i></a>
                                                 <?php endif; ?>
 
-                                                <?php if(in_array($est, ['ativa', 'confirmada']) && $pode_concluir): ?>
+                                                <?php if($est === 'ativa' && $pode_concluir): ?>
                                                     <a href="list.php?action=complete&id=<?= $row['id'] ?>" class="btn-icon btn-complete" title="Concluir"><i class="bi bi-check-all"></i></a>
                                                 <?php endif; ?>
 
@@ -320,7 +410,7 @@ $query_string_filtros = http_build_query($params);
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-4">
-                    <div class="text-center mb-4"><span id="modal-estado" class="status-badge">Estado</span></div>
+                    <div class="text-center mb-4"><span id="modal-estado" class="status-badge text-capitalize">Estado</span></div>
                     <div class="row g-4">
                         <div class="col-6">
                             <span class="text-muted d-block small fw-bold text-uppercase mb-1">Cliente</span>
@@ -375,10 +465,11 @@ $query_string_filtros = http_build_query($params);
                 const badge = modalDetalhes.querySelector('#modal-estado');
                 const estTxt = btn.getAttribute('data-estado');
                 badge.textContent = estTxt;
-                badge.className = 'status-badge'; 
+                badge.className = 'status-badge text-capitalize'; 
                 
+                // Mapeamento original para as tuas classes CSS
                 const est = estTxt.toLowerCase().trim();
-                if(['ativa','confirmada'].includes(est)) badge.classList.add('st-ativa');
+                if(['ativa','confirmada', 'por realizar'].includes(est)) badge.classList.add('st-ativa');
                 else if(['pendente','por confirmar'].includes(est)) badge.classList.add('st-pendente');
                 else if(['cancelada'].includes(est)) badge.classList.add('st-cancelada');
                 else if(['realizada','concluida'].includes(est)) badge.classList.add('st-realizada');
@@ -402,6 +493,9 @@ $query_string_filtros = http_build_query($params);
         const campoPesquisa = document.getElementById('campo-pesquisa');
         const filtroData = document.getElementById('filtro-data');
         const filtroEstado = document.getElementById('filtro-estado');
+        const filtroOrdem = document.getElementById('filtro-ordem');
+        const btnOcultarDropdown = document.getElementById('btn-ocultar-dropdown');
+        const checkboxesOcultar = document.querySelectorAll('.filtro-ocultar-chk');
         const conteudoTabela = document.getElementById('conteudo-tabela');
         const paginaAtual = document.getElementById('pagina-atual');
         let timer;
@@ -419,6 +513,12 @@ $query_string_filtros = http_build_query($params);
             });
         }
 
+        function atualizarTextoOcultar() {
+            let selecionados = 0;
+            checkboxesOcultar.forEach(chk => { if(chk.checked) selecionados++; });
+            btnOcultarDropdown.textContent = selecionados > 0 ? `${selecionados} Oculto(s)` : 'Ocultar...';
+        }
+
         if (formFiltros) {
             formFiltros.addEventListener('submit', e => e.preventDefault());
             campoPesquisa.addEventListener('input', () => {
@@ -428,6 +528,15 @@ $query_string_filtros = http_build_query($params);
             });
             filtroData.addEventListener('change', () => { paginaAtual.value = 1; atualizarTabela(); });
             filtroEstado.addEventListener('change', () => { paginaAtual.value = 1; atualizarTabela(); });
+            filtroOrdem.addEventListener('change', () => { paginaAtual.value = 1; atualizarTabela(); }); 
+            
+            checkboxesOcultar.forEach(chk => {
+                chk.addEventListener('change', () => {
+                    atualizarTextoOcultar();
+                    paginaAtual.value = 1; 
+                    atualizarTabela();
+                });
+            });
         }
     </script>
 </body>

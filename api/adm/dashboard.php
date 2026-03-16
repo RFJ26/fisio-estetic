@@ -7,6 +7,7 @@ require_once __DIR__ . '/../verifica_login.php';
 
 // 3. Outros auxiliares
 require_once __DIR__ . '/../../src/send_email.php';
+
 // ============================================================================
 // PROCESSAR AÇÕES DOS BOTÕES (Confirmar / Cancelar)
 // ============================================================================
@@ -47,11 +48,11 @@ $total_categorias = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
 $total_clientes = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM cliente"))['total'];
 
 // ============================================================================
-// CONSULTA DAS MARCAÇÕES RECENTES
+// CONSULTA DAS MARCAÇÕES RECENTES (Pendentes)
 // ============================================================================
 $marcacoes_query = "
 SELECT 
-    marcacao.id,  /* Precisamos do ID para os botões */
+    marcacao.id,  
     cliente.nome AS cliente,
     funcionario.nome AS funcionario,
     servico.designacao AS servico,
@@ -86,7 +87,7 @@ $marcacoes = mysqli_query($conn, $marcacoes_query);
 </head>
 <body>
 
-    <button id="sidebarToggle" class="sidebar-toggle d-lg-none" style="position:fixed; top:20px; left:20px; z-index:1100; border:none; background:var(--green-accent, #2e7d32); color:white; padding:8px 12px; border-radius:5px;">
+    <button id="sidebarToggle" class="sidebar-toggle d-lg-none" style="position:fixed; top:20px; left:20px; z-index:1100; border:none; background:var(--brand-primary, #2e7d32); color:white; padding:8px 12px; border-radius:5px;">
         <i class="bi bi-list"></i>
     </button>
 
@@ -114,7 +115,7 @@ $marcacoes = mysqli_query($conn, $marcacoes_query);
         
         <header class="header-section d-flex justify-content-between align-items-center mb-5">
             <div>
-                <h1>Olá, <span class="text-gold"><?= htmlspecialchars($_COOKIE['nome']) ?></span></h1>
+                <h1>Olá, <span class="text-gold" style="color: var(--brand-primary);"><?= htmlspecialchars($_COOKIE['nome']) ?></span></h1>
                 <p class="text-muted mb-0">Bem-vindo ao painel de gestão.</p>
             </div>
             <div class="d-none d-md-block text-end">
@@ -126,13 +127,13 @@ $marcacoes = mysqli_query($conn, $marcacoes_query);
             <div class="row g-4">
                 <div class="col-md-4">
                     <a href="../booking/list.php" class="metric-link">
-                        <div class="metric-card">
+                        <div class="metric-card metric-orange">
                             <div class="d-flex justify-content-between align-items-center h-100">
                                 <div>
-                                    <span class="card-label">Marcações por Realizar</span>
+                                    <span class="card-label">Marcações Ativas</span>
                                     <div class="card-value"><?= $total_marcacoes ?></div>
                                 </div>
-                                <div class="icon-box"><i class="bi bi-calendar-event"></i></div>
+                                <div class="icon-box box-orange"><i class="bi bi-calendar-event"></i></div>
                             </div>
                         </div>
                     </a>
@@ -140,13 +141,13 @@ $marcacoes = mysqli_query($conn, $marcacoes_query);
                 
                 <div class="col-md-4">
                     <a href="../service_category/list.php" class="metric-link">
-                        <div class="metric-card">
+                        <div class="metric-card metric-purple">
                             <div class="d-flex justify-content-between align-items-center h-100">
                                 <div>
                                     <span class="card-label">Categorias</span>
                                     <div class="card-value"><?= $total_categorias ?></div>
                                 </div>
-                                <div class="icon-box"><i class="bi bi-tag"></i></div>
+                                <div class="icon-box box-purple"><i class="bi bi-tag"></i></div>
                             </div>
                         </div>
                     </a>
@@ -154,13 +155,13 @@ $marcacoes = mysqli_query($conn, $marcacoes_query);
 
                 <div class="col-md-4">
                     <a href="../customer/list.php" class="metric-link">
-                        <div class="metric-card">
+                        <div class="metric-card metric-green">
                             <div class="d-flex justify-content-between align-items-center h-100">
                                 <div>
                                     <span class="card-label">Clientes</span>
                                     <div class="card-value"><?= $total_clientes ?></div>
                                 </div>
-                                <div class="icon-box"><i class="bi bi-people"></i></div>
+                                <div class="icon-box box-green"><i class="bi bi-people"></i></div>
                             </div>
                         </div>
                     </a>
@@ -170,12 +171,18 @@ $marcacoes = mysqli_query($conn, $marcacoes_query);
 
         <section class="table-section">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="section-title">Marcações Pendentes</h2>
-                <a href="../booking/list.php" class="btn-link-gold">Ver Todas <i class="bi bi-arrow-right ms-1"></i></a>
+                <div class="d-flex align-items-center gap-2">
+                    <div class="icon-box-orange" style="width: 32px; height: 32px; border-radius: 8px; display:flex; align-items:center; justify-content:center;">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    </div>
+                    <h2 class="section-title m-0" style="font-size: 1.25rem; font-weight: 600;">Marcações Pendentes</h2>
+                </div>
+                <a href="../booking/list.php" style="text-decoration: none; color: var(--brand-primary); font-weight: 500;">Ver Todas <i class="bi bi-arrow-right ms-1"></i></a>
             </div>
             
-            <div class="custom-table-container">
-                <div class="table-responsive" style="overflow: visible;"> <table class="table custom-table align-middle mb-0">
+            <div class="collapse-container p-0">
+                <div class="table-responsive">
+                    <table class="modern-table">
                         <thead>
                             <tr>
                                 <th>Cliente</th>
@@ -183,7 +190,7 @@ $marcacoes = mysqli_query($conn, $marcacoes_query);
                                 <th>Serviço</th>
                                 <th>Data</th>
                                 <th>Estado</th>
-                                <th class="text-center">Ações</th>
+                                <th class="text-end pe-4">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -192,19 +199,19 @@ $marcacoes = mysqli_query($conn, $marcacoes_query);
                                 while($row = mysqli_fetch_assoc($marcacoes)){
                                     $data_formatada = date('d/m/Y', strtotime($row['data']));
                                     echo "<tr>
-                                        <td data-label='Cliente' class='fw-bold text-dark'>".htmlspecialchars($row['cliente'])."</td>
-                                        <td data-label='Funcionário'>".htmlspecialchars($row['funcionario'])."</td>
+                                        <td data-label='Cliente' class='fw-medium text-dark'>".htmlspecialchars($row['cliente'])."</td>
+                                        <td data-label='Funcionário' class='text-secondary'>".htmlspecialchars($row['funcionario'])."</td>
                                         <td data-label='Serviço'>".htmlspecialchars($row['servico'])."</td>
-                                        <td data-label='Data'>{$data_formatada}</td>
-                                        <td data-label='Estado'><span class='badge-status'>".htmlspecialchars($row['estado'])."</span></td>
-                                        <td data-label='Ações' class='text-center'>
-                                            <a href='dashboard.php?action=confirm&id={$row['id']}' class='btn btn-success btn-sm me-1'><i class='bi bi-check-lg'></i></a>
-                                            <a href='dashboard.php?action=cancel&id={$row['id']}' class='btn btn-danger btn-sm' onclick='return confirm(\"Cancelar?\")'><i class='bi bi-x-lg'></i></a>
+                                        <td data-label='Data' class='date-highlight'>{$data_formatada}</td>
+                                        <td data-label='Estado'><span class='status-pill status-pending'>".ucfirst($row['estado'])."</span></td>
+                                        <td data-label='Ações' class='text-md-end pe-md-4'>
+                                            <a href='dashboard.php?action=confirm&id={$row['id']}' class='btn-confirm-table me-1' title='Confirmar'><i class='bi bi-check-lg fs-5'></i></a>
+                                            <a href='dashboard.php?action=cancel&id={$row['id']}' class='btn-cancel-table' onclick='return confirm(\"Tem a certeza que deseja cancelar esta marcação?\")' title='Cancelar'><i class='bi bi-x-lg'></i></a>
                                         </td>
                                     </tr>";
                                 }
                             } else {
-                                echo "<tr><td colspan='6' class='text-center py-5 text-muted'>Nenhuma marcação pendente.</td></tr>";
+                                echo "<tr><td colspan='6' class='no-data-info'>Não existem marcações pendentes de confirmação.</td></tr>";
                             }
                             ?>
                         </tbody>
@@ -220,7 +227,6 @@ $marcacoes = mysqli_query($conn, $marcacoes_query);
         const sidebar = document.querySelector('.sidebar');
         const toggle = document.getElementById('sidebarToggle');
         
-        // Toggle básico
         if(toggle){
             toggle.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -228,7 +234,6 @@ $marcacoes = mysqli_query($conn, $marcacoes_query);
             });
         }
 
-        // Fechar ao clicar fora (Mobile/Tablet)
         document.addEventListener('click', (e) => {
             if (window.innerWidth <= 991) {
                 if (!sidebar.contains(e.target) && !toggle.contains(e.target) && sidebar.classList.contains('active')) {
@@ -242,9 +247,7 @@ $marcacoes = mysqli_query($conn, $marcacoes_query);
             let alertBox = document.querySelector('.alert');
             if(alertBox) {
                 alertBox.classList.remove('show');
-                setTimeout(() => alertBox.remove(), 200); // Remove o HTML após a transição
-                
-                // Limpa o URL para não repetir a mensagem ao dar refresh
+                setTimeout(() => alertBox.remove(), 200); 
                 window.history.replaceState({}, document.title, "dashboard.php");
             }
         }, 4000);

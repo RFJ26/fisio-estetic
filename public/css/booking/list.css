@@ -98,18 +98,40 @@ body {
 
 /* --- ESTADOS (BADGES) --- */
 .status-badge {
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    display: inline-block;
+    padding: 6px 14px; 
+    border-radius: 20px; 
+    font-size: 0.75rem; 
+    font-weight: 600; 
+    text-transform: uppercase; 
+    display: inline-block; 
+    letter-spacing: 0.05em;
+    border: none;
 }
-.st-pendente, .st-por-confirmar { background: #fffbeb; color: #b45309; border: 1px solid #fcd34d; }
-.st-ativa, .st-confirmada { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
-.st-cancelada { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
-.st-realizada { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
 
+/* Realizada / Concluída (Verde - status-success no teu exemplo) */
+.st-realizada, .st-concluida { 
+    background-color: #dcfce7; 
+    color: #166534; 
+}
+
+/* Ativa / Confirmada (Amarelo - status-pending no teu exemplo) */
+.st-ativa, .st-confirmada { 
+    background-color: #fef9c3; 
+    color: #854d0e; 
+}
+
+/* Por Confirmar / Pendente (Vermelho - status-danger no teu exemplo) */
+.st-por-confirmar, .st-pendente { 
+    background-color: #fee2e2; 
+    color: #dc2626; 
+}
+
+/* Cancelada (Cinzento e Riscado - status-cancel no teu exemplo) */
+.st-cancelada { 
+    background-color: #f3f4f6; 
+    color: #9ca3af; 
+    text-decoration: line-through;
+}
 /* --- AÇÕES (BOTÕES UNIFICADOS) --- */
 .action-buttons { display: flex; gap: 8px; justify-content: flex-end; }
 .btn-icon {

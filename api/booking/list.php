@@ -340,7 +340,7 @@ $query_string_filtros = http_build_query($params);
                                                     <a href="list.php?action=confirm&id=<?= $row['id'] ?>" class="btn-icon btn-confirm" title="Confirmar"><i class="bi bi-check-lg"></i></a>
                                                 <?php endif; ?>
 
-                                                <?php if($est === 'ativa' && $pode_concluir): ?>
+                                                <?php if($est === 'ativa'): ?>
                                                     <a href="list.php?action=complete&id=<?= $row['id'] ?>" class="btn-icon btn-complete" title="Concluir"><i class="bi bi-check-all"></i></a>
                                                 <?php endif; ?>
 

@@ -347,86 +347,84 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['finalizar_reserva'])) 
                     // =========================================================
                     // CÁLCULO DE DIAS DISPONÍVEIS (PINTAR O CALENDÁRIO FLAT-PICKR)
                     // =========================================================
+                    // =========================================================
+                    // CÁLCULO DE DIAS DISPONÍVEIS (OTIMIZADO - PINTAR O CALENDÁRIO)
+                    // =========================================================
                     $lista_datas_disponiveis = [];
                     $data_hoje = new DateTime();
                     $data_limite = new DateTime('+4 months');
-                    $intervalo = $data_hoje->diff($data_limite);
-                    $total_dias = $intervalo->days;
+                    $total_dias = $data_hoje->diff($data_limite)->days;
+
+                    $hoje_str = $data_hoje->format('Y-m-d');
+                    $limite_str = $data_limite->format('Y-m-d');
 
                     $consulta_duracao = "SELECT num_slots FROM servico WHERE id = '$id_servico'";
                     $resultado_duracao = mysqli_query($conn, $consulta_duracao);
                     $duracao_necessaria = ($resultado_duracao) ? intval(mysqli_fetch_assoc($resultado_duracao)['num_slots']) : 1;
 
-                    // Itera pelos próximos 120 dias para ver em quais há vaga
+                    // 1. CARREGAR TODA A DISPONIBILIDADE (Apenas 1 Query)
+                    $q_disp = "SELECT * FROM disponibilidade WHERE id_servico = '$id_servico' AND data_fim >= '$hoje_str'";
+                    $res_disp = mysqli_query($conn, $q_disp);
+                    $array_disp = [];
+                    if ($res_disp) while ($row = mysqli_fetch_assoc($res_disp)) $array_disp[] = $row;
+
+                    // 2. CARREGAR TODA A INDISPONIBILIDADE (Apenas 1 Query)
+                    $q_indisp = "SELECT * FROM indisponibilidade WHERE id_funcionario = '$id_funcionario' AND data_fim >= '$hoje_str'";
+                    $res_indisp = mysqli_query($conn, $q_indisp);
+                    $array_indisp = [];
+                    if ($res_indisp) while ($row = mysqli_fetch_assoc($res_indisp)) $array_indisp[] = $row;
+
+                    // 3. CARREGAR TODAS AS MARCAÇÕES DO PERÍODO (Apenas 1 Query)
+                    $q_marc = "SELECT m.data, m.slot_inicial, m.slot_final 
+                               FROM marcacao m
+                               JOIN servico_funcionario sf ON m.id_servico_funcionario = sf.id 
+                               WHERE m.data BETWEEN '$hoje_str' AND '$limite_str'
+                               AND m.estado != 'cancelada'
+                               AND (sf.id_funcionario = '$id_funcionario' OR m.id_cliente = '$id_cliente')";
+                    $res_marc = mysqli_query($conn, $q_marc);
+                    $array_marc = [];
+                    if ($res_marc) {
+                        while ($row = mysqli_fetch_assoc($res_marc)) {
+                            $array_marc[$row['data']][] = $row; // Agrupado por data para ser imediato a encontrar
+                        }
+                    }
+
+                    $nomes_colunas_bd = [0 => 'domingo', 1 => 'segunda', 2 => 'terca', 3 => 'quarta', 4 => 'quinta', 5 => 'sexta', 6 => 'sabado'];
+
+                    // Itera pelos próximos 120 dias usando a memória do PHP (Muito mais rápido!)
                     for ($contador_dias = 0; $contador_dias <= $total_dias; $contador_dias++) {
                         $data_temporaria = clone $data_hoje;
                         $data_temporaria->modify("+$contador_dias days");
                         $data_para_teste = $data_temporaria->format('Y-m-d');
                         $dia_semana_numero = $data_temporaria->format('w');
-
-                        $nomes_colunas_bd = [0 => 'domingo', 1 => 'segunda', 2 => 'terca', 3 => 'quarta', 4 => 'quinta', 5 => 'sexta', 6 => 'sabado'];
                         $coluna_dia_semana = $nomes_colunas_bd[$dia_semana_numero];
 
                         // Arrays que representam os slots do dia (0 a 100)
                         $mapa_slots = array_fill(0, 100, false);
 
-                        // 4.1. Disponibilidade do Serviço
-                        $consulta_disponibilidade = "SELECT slot_inicial, slot_final 
-                                 FROM disponibilidade 
-                                 WHERE id_servico = '$id_servico' 
-                                 AND '$data_para_teste' BETWEEN data_inicio AND data_fim 
-                                 AND $coluna_dia_semana = 1
-                                 ORDER BY slot_inicial ASC";
-                        $resultado_disponibilidade = mysqli_query($conn, $consulta_disponibilidade);
-
-                        if ($resultado_disponibilidade) {
-                            while ($turno = mysqli_fetch_assoc($resultado_disponibilidade)) {
-                                $ini = intval($turno['slot_inicial']);
-                                $fim = intval($turno['slot_final']);
-                                for ($slot_index = $ini; $slot_index < $fim; $slot_index++) {
+                        // 4.1. Aplica Disponibilidade
+                        foreach ($array_disp as $disp) {
+                            if ($data_para_teste >= $disp['data_inicio'] && $data_para_teste <= $disp['data_fim'] && $disp[$coluna_dia_semana] == 1) {
+                                for ($slot_index = intval($disp['slot_inicial']); $slot_index < intval($disp['slot_final']); $slot_index++) {
                                     if ($slot_index < 100) $mapa_slots[$slot_index] = true;
                                 }
                             }
                         }
 
-                        // 4.2. Indisponibilidade do Funcionário (Folgas/Férias)
-                        $consulta_indisponibilidade = "SELECT slot_inicial, slot_final 
-                                   FROM indisponibilidade 
-                                   WHERE id_funcionario = '$id_funcionario' 
-                                   AND '$data_para_teste' BETWEEN data_inicio AND data_fim 
-                                   AND $coluna_dia_semana = 1";
-                        $resultado_indisponibilidade = mysqli_query($conn, $consulta_indisponibilidade);
-
-                        if ($resultado_indisponibilidade) {
-                            while ($ausencia = mysqli_fetch_assoc($resultado_indisponibilidade)) {
-                                $ini = intval($ausencia['slot_inicial']);
-                                $fim = intval($ausencia['slot_final']);
-                                for ($slot_index = $ini; $slot_index < $fim; $slot_index++) {
-                                    if (isset($mapa_slots[$slot_index])) {
-                                        $mapa_slots[$slot_index] = false;
-                                    }
+                        // 4.2. Aplica Indisponibilidade
+                        foreach ($array_indisp as $indisp) {
+                            if ($data_para_teste >= $indisp['data_inicio'] && $data_para_teste <= $indisp['data_fim'] && $indisp[$coluna_dia_semana] == 1) {
+                                for ($slot_index = intval($indisp['slot_inicial']); $slot_index < intval($indisp['slot_final']); $slot_index++) {
+                                    if (isset($mapa_slots[$slot_index])) $mapa_slots[$slot_index] = false;
                                 }
                             }
                         }
 
-                        // 4.3. Marcações Existentes (Bloqueia Cliente ou Profissional)
-                        $consulta_marcacoes = "SELECT marcacao.slot_inicial, marcacao.slot_final 
-                           FROM marcacao 
-                           JOIN servico_funcionario ON marcacao.id_servico_funcionario = servico_funcionario.id 
-                           WHERE marcacao.data = '$data_para_teste' 
-                           AND marcacao.estado != 'cancelada'
-                           AND (servico_funcionario.id_funcionario = '$id_funcionario' OR marcacao.id_cliente = '$id_cliente')";
-                        
-                        $resultado_marcacoes = mysqli_query($conn, $consulta_marcacoes);
-
-                        if ($resultado_marcacoes) {
-                            while ($marcacao = mysqli_fetch_assoc($resultado_marcacoes)) {
-                                $ini = intval($marcacao['slot_inicial']);
-                                $fim = intval($marcacao['slot_final']);
-                                for ($slot_index = $ini; $slot_index < $fim; $slot_index++) {
-                                    if (isset($mapa_slots[$slot_index])) {
-                                        $mapa_slots[$slot_index] = false;
-                                    }
+                        // 4.3. Aplica Marcações Existentes
+                        if (isset($array_marc[$data_para_teste])) {
+                            foreach ($array_marc[$data_para_teste] as $marcacao) {
+                                for ($slot_index = intval($marcacao['slot_inicial']); $slot_index < intval($marcacao['slot_final']); $slot_index++) {
+                                    if (isset($mapa_slots[$slot_index])) $mapa_slots[$slot_index] = false;
                                 }
                             }
                         }

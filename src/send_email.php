@@ -9,6 +9,17 @@ require_once __DIR__ . '/helpers.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+$caminhoEnv = __DIR__ . '/../.env';
+
+if (file_exists($caminhoEnv)) {
+    $env = parse_ini_file($caminhoEnv);
+    define('SMTP_USER', $env['SMTP_USER']);
+    define('SMTP_PASS', $env['SMTP_PASS']);
+} else {
+    // Para a execução se o .env não existir (evita erros fatais no PHPMailer)
+    die("Erro crítico: Ficheiro .env não encontrado na raiz do projeto.");
+}
+
 function enviarEmailEstado($conexao, $idMarcacao, $novoEstado) {
     
     // 1. OBTER DADOS
@@ -88,8 +99,8 @@ function enviarEmailEstado($conexao, $idMarcacao, $novoEstado) {
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'clinic.fisio.estetic@gmail.com'; 
-        $mail->Password   = 'chhq waog qawm yitx';     
+        $mail->Username   = SMTP_USER; 
+        $mail->Password   = SMTP_PASS;     
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 465;
         $mail->CharSet    = 'UTF-8';
@@ -180,8 +191,8 @@ function enviarEmailRecuperacao($emailDestino, $nomeDestino, $linkRecuperacao) {
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'clinic.fisio.estetic@gmail.com'; 
-        $mail->Password   = 'chhq waog qawm yitx';     
+        $mail->Username   = SMTP_USER; 
+        $mail->Password   = SMTP_PASS;     
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 465;
         $mail->CharSet    = 'UTF-8';
@@ -266,8 +277,8 @@ function enviarEmailValidacao($emailDestino, $nomeDestino, $linkValidacao) {
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'clinic.fisio.estetic@gmail.com'; 
-        $mail->Password   = 'chhq waog qawm yitx';     
+        $mail->Username   = SMTP_USER; 
+        $mail->Password   = SMTP_PASS;     
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 465;
         $mail->CharSet    = 'UTF-8';
@@ -388,8 +399,8 @@ function enviarEmailNovaMarcacao($conexao, $idMarcacao) {
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'clinic.fisio.estetic@gmail.com'; 
-        $mail->Password   = 'chhq waog qawm yitx';     
+        $mail->Username   = SMTP_USER; 
+    $mail->Password   = SMTP_PASS;     
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 465;
         $mail->CharSet    = 'UTF-8';
@@ -512,8 +523,8 @@ function enviarEmailCancelamentoFuncionario($conexao, $idMarcacao) {
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'clinic.fisio.estetic@gmail.com'; 
-        $mail->Password   = 'chhq waog qawm yitx';     
+        $mail->Username   = SMTP_USER; 
+        $mail->Password   = SMTP_PASS;     
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; 
         $mail->Port       = 465;
         $mail->CharSet    = 'UTF-8';
@@ -572,10 +583,8 @@ function enviarEmailValidacaoFuncionario($emailDestino, $nomeDestino, $linkValid
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'clinic.fisio.estetic@gmail.com'; 
-        
-        // A NOVA PALAVRA-PASSE SEM ESPAÇOS:
-        $mail->Password   = 'chhqwaogqawmyitx';     
+        $mail->Username   = SMTP_USER; 
+        $mail->Password   = SMTP_PASS;        
         
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 465;

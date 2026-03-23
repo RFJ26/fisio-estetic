@@ -1,9 +1,10 @@
 :root {
     --sidebar-width: 260px;
+    --primary-color: #2e7d32;
+    --primary-hover: #1b5e20;
     --bg-light: #f8f9fa;
     --text-dark: #2c3e50;
-    --green-create: #059669; /* Verde Esmeralda */
-    --green-hover: #047857;
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 body {
@@ -23,7 +24,7 @@ body {
 }
 
 .container-fluid {
-    max-width: 1200px; /* Largura contida para o formulário não esticar demais */
+    max-width: 1200px; 
     margin: 0 auto;
     padding: 0;
 }
@@ -32,7 +33,7 @@ body {
 .section-card {
     background: #fff;
     border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--card-shadow);
     border: 1px solid #eff0f2;
     padding: 30px;
     margin-bottom: 25px;
@@ -71,8 +72,9 @@ body {
 
 .form-control:focus, .form-select:focus {
     background-color: #fff;
-    border-color: var(--green-create);
-    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15); /* RGB do #2e7d32 com transparência */
+    outline: none;
 }
 
 .input-group-text {
@@ -89,12 +91,12 @@ body {
 }
 
 .day-check input {
-    display: none; /* Esconde a checkbox real */
+    display: none; 
 }
 
 .day-check label {
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     background: #f3f4f6;
     color: #6b7280;
@@ -110,15 +112,15 @@ body {
 }
 
 .day-check input:checked + label {
-    background-color: var(--green-create);
+    background-color: var(--primary-color);
     color: white;
-    border-color: var(--green-create);
-    box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3);
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 4px rgba(46, 125, 50, 0.3);
 }
 
 /* --- BOTÕES DE AÇÃO --- */
 .btn-save {
-    background-color: var(--green-create);
+    background-color: var(--primary-color);
     color: white;
     border: none;
     padding: 12px 30px;
@@ -129,12 +131,13 @@ body {
     gap: 8px;
     transition: all 0.2s;
     font-size: 1rem;
-    box-shadow: 0 4px 6px rgba(5, 150, 105, 0.2);
+    box-shadow: 0 4px 6px rgba(46, 125, 50, 0.2);
 }
 
 .btn-save:hover {
-    background-color: var(--green-hover);
+    background-color: var(--primary-hover);
     transform: translateY(-1px);
+    color: white;
 }
 
 .btn-cancel {
@@ -146,6 +149,8 @@ body {
     font-weight: 500;
     text-decoration: none;
     transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
 }
 
 .btn-cancel:hover {
@@ -156,8 +161,19 @@ body {
 
 /* Toggle Switch Ajuste */
 .form-switch .form-check-input:checked {
-    background-color: var(--green-create);
-    border-color: var(--green-create);
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.form-switch .form-check-input {
+    width: 2.5em;
+    height: 1.25em;
+    cursor: pointer;
+}
+
+.form-switch .form-check-label {
+    cursor: pointer;
+    padding-top: 2px;
 }
 
 /* Responsividade */
@@ -165,7 +181,19 @@ body {
     .content {
         margin-left: 0;
         width: 100%;
+        padding: 80px 15px 20px 15px;
+    }
+    
+    .section-card {
         padding: 20px;
-        padding-top: 80px;
+    }
+    
+    .d-flex.justify-content-end.gap-3 {
+        flex-direction: column-reverse;
+    }
+    
+    .btn-save, .btn-cancel {
+        width: 100%;
+        justify-content: center;
     }
 }

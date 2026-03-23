@@ -1,0 +1,300 @@
+:root {
+    --primary-color: #2e7d32;   
+    --primary-hover: #1b5e20;   
+    --bg-light: #f8f9fa;
+    --text-dark: #2c3e50;
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+body {
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+}
+
+/* --- LAYOUT PRINCIPAL --- */
+.content {
+    margin-left: 260px; 
+    width: calc(100% - 260px);
+    padding: 30px;
+    min-height: 100vh;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.container-fluid {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+}
+
+/* --- CABEÇALHO E BARRA DE PESQUISA --- */
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.search-box { position: relative; width: 100%; }
+.search-box input {
+    padding-left: 42px;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    height: 44px;
+    width: 100%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.search-box input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.15);
+    outline: none;
+}
+
+.search-box i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    font-size: 1.1rem;
+}
+
+/* --- BOTÃO NOVO FUNCIONÁRIO --- */
+.btn-add {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    font-weight: 500;
+    padding: 10px 22px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.25);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    height: 44px; 
+}
+
+.btn-add:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    color: white;
+    box-shadow: 0 6px 15px rgba(46, 125, 50, 0.35);
+}
+
+/* --- TABELA E AVATAR --- */
+.table-container {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    padding: 0; 
+    border: 1px solid #f0f0f0;
+    overflow: hidden;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.custom-table {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.custom-table thead th {
+    background-color: #f9f9f9;
+    color: #666;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #eaeaea;
+    padding: 18px 20px;
+    vertical-align: middle;
+}
+
+.custom-table tbody td {
+    padding: 18px 20px;
+    vertical-align: middle;
+    color: #444;
+    border-bottom: 1px solid #f5f5f5;
+    font-size: 0.95rem;
+}
+
+.avatar-circle {
+    width: 45px;
+    height: 45px;
+    background-color: #e8f5e9;
+    color: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+/* --- BOTÕES DE AÇÃO (ÍCONES) --- */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.btn-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    text-decoration: none;
+    border: none;
+    font-size: 1rem;
+}
+
+.btn-indisp { background-color: #fff3e0; color: #ef6c00; } 
+.btn-indisp:hover { background-color: #ef6c00; color: white; }
+
+.btn-assign { background-color: #e3f2fd; color: #1976d2; } 
+.btn-assign:hover { background-color: #1976d2; color: white; }
+
+.btn-view { background-color: #f3e5f5; color: #7b1fa2; } 
+.btn-view:hover { background-color: #7b1fa2; color: white; }
+
+.btn-edit { background-color: #e8f5e9; color: var(--primary-color); } 
+.btn-edit:hover { background-color: var(--primary-color); color: white; }
+
+.btn-delete { background-color: #ffebee; color: #d32f2f; } 
+.btn-delete:hover { background-color: #d32f2f; color: white; }
+
+/* --- PAGINAÇÃO --- */
+.pagination { gap: 4px; }
+.pagination .page-link { color: var(--primary-color); border-color: #dee2e6; border-radius: 6px; box-shadow: none; font-weight: 500; }
+.pagination .page-link:hover { background-color: #e8f5e9; color: var(--primary-hover); border-color: #dee2e6; }
+.pagination .page-item.active .page-link { background-color: var(--primary-color); border-color: var(--primary-color); color: #fff; }
+.pagination .page-item.disabled .page-link { color: #6c757d; background-color: transparent; }
+
+/* --- STATUS BADGES E BOTOES --- */
+.badge-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 12px;
+    border-radius: 50rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+.status-validado { background-color: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+.status-pendente { background-color: #fff8e1; color: #f57f17; border: 1px solid #ffecb3; }
+
+.btn-resend {
+    width: 28px; height: 28px;
+    border-radius: 6px; border: 1px solid #e0e0e0; background-color: #ffffff; color: #6c757d;
+    display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease; text-decoration: none;
+}
+.btn-resend:hover { background-color: #f8fafc; border-color: #cbd5e1; color: #0f172a; transform: translateY(-1px); }
+
+/* ========================================================================= */
+/* RESPONSIVIDADE (MOBILE CARD VIEW)                                         */
+/* ========================================================================= */
+@media (max-width: 991px) {
+    .content { 
+        margin-left: 0; 
+        width: 100%; 
+        padding: 80px 15px 20px 15px; 
+    }
+    
+    .header-actions { margin-bottom: 1rem !important; }
+    
+    /* Esconder o cabeçalho da tabela */
+    .custom-table thead { display: none; }
+    
+    .table-container { border: none; box-shadow: none; background: transparent; }
+
+    /* Transformar linhas em "Cartões" */
+    .custom-table tr { 
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        border: 1px solid #e2e8f0; 
+        margin-bottom: 1.5rem; 
+        border-radius: 12px; 
+        box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+    }
+
+    /* Transformar as células no interior do cartão */
+    .custom-table td { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; /* Centraliza a label com o conteúdo */
+        padding: 15px 16px; 
+        border-bottom: 1px solid #f1f5f9; 
+    }
+
+    /* Adicionar a label (ex: "Nome", "Telefone") antes do conteúdo */
+    .custom-table td::before {
+        content: attr(data-label);
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #64748b;
+        margin-right: 15px;
+        flex-shrink: 0;
+    }
+
+    /* Novo wrapper obrigatório para alinhar o conteúdo à direita da label */
+    .td-content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        text-align: right;
+        width: 100%;
+    }
+
+    /* Ajuste específico para a linha do NOME para garantir que a foto e texto ficam juntos */
+    .custom-table td[data-label="Nome"] .td-content {
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    /* Célula de ações fica sem label no telemóvel e junta os botões ao centro/direita */
+    .custom-table td[data-label="Ações"] { 
+        border-bottom: none; 
+        background: #f8fafc; 
+        border-radius: 0 0 12px 12px;
+        justify-content: center; /* Centraliza os botões */
+    }
+    
+    .custom-table td[data-label="Ações"]::before { 
+        display: none; /* Esconde a palavra "Ações" para dar espaço aos botões */
+    }
+
+    .action-buttons { 
+        justify-content: center; 
+        width: 100%; 
+        flex-wrap: wrap; 
+    }
+    
+    .card-footer {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+        padding: 20px !important;
+        border-radius: 12px;
+        background: white;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .pagination { justify-content: center !important; flex-wrap: wrap; }
+}

@@ -1,0 +1,292 @@
+/* =========================================
+   VARIÁVEIS DE COR & OVERRIDES GLOBAIS
+========================================= */
+:root {
+    --primary-color: #2e7d32;
+    --primary-hover: #1b5e20;
+    --bg-light: #f8f9fa;
+    --text-dark: #2c3e50;
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+
+    /* Variáveis Nativas do FullCalendar para forçar o design limpo */
+    --fc-border-color: #eaeaea;
+    --fc-today-bg-color: rgba(46, 125, 50, 0.03);
+    --fc-button-bg-color: #ffffff;
+    --fc-button-border-color: #dce0e5;
+    --fc-button-text-color: #2c3e50;
+    --fc-button-hover-bg-color: #f8f9fa;
+    --fc-button-hover-border-color: #cdd3d8;
+    --fc-button-active-bg-color: #2e7d32;
+    --fc-button-active-border-color: #1b5e20;
+}
+
+/* =========================================
+   ESTRUTURA BASE
+========================================= */
+html, body {
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+}
+
+.content {
+    margin-left: 260px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 25px 35px;
+}
+
+h1, h3, h4, h5, h6, .text-dark {
+    color: var(--text-dark) !important;
+}
+
+/* Botão Personalizado */
+.btn-custom-primary {
+    background-color: var(--primary-color);
+    color: #ffffff !important;
+    border: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+.btn-custom-primary:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(46, 125, 50, 0.3);
+}
+
+/* =========================================
+   FILTROS (CHOICES.JS)
+========================================= */
+.filter-bar {
+    background: #ffffff;
+    padding: 20px 25px;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid #eaeaea;
+}
+.choices__inner {
+    border-radius: 8px !important;
+    border: 1px solid #eaeaea !important;
+    background-color: #ffffff !important;
+    min-height: 44px !important;
+    padding: 4px 8px !important;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.01);
+}
+.choices__list--multiple .choices__item {
+    background-color: var(--primary-color) !important;
+    border: 1px solid var(--primary-hover) !important;
+    border-radius: 6px !important;
+}
+
+/* =========================================
+   O NOVO CALENDÁRIO
+========================================= */
+#calendar-container {
+    flex-grow: 1;
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid #eaeaea;
+    overflow: hidden;
+    min-height: 600px;
+}
+
+.fc-toolbar-title {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    color: var(--text-dark);
+    text-transform: capitalize;
+}
+
+.fc-col-header-cell {
+    background-color: #ffffff;
+}
+.fc-col-header-cell-cushion {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #95a5a6;
+    padding: 12px 0 !important;
+    text-decoration: none !important;
+}
+
+.fc-daygrid-day-top {
+    flex-direction: row;
+    justify-content: center !important;
+    padding-top: 8px !important;
+    margin-bottom: 5px;
+}
+
+.fc-daygrid-day-number {
+    margin: 0 auto;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50% !important;
+    text-decoration: none !important;
+    color: var(--text-dark);
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    cursor: default;
+}
+
+.fc-daygrid-day:hover {
+    background-color: rgba(46, 125, 50, 0.02) !important;
+}
+.fc-daygrid-day-number:hover {
+    background-color: #f1f3f5;
+    color: var(--primary-color);
+}
+
+.fc .fc-day-today .fc-daygrid-day-number {
+    background-color: var(--primary-color);
+    color: #ffffff !important;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
+}
+.fc .fc-day-today .fc-daygrid-day-number:hover {
+    background-color: var(--primary-hover);
+}
+
+.fc-button-primary {
+    font-weight: 600 !important;
+    text-transform: capitalize !important;
+    border-radius: 8px !important;
+    padding: 8px 16px !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important;
+}
+.fc-button-active {
+    box-shadow: inset 0 3px 5px rgba(0,0,0,0.125) !important;
+    color: #ffffff !important;
+}
+
+.event-count-badge {
+    background: #ffffff;
+    border: 1.5px solid var(--primary-color);
+    color: var(--primary-color);
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    box-shadow: 0 2px 6px rgba(46, 125, 50, 0.08);
+    width: fit-content;
+    margin: 4px auto;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    pointer-events: auto;
+    white-space: nowrap; /* Impede a quebra de linha no mobile */
+}
+.event-count-badge i { font-size: 0.9rem; }
+.event-count-badge:hover {
+    background: var(--primary-color);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.25);
+}
+
+/* Esconde o texto curto no PC */
+.badge-texto-curto { display: none; }
+
+/* =========================================
+   PAINEL LATERAL (TIMELINE OFFCANVAS)
+========================================= */
+.offcanvas {
+    border-left: none;
+    box-shadow: -5px 0 30px rgba(0,0,0,0.08);
+}
+.offcanvas-body {
+    background-color: var(--bg-light);
+    padding: 1.5rem !important;
+}
+
+.timeline-card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid #eaeaea;
+    position: relative;
+    transition: all 0.25s ease;
+}
+.timeline-card:hover { 
+    transform: translateY(-3px); 
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); 
+    border-color: #d0d0d0;
+}
+
+.timeline-card.estado-ativa { border-top: 4px solid var(--primary-color); }
+.timeline-card.estado-pendente { border-top: 4px solid #f57c00; }
+.timeline-card.estado-realizada { border-top: 4px solid #1565c0; }
+
+.time-range { 
+    font-size: 0.85rem; 
+    font-weight: 700; 
+    color: var(--text-dark); 
+    background: var(--bg-light);
+    border: 1px solid #eaeaea;
+    padding: 4px 10px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.st-badge {
+    font-size: 0.7rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.st-badge.ativa { background: rgba(46, 125, 50, 0.1); color: var(--primary-color); border: 1px solid rgba(46, 125, 50, 0.2); }
+.st-badge.pendente { background: #fff3e0; color: #e65100; border: 1px solid #ffe0b2; }
+.st-badge.realizada { background: #e3f2fd; color: #1565c0; border: 1px solid #bbdefb; }
+
+/* =========================================
+   CORREÇÃO: REMOVER CAIXA AZUL E CORRIGIR CLIQUE
+========================================= */
+.fc-event, .fc-daygrid-event, .fc-h-event {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    pointer-events: none !important;
+}
+
+/* =========================================
+   RESPONSIVIDADE (MOBILE & TABLET)
+========================================= */
+@media (max-width: 991px) {
+    .content {
+        margin-left: 0; 
+        padding: 15px;
+        min-height: 100vh;
+    }
+    .d-flex.justify-content-between.align-items-center.mb-4 {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 15px;
+    }
+    .filter-bar { padding: 15px; }
+    #calendar-container { padding: 10px; }
+    .fc .fc-toolbar { flex-direction: column; gap: 10px; }
+    .offcanvas { width: 100% !important; }
+    
+    /* Troca o texto "marcações" apenas pelo número no mobile */
+    .badge-texto-longo { display: none; }
+    .badge-texto-curto { display: inline; font-size: 0.9rem; }
+    .event-count-badge { padding: 4px 8px; gap: 4px; }
+}

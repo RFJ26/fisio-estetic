@@ -1,0 +1,269 @@
+:root {
+    --primary-color: #2e7d32;
+    --primary-hover: #1b5e20;
+    --bg-light: #f8f9fa;
+    --text-dark: #2c3e50;
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+}
+
+.content {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+    padding: 30px;
+    min-height: 100vh;
+    transition: all 0.3s ease;
+}
+
+/* --- HEADER & FILTROS --- */
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.search-box { position: relative; min-width: 250px; flex-grow: 1;}
+.search-box input {
+    padding-left: 42px;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    height: 44px;
+    width: 100%;
+}
+.search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888; }
+
+.filter-select {
+    height: 44px;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    color: #4b5563;
+    min-width: 140px;
+    cursor: pointer;
+}
+
+.btn-add {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 22px;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+    font-weight: 500;
+    height: 44px;
+}
+.btn-add:hover { background-color: var(--primary-hover); transform: translateY(-2px); color: white; }
+
+/* --- TABLE CONFIG --- */
+.table-container {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
+}
+
+.custom-table thead th {
+    background-color: #f9f9f9;
+    color: #666;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    padding: 18px 20px;
+    border-bottom: 2px solid #eaeaea;
+}
+
+.custom-table td {
+    padding: 16px 20px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+/* Elementos Textuais da Tabela */
+.date-day { font-size: 1.2rem; font-weight: 700; color: var(--text-dark); line-height: 1; }
+.date-day small { font-size: 0.8rem; font-weight: 500; text-transform: uppercase; color: #888;}
+.date-time { 
+    font-size: 0.85rem; color: var(--primary-color); font-weight: 600; margin-top: 4px;
+    background: #e8f5e9; padding: 2px 8px; border-radius: 6px; display: inline-block;
+}
+
+/* --- ESTADOS (BADGES) --- */
+.status-badge {
+    padding: 6px 14px; 
+    border-radius: 20px; 
+    font-size: 0.75rem; 
+    font-weight: 600; 
+    text-transform: uppercase; 
+    display: inline-block; 
+    letter-spacing: 0.05em;
+    border: none;
+}
+
+/* Realizada / Concluída (Verde - status-success no teu exemplo) */
+.st-realizada, .st-concluida { 
+    background-color: #dcfce7; 
+    color: #166534; 
+}
+
+/* Ativa / Confirmada (Amarelo - status-pending no teu exemplo) */
+.st-ativa, .st-confirmada { 
+    background-color: #fef9c3; 
+    color: #854d0e; 
+}
+
+/* Por Confirmar / Pendente (Vermelho - status-danger no teu exemplo) */
+.st-por-confirmar, .st-pendente { 
+    background-color: #fee2e2; 
+    color: #dc2626; 
+}
+
+/* Cancelada (Cinzento e Riscado - status-cancel no teu exemplo) */
+.st-cancelada { 
+    background-color: #f3f4f6; 
+    color: #9ca3af; 
+    text-decoration: line-through;
+}
+/* --- AÇÕES (BOTÕES UNIFICADOS) --- */
+.action-buttons { display: flex; gap: 8px; justify-content: flex-end; }
+.btn-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    transition: 0.2s; text-decoration: none; border: none; font-size: 1.1rem;
+}
+
+/* Cores Padronizadas */
+.btn-view { background: #f3e5f5; color: #7b1fa2; } /* Roxo */
+.btn-view:hover { background: #7b1fa2; color: white; }
+
+.btn-edit { background: #e8f5e9; color: var(--primary-color); } /* Verde Default */
+.btn-edit:hover { background: var(--primary-color); color: white; }
+
+.btn-confirm { background: #dcfce7; color: #15803d; } /* Verde Vivo */
+.btn-confirm:hover { background: #15803d; color: white; }
+
+.btn-complete { background: #e0e7ff; color: #4338ca; } /* Indigo */
+.btn-complete:hover { background: #4338ca; color: white; }
+
+.btn-cancel { background: #ffebee; color: #d32f2f; } /* Vermelho */
+.btn-cancel:hover { background: #d32f2f; color: white; }
+
+/* --- CORES DA PAGINAÇÃO --- */
+.pagination {
+    gap: 4px; /* Pequeno espaçamento entre os botões */
+}
+
+.pagination .page-link { 
+    color: var(--primary-color); 
+    border-color: #e2e8f0; 
+    border-radius: 6px; /* Bordas mais suaves */
+    box-shadow: none;
+    font-weight: 500;
+}
+
+.pagination .page-link:hover { 
+    background-color: #e8f5e9; 
+    color: var(--primary-hover); 
+    border-color: #e2e8f0;
+}
+
+.pagination .page-item.active .page-link { 
+    background-color: var(--primary-color); 
+    border-color: var(--primary-color); 
+    color: #fff; 
+}
+
+.pagination .page-item.disabled .page-link { 
+    color: #94a3b8; 
+    background-color: transparent;
+}
+
+
+/* --- RESPONSIVIDADE UNIVERSAL (MOBILE CARD) --- */
+@media (max-width: 991px) {
+    .content { 
+        margin-left: 0; 
+        width: 100%; 
+        padding: 80px 15px 20px 15px; /* Ajuste para não colar as bordas ao ecrã */
+    }
+    
+    .header-actions { margin-bottom: 1rem !important; }
+
+    /* Esconde o cabeçalho da tabela */
+    .custom-table thead { display: none; }
+    
+    /* Remove as bordas laterais do container da tabela no mobile */
+    .table-container { border: none; box-shadow: none; background: transparent; }
+
+    /* Transforma cada linha num "Cartão" */
+    .custom-table tr { 
+        display: block; 
+        background: #fff;
+        border: 1px solid #e2e8f0; 
+        margin-bottom: 1rem; 
+        border-radius: 12px; 
+        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    }
+
+    /* O Segredo: Flexbox no TD para alinhar a Label e o Conteúdo */
+    .custom-table td { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        text-align: right; 
+        padding: 12px 16px; 
+        border-bottom: 1px solid #f1f5f9; 
+    }
+
+    /* Estilo da Label gerada pelo data-label */
+    .custom-table td::before {
+        content: attr(data-label);
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #64748b;
+        text-align: left;
+        margin-right: 15px;
+        flex-shrink: 0; /* Impede a label de ser esmagada */
+    }
+
+    /* Garante que os blocos de texto alinham à direita */
+    .custom-table td > div, 
+    .custom-table td > span {
+        text-align: right;
+    }
+
+    /* Área dos Botões de Ação no fundo do cartão */
+    .custom-table td:last-child { 
+        border-bottom: none; 
+        background: #f8fafc; /* Cor de fundo ligeiramente diferente para destacar os botões */
+        border-radius: 0 0 12px 12px;
+        justify-content: flex-end; /* Encosta os botões à direita */
+    }
+
+    .custom-table td:last-child::before {
+        display: none; /* Esconde a palavra "Ações" se preferires um look mais limpo */
+    }
+
+    .action-buttons { justify-content: flex-end; width: 100%; }
+    /* O card-footer onde está a paginação precisa de se alinhar em coluna no telemóvel */
+    .card-footer {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+        padding: 20px !important;
+    }
+    
+    .pagination {
+        justify-content: center !important;
+        flex-wrap: wrap; /* Permite que a paginação quebre a linha se o ecrã for muito pequeno */
+    }
+}

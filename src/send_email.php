@@ -9,16 +9,15 @@ require_once __DIR__ . '/helpers.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-$caminhoEnv = dirname(__DIR__, 2) . '/.env';
+$smtpUser = getenv('SMTP_USER');
+$smtpPass = getenv('SMTP_PASS');
 
-if (file_exists($caminhoEnv)) {
-    $env = parse_ini_file($caminhoEnv);
-    define('SMTP_USER', $env['SMTP_USER']);
-    define('SMTP_PASS', $env['SMTP_PASS']);
-} else {
-    $pastaTentada = dirname(__DIR__, 2);
-    die("Erro crítico: Ficheiro .env não encontrado. <br> O PHP tentou procurar nesta pasta: <b>" . $pastaTentada . "</b>");
+if (!$smtpUser || !$smtpPass) {
+    die("Erro crítico: Credenciais SMTP não encontradas nas variáveis de ambiente.");
 }
+
+define('SMTP_USER', $smtpUser);
+define('SMTP_PASS', $smtpPass);
 
 function enviarEmailEstado($conexao, $idMarcacao, $novoEstado) {
     

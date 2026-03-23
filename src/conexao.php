@@ -1,5 +1,6 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
+// Se a sessão já estiver ativa ou se os headers já foram enviados, não tenta mudar ini_set
+if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
     ini_set('session.cookie_samesite', 'Lax');
     ini_set('session.cookie_secure', '1');
     session_start();

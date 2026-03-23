@@ -1,12 +1,18 @@
-    <?php
-    session_start();
-    include __DIR__ . '/../verifica_login.php';
+<?php
+    // ATENÇÃO: Não pode haver NADA (nem um espaço) antes do <?php acima!
+    if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
+        ini_set('session.cookie_samesite', 'Lax');
+        ini_set('session.cookie_secure', '1');
+        session_start();
+    }
+
+    // 1. Ligar à Base de Dados PRIMEIRO que tudo
     require_once __DIR__ . '/../../src/conexao.php';
 
+    // 2. Verificar login e permissões
+    include __DIR__ . '/../verifica_login.php';
 
-    // ============================================================================
-    // LÓGICA DE REENVIAR EMAIL DE ATIVAÇÃO
-    // ============================================================================
+    // 3. Só agora o resto da lógica (Reenviar email, Delete, etc.)
     if (isset($_GET['resend'])) {
         $id_resend = mysqli_real_escape_string($conn, $_GET['resend']);
         

@@ -231,7 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
                             </div>
 
-                            <div class="d-grid mt-2">
+                            <div class="d-grid mt-4">
                                 <button type="submit" class="btn btn-primary-custom">
                                     <i class="bi bi-floppy me-2"></i>Guardar Alterações
                                 </button>
@@ -241,19 +241,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <div class="col-lg-7">
-                    <div class="card-custom">
-                        <div class="section-title text-start d-flex align-items-center gap-2">
-                            <i class="bi bi-shield-lock" style="color: var(--primary-color);"></i> Segurança da Conta
-                        </div>
+                    <div class="card-custom d-flex flex-column h-100">
+                        <div>
+                            <div class="section-title text-start d-flex align-items-center gap-2 mb-3">
+                                <i class="bi bi-shield-lock" style="color: var(--primary-color);"></i> Segurança da Conta
+                            </div>
 
-                        <div class="alert border-0 d-flex align-items-start mb-4 mt-3" style="background-color: #fff8e1; color: #f57f17; border-radius: 12px;">
-                            <i class="bi bi-info-circle-fill me-3 mt-1 fs-5"></i>
-                            <div class="small">
-                                A sua nova palavra-passe deve conter pelo menos <strong>8 caracteres</strong>, incluindo uma <strong>letra maiúscula</strong>, uma <strong>letra minúscula</strong> e um <strong>número</strong>.
+                            <div class="alert border-0 d-flex align-items-start mb-4" style="background-color: #fff8e1; color: #f57f17; border-radius: 12px;">
+                                <i class="bi bi-info-circle-fill me-3 mt-1 fs-5"></i>
+                                <div class="small">
+                                    A sua nova palavra-passe deve conter pelo menos <strong>8 caracteres</strong>, incluindo uma <strong>letra maiúscula</strong>, uma <strong>letra minúscula</strong> e um <strong>número</strong>.
+                                </div>
                             </div>
                         </div>
                         
-                        <form method="POST" action="" id="formSenha">
+                        <form method="POST" action="" id="formSenha" class="mt-auto">
                             <input type="hidden" name="acao" value="alterar_senha">
 
                             <div class="mb-4">
@@ -283,8 +285,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
                             </div>
 
-                            <div class="d-flex justify-content-end mt-3">
-                                <button type="submit" class="btn btn-outline-primary-custom w-100 d-md-inline-block w-md-auto">
+                            <div class="d-grid d-md-flex justify-content-md-end mt-2">
+                                <button type="submit" class="btn btn-outline-primary-custom">
                                     <i class="bi bi-shield-check me-2"></i>Atualizar Palavra-passe
                                 </button>
                             </div>

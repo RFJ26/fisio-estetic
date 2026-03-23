@@ -7,7 +7,7 @@ require_once __DIR__ . '/../../src/helpers.php';
 
 // Configuração
 $hora_inicio_dia = 8; 
-$minutos_por_slot = 30;
+$minutos_por_slot = 15;
 
 // Validação e IDs
 if (!isset($_GET['id']) && !isset($_POST['id_funcionario'])) {

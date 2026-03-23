@@ -176,7 +176,9 @@ body {
 .pagination .page-item.active .page-link { background-color: var(--primary-color); border-color: var(--primary-color); color: #fff; }
 .pagination .page-item.disabled .page-link { color: #6c757d; background-color: transparent; }
 
-/* --- RESPONSIVIDADE (MOBILE CARD) --- */
+/* ========================================================================= */
+/* RESPONSIVIDADE (MOBILE CARD VIEW)                                         */
+/* ========================================================================= */
 @media (max-width: 991px) {
     .content { 
         margin-left: 0; 
@@ -185,67 +187,143 @@ body {
     }
     
     .header-actions { margin-bottom: 1rem !important; }
+    
+    /* Esconder o cabeçalho da tabela */
     .custom-table thead { display: none; }
+    
     .table-container { border: none; box-shadow: none; background: transparent; }
 
+    /* Transformar linhas em "Cartões" */
     .custom-table tr { 
-        display: block; 
+        display: flex;
+        flex-direction: column;
         background: #fff;
         border: 1px solid #e2e8f0; 
-        margin-bottom: 1rem; 
+        margin-bottom: 1.5rem; 
         border-radius: 12px; 
-        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.03);
     }
 
+    /* Transformar as células no interior do cartão */
     .custom-table td { 
         display: flex; 
         justify-content: space-between; 
         align-items: center; 
-        text-align: right; 
-        padding: 12px 16px; 
+        padding: 15px 16px; 
         border-bottom: 1px solid #f1f5f9; 
     }
 
+    /* Adicionar a label (ex: "Nome", "Telefone") antes do conteúdo */
     .custom-table td::before {
         content: attr(data-label);
         font-size: 0.8rem;
         font-weight: 600;
         text-transform: uppercase;
         color: #64748b;
-        text-align: left;
         margin-right: 15px;
         flex-shrink: 0;
     }
 
-    .custom-table td > div, 
-    .custom-table td > span {
+    /* OBRIGATÓRIO: Wrapper para alinhar o conteúdo à direita da label */
+    .td-content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
         text-align: right;
-    }
-    
-    .custom-table td[data-label="Nome"] > div {
-        justify-content: flex-end;
+        width: 100%;
     }
 
-    .custom-table td:last-child { 
+    /* Ajuste específico para a linha do NOME para alinhar avatar e texto */
+    .custom-table td[data-label="Nome"] .td-content {
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    /* Célula de ações fica sem label no telemóvel e junta os botões ao centro */
+    .custom-table td[data-label="Ações"] { 
         border-bottom: none; 
         background: #f8fafc; 
         border-radius: 0 0 12px 12px;
-        justify-content: flex-end; 
+        justify-content: center; 
+    }
+    
+    .custom-table td[data-label="Ações"]::before { 
+        display: none; 
     }
 
-    .custom-table td:last-child::before { display: none; }
-
-    .action-buttons { justify-content: flex-end; width: 100%; padding-top: 0; flex-wrap: wrap; }
+    .action-buttons { 
+        justify-content: center; 
+        width: 100%; 
+        flex-wrap: wrap; 
+    }
     
     .card-footer {
         flex-direction: column;
         gap: 15px;
         text-align: center;
         padding: 20px !important;
+        border-radius: 12px;
+        background: white;
+        border: 1px solid #e2e8f0;
     }
     
-    .pagination {
-        justify-content: center !important;
-        flex-wrap: wrap; 
-    }
+    .pagination { justify-content: center !important; flex-wrap: wrap; }
+}
+/* --- STATUS BADGES (ESTADO DO EMAIL) --- */
+.badge-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 12px;
+    border-radius: 50rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+.status-validado {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #c8e6c9;
+}
+
+.status-pendente {
+    background-color: #fff8e1;
+    color: #f57f17;
+    border: 1px solid #ffecb3;
+}
+
+/* --- BOTÃO DE REENVIAR EMAIL --- */
+.btn-resend {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+    background-color: #ffffff;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    padding: 0;
+}
+
+.btn-resend i {
+    font-size: 0.85rem;
+    transition: color 0.2s;
+}
+
+.btn-resend:hover {
+    background-color: #f8fafc;
+    border-color: #cbd5e1;
+    color: #0f172a;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.btn-resend:active {
+    transform: translateY(0);
+    box-shadow: none;
 }

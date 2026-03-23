@@ -117,10 +117,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['finalizar_reserva'])) 
 
                     try {
                         if (mysqli_stmt_execute($stmt)) {
-                            // Marcação feita com sucesso! Enviar e-mail e redirecionar
+                            // 1. Apanhar o ID da marcação recém-criada
                             $id_nova_marcacao = mysqli_insert_id($conn);
+                            
+                            // 2. Enviar email para o CLIENTE (a dizer que está Pendente/Por Confirmar)
                             enviarEmailEstado($conn, $id_nova_marcacao, 'por confirmar');
 
+                            // 3. ENVIAR EMAIL PARA O FUNCIONÁRIO E PARA A CLÍNICA (Aviso de Nova Marcação)
+                            enviarEmailNovaMarcacao($conn, $id_nova_marcacao);
+
+                            // 4. Redirecionar para o histórico com sucesso
                             header("Location: my_bookings.php?msg=sucesso");
                             exit;
                         } else {

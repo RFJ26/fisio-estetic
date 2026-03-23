@@ -179,16 +179,22 @@ $query_string_filtros = http_build_query($params);
     <div class="content">
         <div class="container-fluid">
             
-           <div class="header-actions d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h1 class="h3 mb-1 fw-bold text-dark">Agenda</h1>
-        <p class="text-muted mb-0">Gestão de todas as marcações.</p>
+    <div class="header-actions d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1 fw-bold text-dark">Agenda</h1>
+            <p class="text-muted mb-0">Gestão de todas as marcações.</p>
+        </div>
+        
+        <div class="d-flex gap-2">
+            <a href="agenda.php" class="btn-add">
+                <i class="bi bi-calendar3 me-2"></i> Ver Agenda Visual
+            </a>
+
+            <a href="create.php" class="btn-add">
+                <i class="bi bi-plus-lg"></i> <span class="d-none d-sm-inline">Nova Marcação</span>
+            </a>
+        </div>
     </div>
-    
-    <a href="create.php" class="btn-add">
-        <i class="bi bi-plus-lg"></i> <span class="d-none d-sm-inline">Nova Marcação</span>
-    </a>
-</div>
 
 <div class="filter-bar bg-white p-3 rounded-4 shadow-sm border mb-4" style="border-color: #f0f0f0 !important;">
     <form method="GET" class="row g-3 align-items-center" id="form-filtros">

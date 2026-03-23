@@ -27,25 +27,42 @@ $agora = new DateTime('now', $tz_lisboa);
 $msg = "";
 $msg_tipo = "";
 
+// =================================================================================
+// LÓGICA DE CANCELAMENTO (COM ENVIO DE EMAIL DUPLO)
+// =================================================================================
+$msg = "";
+$msg_tipo = "";
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancelar_id'])) {
     $id_marcacao = intval($_POST['cancelar_id']);
     
-    $check_sql = "SELECT id FROM marcacao WHERE id = '$id_marcacao' AND id_cliente = '$id_cliente' AND estado NOT LIKE 'cancelad%'";
+    // Verifica se a marcação é mesmo deste cliente e não está já cancelada nem realizada
+    $check_sql = "SELECT id FROM marcacao WHERE id = '$id_marcacao' AND id_cliente = '$id_cliente' AND estado NOT IN ('cancelada', 'realizada')";
     $check_res = mysqli_query($conn, $check_sql);
     
     if (mysqli_num_rows($check_res) > 0) {
+        // Atualiza a base de dados para o estado 'cancelada'
         $update_sql = "UPDATE marcacao SET estado = 'cancelada' WHERE id = '$id_marcacao'";
         
         if (mysqli_query($conn, $update_sql)) {
-            // ENVIO DO EMAIL DE CANCELAMENTO
+            
+            // -------------------------------------------------------------
+            // 1. Envia email ao CLIENTE a dizer "A sua marcação foi cancelada"
             enviarEmailEstado($conn, $id_marcacao, 'cancelada');
             
-            $msg = "Marcação cancelada com sucesso. Enviámos um e-mail de confirmação.";
+            // 2. Envia email ao FUNCIONÁRIO/LOJA a dizer "O cliente cancelou"
+            enviarEmailCancelamentoFuncionario($conn, $id_marcacao);
+            // -------------------------------------------------------------
+            
+            $msg = "Marcação cancelada com sucesso. Foi-lhe enviado um e-mail a confirmar.";
             $msg_tipo = "success";
         } else {
-            $msg = "Erro ao cancelar.";
+            $msg = "Erro ao cancelar a marcação. Tente novamente.";
             $msg_tipo = "danger";
         }
+    } else {
+        $msg = "Ação inválida. A marcação já foi cancelada ou não foi encontrada.";
+        $msg_tipo = "danger";
     }
 }
 

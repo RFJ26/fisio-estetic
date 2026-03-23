@@ -14,7 +14,7 @@ body {
     background-color: var(--bg-light);
     color: var(--text-dark);
     margin: 0;
-    overflow-x: hidden;
+    overflow-x: hidden; /* Evita scroll horizontal acidental */
 }
 
 /* --- LAYOUT PRINCIPAL --- */
@@ -24,6 +24,7 @@ body {
     padding: 30px;
     min-height: 100vh;
     transition: all 0.3s ease;
+    box-sizing: border-box;
 }
 
 /* --- CABEÇALHO --- */
@@ -40,7 +41,6 @@ body {
     padding: 35px 30px;
     box-shadow: var(--card-shadow);
     border: 1px solid #f0f0f0;
-    height: 100%;
 }
 
 .section-title {
@@ -84,15 +84,22 @@ body {
 }
 
 /* --- BOTÕES --- */
-.btn-primary-custom {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
+.btn-primary-custom, .btn-outline-primary-custom {
     border-radius: 10px;
     padding: 12px 20px;
     font-weight: 600;
     transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
+
+.btn-primary-custom {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+}
+
 .btn-primary-custom:hover {
     background-color: var(--primary-hover);
     color: white;
@@ -104,25 +111,68 @@ body {
     color: var(--primary-color);
     background: transparent;
     border: 2px solid var(--primary-color);
-    border-radius: 10px;
-    padding: 10px 20px;
-    font-weight: 600;
-    transition: all 0.3s ease;
 }
+
 .btn-outline-primary-custom:hover {
     background-color: var(--primary-color);
     color: white;
 }
 
-/* --- RESPONSIVIDADE (MOBILE) --- */
-@media (max-width: 991px) {
+/* ========================================================================= */
+/* MEDIA QUERIES (RESPONSIVIDADE AJUSTADA)                                   */
+/* ========================================================================= */
+
+/* Ecrãs médios e pequenos (Tablets e Mobile) */
+@media (max-width: 991.98px) {
     .content {
         margin-left: 0;
         width: 100%;
-        padding: 80px 15px 20px 15px;
+        max-width: 100vw;
+        padding: 80px 20px 30px 20px; /* Mais espaço para o botão menu (hambúrguer) */
     }
+    
+    /* Remove a altura a 100% que deixa buracos brancos feios no telemóvel */
+    .card-custom.h-100 {
+        height: auto !important; 
+    }
+    
     .card-custom { 
         padding: 25px 20px; 
     }
-    .w-md-auto { width: auto !important; }
+}
+
+/* Telemóveis (Ecrãs pequenos) */
+@media (max-width: 767.98px) {
+    .header-actions {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px; /* Separa o título do conteúdo abaixo, caso exista */
+    }
+
+    .row.g-4 > [class*="col-"] {
+        margin-top: 1.5rem; /* Garante que os cartões não ficam colados quando empilham */
+    }
+}
+
+/* Telemóveis (Ecrãs muito pequenos) */
+@media (max-width: 575.98px) {
+    .content {
+        padding: 70px 15px 20px 15px;
+    }
+
+    .card-custom {
+        padding: 20px 15px;
+    }
+
+    .avatar-circle {
+        width: 80px;
+        height: 80px;
+        font-size: 2.5rem;
+    }
+
+    /* Os botões passam a ocupar 100% da largura para ser mais fácil clicar */
+    .btn-primary-custom, 
+    .btn-outline-primary-custom {
+        width: 100%;
+    }
 }

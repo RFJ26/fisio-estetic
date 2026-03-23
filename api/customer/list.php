@@ -4,6 +4,47 @@ include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
 
 // ============================================================================
+// LÓGICA DE REENVIAR EMAIL DE ATIVAÇÃO
+// ============================================================================
+if (isset($_GET['resend'])) {
+    $id_resend = mysqli_real_escape_string($conn, $_GET['resend']);
+    
+    // 1. Ir buscar os dados do cliente
+    $query_cliente = "SELECT nome, email FROM cliente WHERE id = '$id_resend'";
+    $resultado_cliente = mysqli_query($conn, $query_cliente);
+    
+    if ($resultado_cliente && mysqli_num_rows($resultado_cliente) > 0) {
+        $cliente_resend = mysqli_fetch_assoc($resultado_cliente);
+        
+        // 2. Construir o link dinâmico para a ativação
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+        $dominio = $_SERVER['HTTP_HOST'];
+        $linkValidacao = $protocol . "://" . $dominio . "/public/ativar_cliente.php?id=" . $id_resend;
+        
+        // 3. Incluir o ficheiro de e-mails
+        require_once __DIR__ . '/../../src/send_email.php';
+        
+        try {
+            // NOTA: Esta função tem de estar criada no teu send_email.php!
+            if (function_exists('enviarEmailValidacao')) {
+                $sucesso_email = enviarEmailValidacao($cliente_resend['email'], $cliente_resend['nome'], $linkValidacao);
+                
+                if ($sucesso_email) {
+                    header('Location: list.php?msg=resend_success');
+                    exit();
+                } else {
+                    $erro_msg = "Erro ao tentar reenviar o e-mail. Verifica as configurações SMTP.";
+                }
+            } else {
+                $erro_msg = "Erro: A função enviarEmailValidacaoCliente() não existe no ficheiro send_email.php.";
+            }
+        } catch (Exception $e) {
+            $erro_msg = "Erro ao enviar o e-mail: " . $e->getMessage();
+        }
+    }
+}
+
+// ============================================================================
 // LÓGICA DE APAGAR
 // ============================================================================
 if (isset($_GET['delete'])) {
@@ -61,7 +102,7 @@ $query = "SELECT id, nome, email, telefone, nif, email_verificado
 $clientes = mysqli_query($conn, $query);
 
 $params = $_GET;
-unset($params['pagina'], $params['delete'], $params['msg']);
+unset($params['pagina'], $params['delete'], $params['msg'], $params['resend']);
 $query_string_filtros = http_build_query($params);
 ?>
 <!DOCTYPE html>
@@ -135,6 +176,13 @@ $query_string_filtros = http_build_query($params);
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             <?php endif; ?>
+
+            <?php if(isset($_GET['msg']) && $_GET['msg'] == 'resend_success'): ?>
+                <div class="alert alert-success alert-dismissible fade show shadow-sm" id="successAlert">
+                    <i class="bi bi-send-check-fill me-2"></i> E-mail de validação reenviado com sucesso!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
             
             <?php if(isset($erro_msg)): ?>
                 <div class="alert alert-danger alert-dismissible fade show shadow-sm">
@@ -143,13 +191,13 @@ $query_string_filtros = http_build_query($params);
                 </div>
             <?php endif; ?>
 
-            <div class="table-container" id="conteudo-tabela">
+           <div class="table-container" id="conteudo-tabela">
                 <div class="table-responsive" style="overflow: visible;">
                     <table class="table custom-table mb-0">
                         <thead>
                             <tr>
                                 <th width="35%">Nome</th>
-                                <th width="25%">Email</th>
+                                <th width="25%">Email & Estado</th>
                                 <th width="20%">Telefone</th>
                                 <th width="20%" class="text-end pe-4">Ações</th>
                             </tr>
@@ -166,9 +214,9 @@ $query_string_filtros = http_build_query($params);
                                 ?> 
                                 <tr>
                                     <td data-label="Nome">
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar-circle"><?= $iniciais ?></div>
-                                            <div class="text-start">
+                                        <div class="td-content">
+                                            <div class="avatar-circle me-3"><?= $iniciais ?></div>
+                                            <div class="text-end text-lg-start">
                                                 <div class="fw-bold text-dark"><?= htmlspecialchars($cliente['nome']) ?></div>
                                                 <?php if(!empty($cliente['nif'])): ?>
                                                     <small class="text-muted">NIF: <?= htmlspecialchars($cliente['nif']) ?></small>
@@ -176,20 +224,29 @@ $query_string_filtros = http_build_query($params);
                                             </div>
                                         </div>
                                     </td>
-                                    <td data-label="Email">
-                                        <div class="text-muted d-flex align-items-center gap-2">
-                                            <i class="bi bi-envelope"></i>
-                                            <?= htmlspecialchars($cliente['email']) ?>
-                                            <?php if($cliente['email_verificado']): ?>
-                                                <i class="bi bi-patch-check-fill text-success" title="Email validado" style="font-size: 0.85rem;"></i>
-                                            <?php endif; ?>
+                                    <td data-label="Email & Estado">
+                                        <div class="td-content">
+                                            <div class="text-muted mb-2"><i class="bi bi-envelope me-2"></i><?= htmlspecialchars($cliente['email']) ?></div>
+                                            
+                                            <div class="d-flex justify-content-end align-items-center gap-2">
+                                                <?php if($cliente['email_verificado'] == 1): ?>
+                                                    <span class="badge-status status-validado"><i class="bi bi-check-circle-fill me-1"></i> Validado</span>
+                                                <?php else: ?>
+                                                    <span class="badge-status status-pendente"><i class="bi bi-clock-fill me-1"></i> Pendente</span>
+                                                    <a href="list.php?resend=<?= $cliente['id'] ?>" class="btn-resend" title="Reenviar e-mail de validação">
+                                                        <i class="bi bi-send-fill"></i>
+                                                    </a>
+                                                <?php endif; ?>
+                                            </div>
                                         </div>
                                     </td>
                                     <td data-label="Telefone">
-                                        <div class="text-muted"><i class="bi bi-phone me-2"></i><?= !empty($cliente['telefone']) ? htmlspecialchars($cliente['telefone']) : '--' ?></div>
+                                        <div class="td-content">
+                                            <div class="text-muted"><i class="bi bi-phone me-2"></i><?= !empty($cliente['telefone']) ? htmlspecialchars($cliente['telefone']) : '--' ?></div>
+                                        </div>
                                     </td>
                                     <td data-label="Ações" class="text-end pe-4">
-                                        <div class="action-buttons justify-content-end">
+                                        <div class="action-buttons justify-content-lg-end">
                                             <a href="view.php?id=<?= $cliente['id'] ?>" class="btn-icon btn-view" title="Ver Detalhes">
                                                 <i class="bi bi-eye"></i>
                                             </a>
@@ -214,6 +271,12 @@ $query_string_filtros = http_build_query($params);
                         </tbody>
                     </table>
                 </div>
+
+                <?php if ($total_paginas > 1): ?>
+                    <div class="card-footer bg-white border-top py-3 px-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        </div>
+                <?php endif; ?>
+            </div>
 
                 <?php if ($total_paginas > 1): ?>
                     <div class="card-footer bg-white border-top py-3 px-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
@@ -303,7 +366,6 @@ $query_string_filtros = http_build_query($params);
                 
                 timer = setTimeout(() => {
                     const termo = this.value;
-                    // Certifica-te que aponta para list.php
                     const url = `list.php?search=${encodeURIComponent(termo)}&pagina=1`;
 
                     conteudoTabela.style.opacity = '0.5';

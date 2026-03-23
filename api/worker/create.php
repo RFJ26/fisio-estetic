@@ -1,10 +1,9 @@
 <?php
 session_start();
 
-
-
 include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
+require_once __DIR__ . '/../../src/send_email.php'; // Adicionado para enviar o e-mail
 
 $erros = [];
 
@@ -14,11 +13,10 @@ if (isset($_POST['create_worker'])) {
     $email    = trim($_POST['email']);
     $telefone = trim($_POST['telefone']);
     $nif      = trim($_POST['nif']);
-    $password = $_POST['password'];
     $adm      = $_POST['adm']; // 0 ou 1
 
     // =========================================================================
-    // VALIDAÇÕES
+    // VALIDAÇÕES ORIGINAIS (MANTIDAS EXATAMENTE COMO PEDISTE)
     // =========================================================================
 
     // 1. Nome: Apenas letras e espaços
@@ -31,8 +29,7 @@ if (isset($_POST['create_worker'])) {
         $erros['email'] = "Email inválido.";
     }
 
-    // 3. Telefone: O Regex específico que pediste
-    // Nota: Adicionei /^ e $/ para garantir que valida a string inteira
+    // 3. Telefone: O Regex específico
     if (!preg_match("/^(\+351)?(2\d{8}|9[1236]\d{7})$/", $telefone)) {
         $erros['telefone'] = "Telefone inválido. Deve começar por 2, 91, 92, 93 ou 96 (opcionalmente com +351).";
     }
@@ -42,13 +39,8 @@ if (isset($_POST['create_worker'])) {
         $erros['nif'] = "NIF inválido (deve ter 9 dígitos).";
     }
 
-    // 5. Password: Forte (8 chars, Maiúscula, Minúscula, Número)
-    if (!preg_match("/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/", $password)) {
-        $erros['password'] = "A palavra-passe deve ter no mínimo 8 caracteres, incluir uma maiúscula, uma minúscula e um número.";
-    }
-
     // =========================================================================
-    // INSERÇÃO NA BASE DE DADOS
+    // INSERÇÃO NA BASE DE DADOS COM ENVIO DE E-MAIL
     // =========================================================================
     if (empty($erros)) {
         
@@ -72,14 +64,27 @@ if (isset($_POST['create_worker'])) {
             if (mysqli_stmt_num_rows($stmtClient) > 0) {
                 $erros['bd'] = "Este Email ou NIF já está associado a um Cliente.";
             } else {
-                // Sucesso: Inserir
-                $passHash = md5($password); 
-                $query = "INSERT INTO funcionario (nome, email, telefone, nif, palavra_passe, adm) VALUES (?, ?, ?, ?, ?, ?)";
+                
+                // GERA O TOKEN E PREPARA DADOS
+                $token = bin2hex(random_bytes(50));
+                $passVazia = ""; 
+                $emailVerificado = 0;
+
+                // Sucesso: Inserir com o token
+                $query = "INSERT INTO funcionario (nome, email, telefone, nif, palavra_passe, adm, email_verificado, token_verificacao) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
                 $stmt = mysqli_prepare($conn, $query);
-                mysqli_stmt_bind_param($stmt, "sssssi", $nome, $email, $telefone, $nif, $passHash, $adm);
+                mysqli_stmt_bind_param($stmt, "sssssiis", $nome, $email, $telefone, $nif, $passVazia, $adm, $emailVerificado, $token);
 
                 if (mysqli_stmt_execute($stmt)) {
-                    echo "<script>alert('Funcionário criado com sucesso!'); window.location.href = 'list.php';</script>";
+                    
+                    // ENVIAR O E-MAIL
+                    $protocolo = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+                    $dominio = $_SERVER['HTTP_HOST'];
+                    $linkValidacao = $protocolo . "://" . $dominio . "/ativar_funcionario.php?token=" . $token;
+
+                    enviarEmailValidacaoFuncionario($email, $nome, $linkValidacao, $adm);
+
+                    echo "<script>alert('Funcionário criado com sucesso! Foi enviado um email para ativar a conta.'); window.location.href = 'list.php';</script>";
                     exit();
                 } else {
                     $erros['bd'] = "Erro ao criar funcionário na base de dados.";
@@ -179,6 +184,8 @@ if (isset($_POST['create_worker'])) {
                             <label for="telefone" class="form-label">Telefone</label>
                             <input type="text" class="form-control" id="telefone" name="telefone" 
                                    placeholder="912345678"
+                                   maxlength="13"
+                                   oninput="this.value = this.value.replace(/[^0-9+]/g, '')"
                                    pattern="(\+351)?(2\d{8}|9[1236]\d{7})"
                                    title="Formato inválido. Aceita fixos (2...) ou móveis (91, 92, 93, 96), opcionalmente com +351." 
                                    value="<?= isset($_POST['telefone']) ? htmlspecialchars($_POST['telefone']) : '' ?>" required>
@@ -188,30 +195,26 @@ if (isset($_POST['create_worker'])) {
                             <label for="nif" class="form-label">NIF</label>
                             <input type="text" class="form-control" id="nif" name="nif" 
                                    placeholder="123456789"
+                                   maxlength="9"
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                                    pattern="[0-9]{9}"
                                    title="O NIF deve ter 9 dígitos" 
                                    value="<?= isset($_POST['nif']) ? htmlspecialchars($_POST['nif']) : '' ?>" required>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-12">
                             <label for="adm" class="form-label">Permissões de Acesso</label>
                             <select class="form-select" id="adm" name="adm">
                                 <option value="0" selected>Funcionário (Acesso Limitado)</option>
                                 <option value="1">Administrador (Acesso Total)</option>
                             </select>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="password" class="form-label">Definir Palavra-passe</label>
-                            <input type="password" class="form-control" id="password" 
-                                   placeholder="Mínimo 8 caracteres, Maiúscula, Minúscula e Número" name="password" 
-                                   pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                                   title="A senha deve ter pelo menos 8 caracteres, uma maiúscula, uma minúscula e um número."
-                                   autocomplete="new-password" required>
+                            <small class="text-muted d-block mt-2">
+                                <i class="bi bi-info-circle me-1"></i> O funcionário receberá um e-mail para definir a sua palavra-passe.
+                            </small>
                         </div>
                     </div>
 
-                    <div class="form-actions">
+                    <div class="form-actions mt-4">
                         <a href="list.php" class="btn-cancel">Cancelar</a>
                         <button type="submit" name="create_worker" class="btn-save">
                             <i class="bi bi-check-lg me-2"></i>Criar Funcionário

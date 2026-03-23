@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-
 include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
 
@@ -15,6 +14,7 @@ if (isset($_POST['create_client'])) {
     $password = $_POST['password'];
     $obs      = trim($_POST['obs']);
 
+    // Validações PHP (Backend - Segurança)
     $regexpNome = "/(^[A-ZAÁÀÃÂEÉÈÊIÍÌÎOÓÒÕÔUÚÙÛ][a-zaáàãâeéèêiíìîoóòõôuúùû]+( [A-ZAÁÀÃÂEÉÈÊIÍÌÎOÓÒÕÔUÚÙÛ][a-zaáàãâeéèêiíìîoóòõôuúùû]+)+$)| (^[A-ZAÁÀÃÂEÉÈÊIÍÌÎOÓÒÕÔUÚÙÛ][a-zaáàãâeéèêiíìîoóòõôuúùû]+( [A-ZAÁÀÃÂEÉÈÊIÍÌÎOÓÒÕÔUÚÙÛ][a-zaáàãâeéèêiíìîoóòõôuúùû]+)* (((de)|(dos)|(da)|(do Ó)))?( [A-ZAÁÀÃÂEÉÈÊIÍÌÎOÓÒÕÔUÚÙÛ][a-zaáàãâeéèêiíìîoóòõôuúùû]+)+$)/";
     if (!preg_match($regexpNome, $nome)) $erros['nome'] = "Nome incorreto (Ex: Ana Silva).";
 
@@ -22,14 +22,15 @@ if (isset($_POST['create_client'])) {
     if (!empty($email) && !preg_match($regexEmail, $email)) $erros['email'] = "Email inválido.";
 
     $regexpTelefone = "/^(\\+351)?((2\\d{8})|(9[1236]\\d{7}))$/";
-    if (!preg_match($regexpTelefone, $telefone)) $erros['telefone'] = "Telefone inválido (9 dígitos).";
+    if (!preg_match($regexpTelefone, $telefone)) $erros['telefone'] = "Telefone inválido. Deve ter 9 dígitos (ex: 912345678).";
 
     $regexpNif = "/^[1-79]\\d{8}$/";
-    if (!empty($nif) && !preg_match($regexpNif, $nif)) $erros['nif'] = "NIF inválido (9 dígitos).";
+    if (!empty($nif) && !preg_match($regexpNif, $nif)) $erros['nif'] = "NIF inválido. Deve ter 9 dígitos numéricos.";
 
     if (empty($password) || strlen($password) < 6) $erros['password'] = "Palavra-passe requer min. 6 caracteres.";
 
     if (empty($erros)) {
+        // Verificar se já existe nos Clientes
         $checkClient = "SELECT id FROM cliente WHERE email = ? OR nif = ?";
         $stmtClient = mysqli_prepare($conn, $checkClient);
         mysqli_stmt_bind_param($stmtClient, "ss", $email, $nif);
@@ -39,6 +40,7 @@ if (isset($_POST['create_client'])) {
         if (mysqli_stmt_num_rows($stmtClient) > 0) {
             $erros['bd'] = "Email ou NIF já existe como Cliente.";
         } else {
+            // Verificar se já existe nos Funcionários
             $checkFunc = "SELECT id FROM funcionario WHERE email = ? OR nif = ?";
             $stmtFunc = mysqli_prepare($conn, $checkFunc);
             mysqli_stmt_bind_param($stmtFunc, "ss", $email, $nif);
@@ -49,12 +51,32 @@ if (isset($_POST['create_client'])) {
                 $erros['bd'] = "Email ou NIF já existe como Funcionário.";
             } else {
                 $passHash = md5($password);
-                $query = "INSERT INTO cliente (nome, email, telefone, nif, palavra_passe, obs) VALUES (?, ?, ?, ?, ?, ?)";
+                $email_verificado = 0; // O cliente entra sempre como não verificado
+                
+                // Inserir na BD
+                $query = "INSERT INTO cliente (nome, email, telefone, nif, palavra_passe, obs, email_verificado) VALUES (?, ?, ?, ?, ?, ?, ?)";
                 $stmtInsert = mysqli_prepare($conn, $query);
-                mysqli_stmt_bind_param($stmtInsert, "ssssss", $nome, $email, $telefone, $nif, $passHash, $obs);
+                mysqli_stmt_bind_param($stmtInsert, "ssssssi", $nome, $email, $telefone, $nif, $passHash, $obs, $email_verificado);
 
                 if (mysqli_stmt_execute($stmtInsert)) {
-                    echo "<script>alert('Cliente criado com sucesso!'); window.location.href = 'list.php';</script>";
+                    
+                    // ============================================================================
+                    // LÓGICA DE ENVIO DO EMAIL DE VALIDAÇÃO
+                    // ============================================================================
+                    $novo_cliente_id = mysqli_insert_id($conn);
+                    
+                    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+                    $dominio = $_SERVER['HTTP_HOST'];
+                    $linkValidacao = $protocol . "://" . $dominio . "/public/ativar_cliente.php?id=" . $novo_cliente_id;
+                    
+                    require_once __DIR__ . '/../../src/send_email.php';
+                    
+                    if (function_exists('enviarEmailValidacao')) {
+                        enviarEmailValidacao($email, $nome, $linkValidacao);
+                    }
+                    // ============================================================================
+
+                    echo "<script>alert('Cliente criado com sucesso! E-mail de ativação enviado.'); window.location.href = 'list.php';</script>";
                     exit();
                 } else {
                     $erros['bd'] = "Erro na BD: " . mysqli_error($conn);
@@ -131,7 +153,6 @@ if (isset($_POST['create_client'])) {
                                 <input type="text" id="nome" name="nome" class="form-control form-control-lg" 
                                     placeholder="Ex: Ana Silva"
                                     title="Nome completo. Ex: João das Dores. Use iniciais maiúsculas." 
-
                                     value="<?= isset($_POST['nome']) ? htmlspecialchars($_POST['nome']) : '' ?>" required>
                                 <span class="text-help">Primeira letra maiúscula e pelo menos um sobrenome.</span>
                             </div>
@@ -147,10 +168,12 @@ if (isset($_POST['create_client'])) {
 
                             <div class="col-md-6">
                                 <label for="telefone" class="form-label">Telefone <span class="text-danger">*</span></label>
-                                <input type="text" id="telefone" name="telefone" class="form-control" 
-                                    placeholder="912345678"
+                                <input type="tel" id="telefone" name="telefone" class="form-control" 
+                                    placeholder="Ex: 912345678"
                                     pattern="(\+351)?(2\d{8}|9[1236]\d{7})"
-                                   title="Deve começar por 2 ou 9(1,2,3,6) e ter 9 dígitos" 
+                                    maxlength="13"
+                                    oninput="this.value = this.value.replace(/[^0-9+]/g, '')"
+                                    title="Deve ter 9 dígitos (ex: 912345678) ou incluir o indicativo +351" 
                                     value="<?= isset($_POST['telefone']) ? htmlspecialchars($_POST['telefone']) : '' ?>" required>
                             </div>
 
@@ -159,7 +182,9 @@ if (isset($_POST['create_client'])) {
                                 <input type="text" id="nif" name="nif" class="form-control" 
                                     placeholder="Nº Contribuinte"
                                     pattern="[0-9]{9}"
-                                   title="O NIF deve ter 9 dígitos" 
+                                    maxlength="9"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                    title="O NIF deve ter exatamente 9 dígitos" 
                                     value="<?= isset($_POST['nif']) ? htmlspecialchars($_POST['nif']) : '' ?>">
                             </div>
 
@@ -176,7 +201,7 @@ if (isset($_POST['create_client'])) {
                             </div>
                         </div>
 
-                        <div class="form-actions d-flex justify-content-end gap-3">
+                        <div class="form-actions d-flex justify-content-end gap-3 mt-4">
                             <a href="list.php" class="btn-cancel border-0">Cancelar</a>
                             <button type="submit" name="create_client" class="btn-save">
                                 <i class="bi bi-check-lg me-2"></i>Criar Cliente

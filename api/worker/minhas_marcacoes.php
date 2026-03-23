@@ -28,7 +28,7 @@ if ($id_funcionario == 0 && !empty($nome_funcionario)) {
 $hoje = date('Y-m-d');
 
 // ============================================================================
-// AÇÕES DOS BOTÕES (COM SEGURANÇA E SEM ABREVIATURAS SQL)
+// AÇÕES DOS BOTÕES (COM SEGURANÇA E ENVIO DE EMAIL)
 // ============================================================================
 if (isset($_GET['action']) && isset($_GET['id'])) {
     $id_marcacao = intval($_GET['id']);
@@ -47,11 +47,11 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
     if (mysqli_num_rows(mysqli_query($conn, $query_verifica)) > 0) {
         if ($acao === 'confirm') { 
             $novo_estado = 'ativa'; 
-            $mensagem = 'Marcação confirmada!';
+            $mensagem = 'Marcação confirmada! O cliente foi notificado.';
         }
         elseif ($acao === 'cancel') { 
             $novo_estado = 'cancelada'; 
-            $mensagem = 'Marcação cancelada.';
+            $mensagem = 'Marcação cancelada e cliente notificado.';
         }
         elseif ($acao === 'complete') { 
             $novo_estado = 'realizada'; 
@@ -63,6 +63,7 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
             mysqli_stmt_bind_param($stmt, "si", $novo_estado, $id_marcacao);
             mysqli_stmt_execute($stmt);
             
+            // ENVIA O EMAIL AQUI APÓS MUDAR O ESTADO
             enviarEmailEstado($conn, $id_marcacao, $novo_estado);
 
             // Redirecionar limpando os parâmetros de ação, mas mantendo a mensagem
@@ -179,11 +180,14 @@ $query_string_filtros = http_build_query($params);
     <div class="content">
         <div class="container-fluid">
             
-           <div class="header-actions d-flex justify-content-between align-items-center mb-4">
+           <div class="header-actions d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
                 <div>
                     <h1 class="h3 mb-1 fw-bold text-dark">Minha Agenda</h1>
                     <p class="text-muted mb-0">Gestão das suas marcações agendadas.</p>
                 </div>
+                <a href="minha_agenda.php" class="btn btn-success rounded-pill px-4 py-2 fw-semibold" style="background-color: #2e7d32; border-color: #2e7d32; box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);">
+                    <i class="bi bi-calendar-month me-2"></i> Ver em Calendário
+                </a>
             </div>
 
             <div class="filter-bar bg-white p-3 rounded-4 shadow-sm border mb-4" style="border-color: #f0f0f0 !important;">
@@ -237,13 +241,19 @@ $query_string_filtros = http_build_query($params);
                                     $est = mb_strtolower(trim($row['estado']), 'UTF-8'); 
                                     $status_class = 'st-' . str_replace(' ', '-', $est);
                                     $hora = function_exists('converterSlotParaHora') ? converterSlotParaHora($row['slot_inicial']) : $row['slot_inicial'];
-                                    $data = date('d/m/Y', strtotime($row['data']));
+                                    
+                                    // A Data legível completa para o Modal
+                                    $data_modal = date('d/m/Y', strtotime($row['data']));
+                                    
                                     $is_readonly = in_array($est, ['realizada', 'concluida', 'cancelada']);
                                     $pode_concluir = ($row['data'] <= $hoje); 
                                 ?>
                                     <tr>
                                         <td data-label="Data / Hora">
-                                            <div class="date-day"><?= date('d', strtotime($row['data'])) ?> <small><?= date('M', strtotime($row['data'])) ?></small></div>
+                                            <div class="date-day">
+                                                <?= date('d', strtotime($row['data'])) ?> 
+                                                <small><?= date('M Y', strtotime($row['data'])) ?></small>
+                                            </div>
                                             <div class="date-time"><i class="bi bi-clock me-1"></i><?= $hora ?></div>
                                         </td>
                                         <td data-label="Cliente">
@@ -263,7 +273,7 @@ $query_string_filtros = http_build_query($params);
                                                     data-cliente="<?= htmlspecialchars($row['nome_cliente']) ?>"
                                                     data-servico="<?= htmlspecialchars($row['nome_servico']) ?>"
                                                     data-obs="<?= htmlspecialchars($row['obs_cliente'] ?? 'Sem observações') ?>"
-                                                    data-data="<?= $data ?>" data-hora="<?= $hora ?>" data-estado="<?= $row['estado'] ?>" title="Ver Detalhes">
+                                                    data-data="<?= $data_modal ?>" data-hora="<?= $hora ?>" data-estado="<?= $row['estado'] ?>" title="Ver Detalhes">
                                                     <i class="bi bi-eye"></i>
                                                 </button>
 

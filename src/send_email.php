@@ -89,7 +89,7 @@ function enviarEmailEstado($conexao, $idMarcacao, $novoEstado) {
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = 'clinic.fisio.estetic@gmail.com'; 
-        $mail->Password   = 'zyhd ljzl pzmx yxgu';     
+        $mail->Password   = 'chhq waog qawm yitx';     
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 465;
         $mail->CharSet    = 'UTF-8';
@@ -166,7 +166,7 @@ function enviarEmailEstado($conexao, $idMarcacao, $novoEstado) {
 }
 
 // ========================================================================
-// NOVA FUNÇÃO: ENVIAR EMAIL DE RECUPERAÇÃO DE PALAVRA-PASSE
+//  FUNÇÃO: ENVIAR EMAIL DE RECUPERAÇÃO DE PALAVRA-PASSE
 // ========================================================================
 function enviarEmailRecuperacao($emailDestino, $nomeDestino, $linkRecuperacao) {
     
@@ -181,7 +181,7 @@ function enviarEmailRecuperacao($emailDestino, $nomeDestino, $linkRecuperacao) {
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = 'clinic.fisio.estetic@gmail.com'; 
-        $mail->Password   = 'zyhd ljzl pzmx yxgu';     
+        $mail->Password   = 'chhq waog qawm yitx';     
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 465;
         $mail->CharSet    = 'UTF-8';
@@ -252,7 +252,7 @@ function enviarEmailRecuperacao($emailDestino, $nomeDestino, $linkRecuperacao) {
 }
 
 // ========================================================================
-// NOVA FUNÇÃO: ENVIAR EMAIL DE VALIDAÇÃO DE CONTA (REGISTO)
+//  FUNÇÃO: ENVIAR EMAIL DE VALIDAÇÃO DE CONTA (REGISTO)
 // ========================================================================
 function enviarEmailValidacao($emailDestino, $nomeDestino, $linkValidacao) {
     
@@ -267,7 +267,7 @@ function enviarEmailValidacao($emailDestino, $nomeDestino, $linkValidacao) {
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = 'clinic.fisio.estetic@gmail.com'; 
-        $mail->Password   = 'zyhd ljzl pzmx yxgu';     
+        $mail->Password   = 'chhq waog qawm yitx';     
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 465;
         $mail->CharSet    = 'UTF-8';
@@ -333,6 +333,292 @@ function enviarEmailValidacao($emailDestino, $nomeDestino, $linkValidacao) {
 
     } catch (Exception $e) {
         return false;
+    }
+}
+
+// ========================================================================
+//  FUNÇÃO: ENVIAR EMAIL DE NOVA MARCAÇÃO (PARA FUNCIONÁRIO E LOJA)
+// ========================================================================
+function enviarEmailNovaMarcacao($conexao, $idMarcacao) {
+    
+    $urlLogotipo = "https://img.icons8.com/ios-filled/100/lotus.png"; 
+    $corCabecalho = "#275a29"; 
+    $corPrimary = "#4caf50"; 
+
+    // 1. OBTER DADOS DA MARCAÇÃO
+    $consultaSQL = "SELECT 
+                marcacao.data, 
+                marcacao.slot_inicial, 
+                cliente.nome AS nome_cliente, 
+                servico.designacao AS nome_servico,
+                funcionario.nome AS nome_funcionario,
+                funcionario.email AS email_funcionario
+            FROM marcacao 
+            INNER JOIN cliente ON marcacao.id_cliente = cliente.id 
+            INNER JOIN servico_funcionario ON marcacao.id_servico_funcionario = servico_funcionario.id
+            INNER JOIN servico ON servico_funcionario.id_servico = servico.id 
+            INNER JOIN funcionario ON servico_funcionario.id_funcionario = funcionario.id
+            WHERE marcacao.id = ?";
+
+    $stmt = $conexao->prepare($consultaSQL);
+    $stmt->bind_param("i", $idMarcacao);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+
+    if ($resultado->num_rows == 0) {
+        return false;
+    }
+
+    $dados = $resultado->fetch_assoc();
+    
+    // Formatar os dados
+    $dataPT = date('d/m/Y', strtotime($dados['data']));
+    $hora = converterSlotParaHora($dados['slot_inicial']); 
+    $nomeCliente = $dados['nome_cliente'];
+    $nomeServico = $dados['nome_servico'];
+    $nomeFuncionario = $dados['nome_funcionario'];
+    $emailFuncionario = $dados['email_funcionario'];
+    
+    // Email geral da Loja / Administração
+    $emailLoja = 'clinic.fisio.estetic@gmail.com'; 
+
+    $mail = new PHPMailer(true);
+
+    try {
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'clinic.fisio.estetic@gmail.com'; 
+        $mail->Password   = 'chhq waog qawm yitx';     
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        $mail->Port       = 465;
+        $mail->CharSet    = 'UTF-8';
+
+        $mail->setFrom('clinic.fisio.estetic@gmail.com', 'FisioEstetic - Sistema');
+
+        // Adicionar Destinatários (Funcionário + Email da Loja em CC)
+        $mail->addAddress($emailFuncionario, $nomeFuncionario); // Para o Funcionário
+        $mail->addCC($emailLoja, 'Administração FisioEstetic'); // CC para a Loja
+
+        $mail->isHTML(true);
+        $mail->Subject = "Nova Marcacao Recebida - $dataPT as $hora";
+
+        // HTML do email
+        $corpoEmail = "
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset='UTF-8'>
+            <style>
+                body { background-color: #f6f6f6; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
+                .main-box { max-width: 600px; margin: 20px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+                .header { background-color: $corCabecalho; padding: 30px; text-align: center; }
+                .content { padding: 40px 30px; }
+                .dynamic-title { color: #333; margin-top: 0; font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 15px; }
+                .intro-text { color: #555; font-size: 16px; line-height: 1.6; margin-bottom: 20px; text-align: center; }
+                .info-box { background-color: #f8f9fa; border-left: 4px solid $corCabecalho; padding: 20px; margin: 25px 0; border-radius: 4px; }
+                .info-row { margin: 10px 0; font-size: 15px; color: #333; }
+                .footer { background-color: #f6f6f6; padding: 20px; text-align: center; font-size: 12px; color: #999; }
+            </style>
+        </head>
+        <body>
+            <div style='background-color: #f6f6f6; padding: 20px;'>
+                <div class='main-box'>
+                    <div class='header'>
+                        <img src='$urlLogotipo' alt='FisioEstetic' width='80' style='display:block; margin: 0 auto; filter: brightness(0) invert(1);'>
+                    </div>
+                    <div class='content'>
+                        <h2 class='dynamic-title'>Nova Marcação Recebida</h2>
+                        <p class='intro-text'>
+                            Olá <strong>$nomeFuncionario</strong>,<br>
+                            Um cliente acabou de solicitar uma nova marcação que aguarda a tua confirmação no sistema.
+                        </p>
+                        
+                        <div class='info-box'>
+                            <div class='info-row'><strong>Cliente:</strong> $nomeCliente</div>
+                            <div class='info-row'><strong>Serviço:</strong> $nomeServico</div>
+                            <div class='info-row'><strong>Data:</strong> $dataPT</div>
+                            <div class='info-row'><strong>Hora:</strong> $hora</div>
+                        </div>
+                        
+                        <p class='intro-text' style='margin-top: 25px;'>
+                            Por favor, acede ao portal FisioEstetic para Confirmar ou Cancelar o agendamento.
+                        </p>
+                    </div>
+                    <div class='footer'>
+                        &copy; 2026 FisioEstetic<br>Email automático.
+                    </div>
+                </div>
+            </div>
+        </body>
+        </html>
+        ";
+
+        $mail->Body    = $corpoEmail;
+        $mail->AltBody = "Nova marcação solicitada por $nomeCliente para o serviço $nomeServico no dia $dataPT às $hora. Aceda ao painel para confirmar.";
+
+        $mail->send();
+        return true;
+
+    } catch (Exception $e) {
+        return false;
+    }
+}
+
+// ========================================================================
+//  FUNÇÃO: AVISAR FUNCIONÁRIO E LOJA QUE O CLIENTE CANCELOU
+// ========================================================================
+function enviarEmailCancelamentoFuncionario($conexao, $idMarcacao) {
+    
+    $urlLogotipo = "https://img.icons8.com/ios-filled/100/lotus.png"; 
+    $corCabecalho = "#d32f2f"; // Vermelho porque é um cancelamento
+    $corPrimary = "#d32f2f"; 
+
+    // Obter dados da marcação
+    $consultaSQL = "SELECT 
+                marcacao.data, 
+                marcacao.slot_inicial, 
+                cliente.nome AS nome_cliente, 
+                servico.designacao AS nome_servico,
+                funcionario.nome AS nome_funcionario,
+                funcionario.email AS email_funcionario
+            FROM marcacao 
+            INNER JOIN cliente ON marcacao.id_cliente = cliente.id 
+            INNER JOIN servico_funcionario ON marcacao.id_servico_funcionario = servico_funcionario.id
+            INNER JOIN servico ON servico_funcionario.id_servico = servico.id 
+            INNER JOIN funcionario ON servico_funcionario.id_funcionario = funcionario.id
+            WHERE marcacao.id = ?";
+
+    $stmt = $conexao->prepare($consultaSQL);
+    $stmt->bind_param("i", $idMarcacao);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+
+    if ($resultado->num_rows == 0) return false;
+
+    $dados = $resultado->fetch_assoc();
+    
+    $dataPT = date('d/m/Y', strtotime($dados['data']));
+    $hora = converterSlotParaHora($dados['slot_inicial']); 
+    $nomeCliente = $dados['nome_cliente'];
+    $nomeServico = $dados['nome_servico'];
+    $nomeFuncionario = $dados['nome_funcionario'];
+    $emailFuncionario = $dados['email_funcionario'];
+    
+    $emailLoja = 'clinic.fisio.estetic@gmail.com'; 
+
+    try {
+        $mail = new PHPMailer(true); 
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'clinic.fisio.estetic@gmail.com'; 
+        $mail->Password   = 'chhq waog qawm yitx';     
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; 
+        $mail->Port       = 465;
+        $mail->CharSet    = 'UTF-8';
+
+        $mail->setFrom('clinic.fisio.estetic@gmail.com', 'FisioEstetic - Sistema');
+        $mail->addAddress($emailFuncionario, $nomeFuncionario); // Para o funcionário
+        $mail->addCC($emailLoja, 'Administração FisioEstetic'); // Para a loja
+
+        $mail->isHTML(true);
+        $mail->Subject = "Marcacao Cancelada pelo Cliente - $dataPT as $hora";
+
+        $corpoEmail = "
+        <div style='background-color: #f6f6f6; padding: 20px; font-family: Helvetica, Arial, sans-serif;'>
+            <div style='max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 8px; overflow: hidden;'>
+                <div style='background-color: $corCabecalho; padding: 30px; text-align: center;'>
+                    <img src='$urlLogotipo' alt='FisioEstetic' width='80' style='filter: brightness(0) invert(1);'>
+                </div>
+                <div style='padding: 40px 30px;'>
+                    <h2 style='color: #333; text-align: center;'>Marcação Cancelada ❌</h2>
+                    <p style='color: #555; text-align: center;'>
+                        Olá <strong>$nomeFuncionario</strong>,<br>
+                        O cliente acabou de cancelar a seguinte marcação no portal:
+                    </p>
+                    <div style='background-color: #fee2e2; border-left: 4px solid $corCabecalho; padding: 20px; margin: 25px 0; border-radius: 4px;'>
+                        <p style='margin: 10px 0;'><strong>Cliente:</strong> $nomeCliente</p>
+                        <p style='margin: 10px 0;'><strong>Serviço:</strong> $nomeServico</p>
+                        <p style='margin: 10px 0;'><strong>Data:</strong> $dataPT</p>
+                        <p style='margin: 10px 0;'><strong>Hora:</strong> $hora</p>
+                    </div>
+                    <p style='color: #555; text-align: center;'>A sua agenda foi atualizada e este horário encontra-se agora livre.</p>
+                </div>
+            </div>
+        </div>
+        ";
+
+        $mail->Body = $corpoEmail;
+        $mail->send();
+        return true;
+    } catch (Exception $e) { return false; }
+}
+
+// ========================================================================
+//  FUNÇÃO: ENVIAR EMAIL DE VALIDAÇÃO DE CONTA (FUNCIONÁRIO)
+// ========================================================================
+function enviarEmailValidacaoFuncionario($emailDestino, $nomeDestino, $linkValidacao, $adm) {
+    
+    $urlLogotipo = "https://img.icons8.com/ios-filled/100/lotus.png"; 
+    $corCabecalho = "#275a29"; 
+    $corPrimary = "#4caf50"; 
+
+    $cargoTexto = $adm == 1 ? "Administrador" : "Funcionário";
+
+    $mail = new PHPMailer(true);
+
+    try {
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'clinic.fisio.estetic@gmail.com'; 
+        
+        // A NOVA PALAVRA-PASSE SEM ESPAÇOS:
+        $mail->Password   = 'chhqwaogqawmyitx';     
+        
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        $mail->Port       = 465;
+        $mail->CharSet    = 'UTF-8';
+
+        $mail->setFrom('clinic.fisio.estetic@gmail.com', 'Administração FisioEstetic');
+        $mail->addAddress($emailDestino, $nomeDestino);
+
+        $mail->isHTML(true);
+        $mail->Subject = "Bem-vindo a Equipa FisioEstetic - Ative a sua conta";
+
+        $corpoEmail = "
+        <div style='background-color: #f6f6f6; padding: 20px; font-family: Helvetica, Arial, sans-serif;'>
+            <div style='max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 8px; overflow: hidden;'>
+                <div style='background-color: $corCabecalho; padding: 30px; text-align: center;'>
+                    <img src='$urlLogotipo' alt='FisioEstetic' width='80' style='filter: brightness(0) invert(1);'>
+                </div>
+                <div style='padding: 40px 30px; text-align: center;'>
+                    <h2 style='color: #333; margin-top: 0; font-size: 22px;'>Bem-vindo(a) à Equipa!</h2>
+                    <p style='color: #555; font-size: 16px; line-height: 1.6; margin-bottom: 20px;'>
+                        Olá <strong>$nomeDestino</strong>,<br>
+                        A Administração criou-lhe uma conta de <strong>$cargoTexto</strong> no portal FisioEstetic.<br><br>
+                        Para ativar o seu acesso e definir a sua palavra-passe pessoal, clique no botão abaixo:
+                    </p>
+                    
+                    <a href='$linkValidacao' style='display: inline-block; background-color: $corCabecalho; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 6px; font-weight: bold; font-size: 16px; margin: 20px 0;'>
+                        Ativar Conta e Criar Palavra-passe
+                    </a>
+                    
+                    <p style='margin-top: 30px; font-size: 13px; color: #888;'>
+                        Se o botão não funcionar, copie este link:<br>
+                        <a href='$linkValidacao' style='color: $corPrimary; word-break: break-all;'>$linkValidacao</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        ";
+
+        $mail->Body = $corpoEmail;
+        $mail->send();
+        return true;
+    } catch (Exception $e) { 
+        return false; 
     }
 }
 ?>

@@ -9,15 +9,15 @@ require_once __DIR__ . '/helpers.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-$caminhoEnv = __DIR__ . '/../../.env';
+$caminhoEnv = dirname(__DIR__, 2) . '/.env';
 
 if (file_exists($caminhoEnv)) {
     $env = parse_ini_file($caminhoEnv);
     define('SMTP_USER', $env['SMTP_USER']);
     define('SMTP_PASS', $env['SMTP_PASS']);
 } else {
-    // Para a execução se o .env não existir (evita erros fatais no PHPMailer)
-    die("Erro crítico: Ficheiro .env não encontrado na raiz do projeto.");
+    $pastaTentada = dirname(__DIR__, 2);
+    die("Erro crítico: Ficheiro .env não encontrado. <br> O PHP tentou procurar nesta pasta: <b>" . $pastaTentada . "</b>");
 }
 
 function enviarEmailEstado($conexao, $idMarcacao, $novoEstado) {

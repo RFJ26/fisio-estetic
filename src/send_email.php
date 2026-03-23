@@ -9,7 +9,7 @@ require_once __DIR__ . '/helpers.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-$caminhoEnv = __DIR__ . '/../.env';
+$caminhoEnv = __DIR__ . '/../../.env';
 
 if (file_exists($caminhoEnv)) {
     $env = parse_ini_file($caminhoEnv);

@@ -4,7 +4,8 @@ include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
 
 // Função para converter número de slots em horas/minutos
-function converterSlotsParaTempo($slots, $minutos_por_slot = 30) {
+// AJUSTADO: Passou de 30 para 15 minutos, de acordo com a base de dados
+function converterSlotsParaTempo($slots, $minutos_por_slot = 15) {
     $total_minutos = $slots * $minutos_por_slot;
     $horas = floor($total_minutos / 60);
     $minutos = $total_minutos % 60;
@@ -89,6 +90,17 @@ $query_string_filtros = http_build_query($params);
     
     <link rel="stylesheet" href="../css/sidebar.css">
     <link rel="stylesheet" href="../css/service/list.css">
+    
+    <style>
+        /* Estilo extra para destacar os serviços gratuitos */
+        .badge-oferta {
+            background-color: #198754 !important; /* Verde Bootstrap */
+            color: white !important;
+            padding: 0.25rem 0.6rem;
+            border-radius: 50rem;
+            font-size: 0.85em;
+        }
+    </style>
 </head>
 <body>
 
@@ -184,7 +196,10 @@ $query_string_filtros = http_build_query($params);
                                         </span>
                                     </td>
                                     <td data-label="Preço" class="text-center">
-                                        <span class="price-badge"><?= number_format($row['preco'], 2, ',', '.') ?> €</span>
+                                        <?php $isOferta = ($row['preco'] <= 0.01); ?>
+                                        <span class="price-badge <?= $isOferta ? 'badge-oferta' : '' ?>">
+                                            <?= $isOferta ? 'Oferta' : number_format($row['preco'], 2, ',', '.') . ' €' ?>
+                                        </span>
                                     </td>
                                     <td data-label="Ações" class="text-end pe-4">
                                         <div class="action-buttons">

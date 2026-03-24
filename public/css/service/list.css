@@ -201,3 +201,25 @@ body {
         flex-wrap: wrap; 
     }
 }
+/* ==========================================================================
+   BADGE DE OFERTA (Preços a 0.00€ / 0.01€)
+   ========================================================================== */
+.price-badge.badge-oferta {
+    background-color: #198754 !important; /* Verde bonito do Bootstrap */
+    color: #ffffff !important;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 50px; /* Bordas bem redondas */
+    text-transform: uppercase;
+    font-size: 0.85em;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 5px rgba(25, 135, 84, 0.3); /* Sombra suave para destacar */
+    border: none; /* Remove qualquer borda que a price-badge normal tenha */
+}
+
+/* Efeito ao passar o rato (opcional, mas fica bem) */
+.price-badge.badge-oferta:hover {
+    background-color: #146c43 !important;
+    transform: translateY(-1px);
+    transition: all 0.2s ease;
+}

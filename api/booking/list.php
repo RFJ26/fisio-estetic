@@ -13,9 +13,6 @@ mysqli_set_charset($conn, "utf8");
 
 $hoje = date('Y-m-d');
 
-// Auto-atualização de estados
-$query_auto_update = "UPDATE marcacao SET estado = 'realizada' WHERE data < '$hoje' AND estado IN ('ativa', 'por confirmar')";
-mysqli_query($conn, $query_auto_update);
 
 // Ações dos botões (Confirmar, Cancelar, Concluir)
 if (isset($_GET['action']) && isset($_GET['id'])) {

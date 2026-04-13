@@ -67,7 +67,7 @@ if (isset($_POST['create_client'])) {
                     
                     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
                     $dominio = $_SERVER['HTTP_HOST'];
-                    $linkValidacao = $protocol . "://" . $dominio . "/public/ativar_cliente.php?id=" . $novo_cliente_id;
+                    $linkValidacao = $protocol . "://" . $dominio . "/public/verificar.php?id=" . $novo_cliente_id;
                     
                     require_once __DIR__ . '/../../src/send_email.php';
                     

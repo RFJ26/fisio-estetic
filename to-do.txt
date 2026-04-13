@@ -1,0 +1,9 @@
+Ver um esquema para contactar o cliente quando uma marcação é cancelada
+
+quantidade de coisas no list das paginações
+
+colocar funcionarios 
+
+meter na pasta local
+
+fazer um filtro do calendairo para o dia em vez do mes todo

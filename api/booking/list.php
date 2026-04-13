@@ -98,10 +98,10 @@ $offset = ($pagina_atual - 1) * $registos_por_pagina;
 $query_count = "
     SELECT COUNT(marcacao.id) AS total
     FROM marcacao
-    INNER JOIN cliente ON marcacao.id_cliente = cliente.id
-    INNER JOIN servico_funcionario ON marcacao.id_servico_funcionario = servico_funcionario.id
-    INNER JOIN funcionario ON servico_funcionario.id_funcionario = funcionario.id
-    INNER JOIN servico ON servico_funcionario.id_servico = servico.id
+    LEFT JOIN cliente ON marcacao.id_cliente = cliente.id
+    LEFT JOIN servico_funcionario ON marcacao.id_servico_funcionario = servico_funcionario.id
+    LEFT JOIN funcionario ON servico_funcionario.id_funcionario = funcionario.id
+    LEFT JOIN servico ON servico_funcionario.id_servico = servico.id
     $condicao
 ";
 $resultado_count = mysqli_query($conn, $query_count);

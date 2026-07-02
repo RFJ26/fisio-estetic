@@ -70,7 +70,7 @@ if (isset($_POST['recuperar'])) {
             <h2 class="brand-title">Fisioestetic</h2>
         </div>
 
-        <h3>Esqueceu-se da senha?</h3>
+        <h3>Esqueceu-se da palavra-passe?</h3>
         <p class="subtitle" style="margin-bottom: 30px;">Introduza o seu email e enviaremos um link para criar uma nova palavra-passe.</p>
 
         <?php if ($msg != ""): ?>

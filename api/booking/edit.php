@@ -6,8 +6,7 @@ include __DIR__ . '/../verifica_login.php';
 
 // --- CONFIGURAÇÃO DE SESSÃO E ACESSO ---
 require_once '../../src/conexao.php';
-require_once '../../src/helpers.php';      
-require_once __DIR__ . '/../../src/send_email.php';
+require_once '../../src/helpers.php';
 
 mysqli_set_charset($conn, "utf8mb4");
 
@@ -172,6 +171,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['salvar_alteracoes'])) 
         mysqli_stmt_bind_param($stmt, "siisi", $nova_data, $novo_slot_ini, $novo_slot_fim, $novo_estado, $id_marcacao);
         
         if (mysqli_stmt_execute($stmt)) {
+            require_once __DIR__ . '/../../src/send_email.php';
             enviarEmailEstado($conn, $id_marcacao, $novo_estado);
             echo "<script>window.location.href='list.php?msg=Editado com sucesso';</script>";
             exit;
@@ -186,6 +186,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['salvar_alteracoes'])) 
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
+    <?php require_once __DIR__ . '/../includes/perf_head.php'; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Editar Marcação | Fisioestetic</title>
     
@@ -427,5 +428,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['salvar_alteracoes'])) 
         // Inicia o calendário
         renderCalendar();
     </script>
+    <?php require_once __DIR__ . '/../includes/perf_foot.php'; ?>
 </body>
 </html>

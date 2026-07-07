@@ -6,7 +6,7 @@
 
 session_start();
 require_once __DIR__ . '/../../src/conexao.php';
-include_once __DIR__ . '/../../src/helpers.php';require_once __DIR__ . '/../../src/send_email.php';// Importa a lógica de email
+include_once __DIR__ . '/../../src/helpers.php';
 
 $tz_lisboa = new DateTimeZone('Europe/Lisbon');
 date_default_timezone_set('Europe/Lisbon');
@@ -45,7 +45,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cancelar_id'])) {
         $update_sql = "UPDATE marcacao SET estado = 'cancelada' WHERE id = '$id_marcacao'";
         
         if (mysqli_query($conn, $update_sql)) {
-            
+            require_once __DIR__ . '/../../src/send_email.php';
+
             // -------------------------------------------------------------
             // 1. Envia email ao CLIENTE a dizer "A sua marcação foi cancelada"
             enviarEmailEstado($conn, $id_marcacao, 'cancelada');
@@ -154,6 +155,7 @@ $mesesPT = [1=>'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov'
 <html lang="pt-pt">
 <head>
     <meta charset="UTF-8">
+    <?php require_once __DIR__ . '/../includes/perf_head.php'; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minhas Marcações</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -307,5 +309,6 @@ $mesesPT = [1=>'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov'
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <?php require_once __DIR__ . '/../includes/perf_foot.php'; ?>
 </body>
 </html>

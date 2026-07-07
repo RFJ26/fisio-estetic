@@ -7,7 +7,6 @@ date_default_timezone_set('Europe/Lisbon');
 
 include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
-require_once __DIR__ . '/../../src/send_email.php';
 
 mysqli_set_charset($conn, "utf8");
 
@@ -39,6 +38,7 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
         mysqli_stmt_bind_param($stmt, "si", $novo_estado, $id_marcacao);
         mysqli_stmt_execute($stmt);
         
+        require_once __DIR__ . '/../../src/send_email.php';
         enviarEmailEstado($conn, $id_marcacao, $novo_estado);
 
         header("Location: list.php?msg=" . urlencode($mensagem)); 
@@ -135,6 +135,7 @@ $query_string_filtros = http_build_query($params);
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
+    <?php require_once __DIR__ . '/../includes/perf_head.php'; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Agenda - Fisioestetic</title>
     
@@ -542,5 +543,6 @@ $query_string_filtros = http_build_query($params);
             });
         }
     </script>
+    <?php require_once __DIR__ . '/../includes/perf_foot.php'; ?>
 </body>
 </html>

@@ -126,6 +126,7 @@ if (isset($_POST['edit_worker'])) {
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
+    <?php require_once __DIR__ . '/../includes/perf_head.php'; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Editar Funcionário - Fisioestetic</title>
     
@@ -271,5 +272,6 @@ if (isset($_POST['edit_worker'])) {
         const toggle = document.getElementById('sidebarToggle');
         toggle.addEventListener('click', () => sidebar.classList.toggle('active'));
     </script>
+    <?php require_once __DIR__ . '/../includes/perf_foot.php'; ?>
 </body>
 </html>

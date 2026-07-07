@@ -134,6 +134,7 @@
     <html lang="pt">
     <head>
         <meta charset="UTF-8">
+    <?php require_once __DIR__ . '/../includes/perf_head.php'; ?>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Gerir Funcionários - Fisioestetic</title>
         

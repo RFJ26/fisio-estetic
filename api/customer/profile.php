@@ -101,6 +101,7 @@ $dados = mysqli_fetch_assoc($result_user);
 <html lang="pt-pt">
 <head>
     <meta charset="UTF-8">
+    <?php require_once __DIR__ . '/../includes/perf_head.php'; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Perfil - Fisioestetic</title>
     
@@ -255,5 +256,6 @@ $dados = mysqli_fetch_assoc($result_user);
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <?php require_once __DIR__ . '/../includes/perf_foot.php'; ?>
 </body>
 </html>

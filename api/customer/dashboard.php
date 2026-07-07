@@ -54,6 +54,7 @@ if ($result_proxima && mysqli_num_rows($result_proxima) > 0) {
 <html lang="pt-pt">
 <head>
     <meta charset="UTF-8">
+    <?php require_once __DIR__ . '/../includes/perf_head.php'; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minha Área - Fisioestetic</title>
     
@@ -195,5 +196,6 @@ if ($result_proxima && mysqli_num_rows($result_proxima) > 0) {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <?php require_once __DIR__ . '/../includes/perf_foot.php'; ?>
 </body>
 </html>

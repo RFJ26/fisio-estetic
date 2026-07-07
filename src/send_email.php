@@ -9,18 +9,36 @@ require_once __DIR__ . '/helpers.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-$smtpUser = getenv('SMTP_USER');
-$smtpPass = getenv('SMTP_PASS');
+function ensureSmtpConfigured(): bool
+{
+    static $configured = false;
 
-if (!$smtpUser || !$smtpPass) {
-    die("Erro crítico: Credenciais SMTP não encontradas nas variáveis de ambiente.");
+    if ($configured) {
+        return true;
+    }
+
+    $smtpUser = $_ENV['SMTP_USER'] ?? getenv('SMTP_USER');
+    $smtpPass = $_ENV['SMTP_PASS'] ?? getenv('SMTP_PASS');
+
+    if (!$smtpUser || !$smtpPass) {
+        error_log('Credenciais SMTP não encontradas nas variáveis de ambiente.');
+        return false;
+    }
+
+    if (!defined('SMTP_USER')) {
+        define('SMTP_USER', $smtpUser);
+        define('SMTP_PASS', $smtpPass);
+    }
+
+    $configured = true;
+    return true;
 }
 
-define('SMTP_USER', $smtpUser);
-define('SMTP_PASS', $smtpPass);
-
 function enviarEmailEstado($conexao, $idMarcacao, $novoEstado) {
-    
+    if (!ensureSmtpConfigured()) {
+        return false;
+    }
+
     // 1. OBTER DADOS
     $consultaSQL = "SELECT 
                 marcacao.id, 
@@ -179,7 +197,10 @@ function enviarEmailEstado($conexao, $idMarcacao, $novoEstado) {
 //  FUNÇÃO: ENVIAR EMAIL DE RECUPERAÇÃO DE PALAVRA-PASSE
 // ========================================================================
 function enviarEmailRecuperacao($emailDestino, $nomeDestino, $linkRecuperacao) {
-    
+    if (!ensureSmtpConfigured()) {
+        return false;
+    }
+
     $urlLogotipo = "https://img.icons8.com/ios-filled/100/lotus.png"; 
     $corCabecalho = "#275a29"; 
     $corPrimary = "#4caf50"; 
@@ -265,7 +286,10 @@ function enviarEmailRecuperacao($emailDestino, $nomeDestino, $linkRecuperacao) {
 //  FUNÇÃO: ENVIAR EMAIL DE VALIDAÇÃO DE CONTA (REGISTO)
 // ========================================================================
 function enviarEmailValidacao($emailDestino, $nomeDestino, $linkValidacao) {
-    
+    if (!ensureSmtpConfigured()) {
+        return false;
+    }
+
     $urlLogotipo = "https://img.icons8.com/ios-filled/100/lotus.png"; 
     $corCabecalho = "#275a29"; 
     $corPrimary = "#4caf50"; 
@@ -350,7 +374,10 @@ function enviarEmailValidacao($emailDestino, $nomeDestino, $linkValidacao) {
 //  FUNÇÃO: ENVIAR EMAIL DE NOVA MARCAÇÃO (PARA FUNCIONÁRIO E LOJA)
 // ========================================================================
 function enviarEmailNovaMarcacao($conexao, $idMarcacao) {
-    
+    if (!ensureSmtpConfigured()) {
+        return false;
+    }
+
     $urlLogotipo = "https://img.icons8.com/ios-filled/100/lotus.png"; 
     $corCabecalho = "#275a29"; 
     $corPrimary = "#4caf50"; 
@@ -479,7 +506,10 @@ function enviarEmailNovaMarcacao($conexao, $idMarcacao) {
 //  FUNÇÃO: AVISAR FUNCIONÁRIO E LOJA QUE O CLIENTE CANCELOU
 // ========================================================================
 function enviarEmailCancelamentoFuncionario($conexao, $idMarcacao) {
-    
+    if (!ensureSmtpConfigured()) {
+        return false;
+    }
+
     $urlLogotipo = "https://img.icons8.com/ios-filled/100/lotus.png"; 
     $corCabecalho = "#d32f2f"; // Vermelho porque é um cancelamento
     $corPrimary = "#d32f2f"; 
@@ -569,7 +599,10 @@ function enviarEmailCancelamentoFuncionario($conexao, $idMarcacao) {
 //  FUNÇÃO: ENVIAR EMAIL DE VALIDAÇÃO DE CONTA (FUNCIONÁRIO)
 // ========================================================================
 function enviarEmailValidacaoFuncionario($emailDestino, $nomeDestino, $linkValidacao, $adm) {
-    
+    if (!ensureSmtpConfigured()) {
+        return false;
+    }
+
     $urlLogotipo = "https://img.icons8.com/ios-filled/100/lotus.png"; 
     $corCabecalho = "#275a29"; 
     $corPrimary = "#4caf50"; 

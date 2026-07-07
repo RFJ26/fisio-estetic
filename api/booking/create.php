@@ -4,8 +4,7 @@ date_default_timezone_set('Europe/Lisbon');
 
 include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
-require_once __DIR__ . '/../../src/helpers.php'; 
-require_once __DIR__ . '/../../src/send_email.php';
+require_once __DIR__ . '/../../src/helpers.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['finalizar'])) {
     $id_c = intval($_POST['id_cliente']);
@@ -43,6 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['finalizar'])) {
                 try {
                     if (mysqli_stmt_execute($stmt)) {
                         $novo_id = mysqli_insert_id($conn);
+                        require_once __DIR__ . '/../../src/send_email.php';
                         enviarEmailEstado($conn, $novo_id, 'por confirmar');
 
                         echo "<script>window.location.href = 'list.php?msg=Marcação criada e email enviado!';</script>";
@@ -84,6 +84,7 @@ $res_serv = mysqli_query($conn, $q_servicos);
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
+    <?php require_once __DIR__ . '/../includes/perf_head.php'; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Nova Marcação | Fisioestetic</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -381,5 +382,6 @@ $res_serv = mysqli_query($conn, $q_servicos);
 
         renderCalendar();
     </script>
+    <?php require_once __DIR__ . '/../includes/perf_foot.php'; ?>
 </body>
 </html>

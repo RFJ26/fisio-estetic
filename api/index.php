@@ -10,6 +10,7 @@ if (session_status() === PHP_SESSION_NONE) {
 <html lang="pt-pt">
 <head>
     <meta charset="UTF-8">
+    <?php require_once __DIR__ . '/includes/perf_head.php'; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Entrar - Fisioestetic</title>
     <link rel="stylesheet" href="css/mouse-fix.css">
@@ -90,5 +91,6 @@ if (session_status() === PHP_SESSION_NONE) {
     </div>
 </div>
 
+    <?php require_once __DIR__ . '/includes/perf_foot.php'; ?>
 </body>
 </html>

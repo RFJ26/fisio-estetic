@@ -5,9 +5,6 @@ require_once __DIR__ . '/../../src/conexao.php';
 // 2. Segurança (Verifica se está logado)
 require_once __DIR__ . '/../verifica_login.php';
 
-// 3. Outros auxiliares
-require_once __DIR__ . '/../../src/send_email.php';
-
 // ============================================================================
 // PROCESSAR AÇÕES DOS BOTÕES (Confirmar / Cancelar)
 // ============================================================================
@@ -30,7 +27,7 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
         mysqli_stmt_bind_param($stmt, "si", $novo_estado, $id_marcacao);
         
         if (mysqli_stmt_execute($stmt)) {
-            // Envia o email com o novo estado
+            require_once __DIR__ . '/../../src/send_email.php';
             enviarEmailEstado($conn, $id_marcacao, $novo_estado);
             
             // Redireciona para limpar o URL e mostra a mensagem
@@ -43,9 +40,15 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
 // ============================================================================
 // CONSULTAS PARA AS MÉTRICAS
 // ============================================================================
-$total_marcacoes = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM marcacao WHERE estado = 'ativa'"))['total'];
-$total_categorias = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM categoria"))['total'];
-$total_clientes = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM cliente"))['total'];
+$metrics = mysqli_fetch_assoc(mysqli_query($conn, "
+    SELECT
+        (SELECT COUNT(*) FROM marcacao WHERE estado = 'ativa') AS total_marcacoes,
+        (SELECT COUNT(*) FROM categoria) AS total_categorias,
+        (SELECT COUNT(*) FROM cliente) AS total_clientes
+"));
+$total_marcacoes = $metrics['total_marcacoes'];
+$total_categorias = $metrics['total_categorias'];
+$total_clientes = $metrics['total_clientes'];
 
 // ============================================================================
 // CONSULTA DAS MARCAÇÕES RECENTES (Pendentes)
@@ -74,6 +77,7 @@ $marcacoes = mysqli_query($conn, $marcacoes_query);
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
+    <?php require_once __DIR__ . '/../includes/perf_head.php'; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dashboard - Fisioestetic</title>
     
@@ -251,5 +255,6 @@ $marcacoes = mysqli_query($conn, $marcacoes_query);
             }
         }, 4000);
     </script>
+    <?php require_once __DIR__ . '/../includes/perf_foot.php'; ?>
 </body>
 </html>

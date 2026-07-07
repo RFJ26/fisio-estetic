@@ -5,7 +5,6 @@ date_default_timezone_set('Europe/Lisbon');
 
 require_once __DIR__ . '/../../src/conexao.php';
 require_once __DIR__ . '/../../src/helpers.php';
-require_once __DIR__ . '/../../src/send_email.php';
 
 // ============================================================================
 // 1. VERIFICAR LOGIN PADRÃO DO CLIENTE
@@ -120,6 +119,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['finalizar_reserva'])) 
                             // 1. Apanhar o ID da marcação recém-criada
                             $id_nova_marcacao = mysqli_insert_id($conn);
                             
+                            require_once __DIR__ . '/../../src/send_email.php';
+
                             // 2. Enviar email para o CLIENTE (a dizer que está Pendente/Por Confirmar)
                             enviarEmailEstado($conn, $id_nova_marcacao, 'por confirmar');
 
@@ -153,6 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['finalizar_reserva'])) 
 <html lang="pt-pt">
 <head>
     <meta charset="UTF-8">
+    <?php require_once __DIR__ . '/../includes/perf_head.php'; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nova Marcação | Fisioestetic</title>
 
@@ -687,5 +689,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['finalizar_reserva'])) 
             }
         });
     </script>
+    <?php require_once __DIR__ . '/../includes/perf_foot.php'; ?>
 </body>
 </html>

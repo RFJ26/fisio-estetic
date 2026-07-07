@@ -4,7 +4,40 @@
       "runtime": "vercel-php@0.9.0"
     }
   },
+  "headers": [
+    {
+      "source": "/css/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/scripts/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/images/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/uploads/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400" }
+      ]
+    },
+    {
+      "source": "/favicon.ico",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    }
+  ],
   "routes": [
+    { "src": "/warmup", "dest": "/api/warmup.php" },
     { "src": "/css/(.*)", "dest": "/public/css/$1" },
     { "src": "/css 3/(.*)", "dest": "/public/css 3/$1" },
     { "src": "/images/(.*)", "dest": "/public/images/$1" },

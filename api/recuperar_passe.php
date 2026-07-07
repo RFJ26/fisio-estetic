@@ -56,6 +56,7 @@ if (isset($_POST['recuperar'])) {
 <html lang="pt-pt">
 <head>
     <meta charset="UTF-8">
+    <?php require_once __DIR__ . '/includes/perf_head.php'; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recuperar Palavra-passe - Fisioestetic</title>
     <link rel="stylesheet" href="css/register.css">
@@ -100,5 +101,6 @@ if (isset($_POST['recuperar'])) {
     </div>
   </div>
 
+    <?php require_once __DIR__ . '/includes/perf_foot.php'; ?>
 </body>
 </html>

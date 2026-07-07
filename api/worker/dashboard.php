@@ -3,8 +3,7 @@ session_start();
 
 include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
-require_once __DIR__ . '/../../src/helpers.php'; 
-require_once __DIR__ . '/../../src/send_email.php';
+require_once __DIR__ . '/../../src/helpers.php';
 
 $id_funcionario = $_COOKIE['id'] ?? 0; 
 $nome_funcionario = $_COOKIE['nome'] ?? 'Colaborador';
@@ -40,7 +39,7 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
             mysqli_stmt_bind_param($stmt, "si", $novo_estado, $id_marcacao);
             
             if (mysqli_stmt_execute($stmt)) {
-                // ENVIA O EMAIL AO CLIENTE AVISANDO DA MUDANÇA DE ESTADO
+                require_once __DIR__ . '/../../src/send_email.php';
                 enviarEmailEstado($conn, $id_marcacao, $novo_estado);
                 
                 // Redireciona para limpar o URL
@@ -89,6 +88,7 @@ $result_lista = mysqli_query($conn, $query_lista);
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
+    <?php require_once __DIR__ . '/../includes/perf_head.php'; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel do Funcionário</title>
     
@@ -367,5 +367,6 @@ $result_lista = mysqli_query($conn, $query_lista);
             }
         }, 4000);
     </script>
+    <?php require_once __DIR__ . '/../includes/perf_foot.php'; ?>
 </body>
 </html>

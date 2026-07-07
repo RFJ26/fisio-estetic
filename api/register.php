@@ -100,6 +100,7 @@ if (isset($_POST['register'])) {
 <html lang="pt-pt">
 <head>
     <meta charset="UTF-8">
+    <?php require_once __DIR__ . '/includes/perf_head.php'; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criar Conta - Fisioestetic</title>
     
@@ -189,5 +190,6 @@ if (isset($_POST['register'])) {
         </div>
     </div>
   </div>
+    <?php require_once __DIR__ . '/includes/perf_foot.php'; ?>
 </body>
 </html>

@@ -3,7 +3,6 @@ session_start();
 
 include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
-require_once __DIR__ . '/../../src/send_email.php'; // Adicionado para enviar o e-mail
 
 $erros = [];
 
@@ -82,6 +81,7 @@ if (isset($_POST['create_worker'])) {
                     $dominio = $_SERVER['HTTP_HOST'];
                     $linkValidacao = $protocolo . "://" . $dominio . "/ativar_funcionario.php?token=" . $token;
 
+                    require_once __DIR__ . '/../../src/send_email.php';
                     enviarEmailValidacaoFuncionario($email, $nome, $linkValidacao, $adm);
 
                     echo "<script>alert('Funcionário criado com sucesso! Foi enviado um email para ativar a conta.'); window.location.href = 'list.php';</script>";
@@ -99,6 +99,7 @@ if (isset($_POST['create_worker'])) {
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
+    <?php require_once __DIR__ . '/../includes/perf_head.php'; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Novo Funcionário - Fisioestetic</title>
     
@@ -235,5 +236,6 @@ if (isset($_POST['create_worker'])) {
         const toggle = document.getElementById('sidebarToggle'); 
         if(toggle) toggle.addEventListener('click', () => sidebar.classList.toggle('active'));
     </script>
+    <?php require_once __DIR__ . '/../includes/perf_foot.php'; ?>
 </body>
 </html>

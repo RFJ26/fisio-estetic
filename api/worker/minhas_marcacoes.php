@@ -7,8 +7,7 @@ date_default_timezone_set('Europe/Lisbon');
 
 include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
-require_once __DIR__ . '/../../src/helpers.php'; // Para converterSlotParaHora se precisares
-require_once __DIR__ . '/../../src/send_email.php';
+require_once __DIR__ . '/../../src/helpers.php';
 
 mysqli_set_charset($conn, "utf8");
 
@@ -63,7 +62,7 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
             mysqli_stmt_bind_param($stmt, "si", $novo_estado, $id_marcacao);
             mysqli_stmt_execute($stmt);
             
-            // ENVIA O EMAIL AQUI APÓS MUDAR O ESTADO
+            require_once __DIR__ . '/../../src/send_email.php';
             enviarEmailEstado($conn, $id_marcacao, $novo_estado);
 
             // Redirecionar limpando os parâmetros de ação, mas mantendo a mensagem
@@ -147,6 +146,7 @@ $query_string_filtros = http_build_query($params);
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
+    <?php require_once __DIR__ . '/../includes/perf_head.php'; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Minhas Marcações - Fisioestetic</title>
     
@@ -460,5 +460,6 @@ $query_string_filtros = http_build_query($params);
             filtroEstado.addEventListener('change', () => { paginaAtual.value = 1; atualizarTabela(); });
         }
     </script>
+    <?php require_once __DIR__ . '/../includes/perf_foot.php'; ?>
 </body>
 </html>

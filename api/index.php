@@ -63,7 +63,7 @@ if (session_status() === PHP_SESSION_NONE) {
             <div class="input-group">
                 <label for="email">Email</label>
                 <div class="input-wrapper">
-                    <i class="bi bi-envelope"></i>
+                    <i class="bi bi-envelope field-icon"></i>
                     <input type="email" id="email" name="email" placeholder="seu@email.com" required>
                 </div>
             </div>

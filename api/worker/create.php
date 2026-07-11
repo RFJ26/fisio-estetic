@@ -18,9 +18,10 @@ if (isset($_POST['create_worker'])) {
     // VALIDAÇÕES ORIGINAIS (MANTIDAS EXATAMENTE COMO PEDISTE)
     // =========================================================================
 
-    // 1. Nome: Apenas letras e espaços
-    if (!preg_match("/^[a-zA-ZÀ-ÿ\s]+$/", $nome)) {
-        $erros['nome'] = "Nome incorreto. O nome deve conter apenas letras e espaços.";
+    // 1. Nome: igual à validação da BD (sp_valida_funcionario)
+    $regexpNome = "/^[A-ZAÁÀÃÂEÉÈÊIÍÌÎOÓÒÕÔUÚÙÛ][a-zaáàãâeéèêiíìîoóòõôuúùû]+(?: [A-ZAÁÀÃÂEÉÈÊIÍÌÎOÓÒÕÔUÚÙÛ][a-zaáàãâeéèêiíìîoóòõôuúùû]+)*$/u";
+    if (!preg_match($regexpNome, $nome)) {
+        $erros['nome'] = "Nome incorreto. Use o nome completo com iniciais maiúsculas (ex: Ana Silva).";
     }
 
     // 2. Email: Validação padrão PHP
@@ -33,9 +34,9 @@ if (isset($_POST['create_worker'])) {
         $erros['telefone'] = "Telefone inválido. Deve começar por 2, 91, 92, 93 ou 96 (opcionalmente com +351).";
     }
 
-    // 4. NIF: Exatamente 9 dígitos
-    if (!preg_match("/^[0-9]{9}$/", $nif)) {
-        $erros['nif'] = "NIF inválido (deve ter 9 dígitos).";
+    // 4. NIF: igual ao trigger da BD (não pode começar por 0 ou 8)
+    if (!preg_match("/^[1-79]\d{8}$/", $nif)) {
+        $erros['nif'] = "NIF inválido. Deve ter 9 dígitos e não pode começar por 0 ou 8.";
     }
 
     // =========================================================================
@@ -72,22 +73,36 @@ if (isset($_POST['create_worker'])) {
                 // Sucesso: Inserir com o token
                 $query = "INSERT INTO funcionario (nome, email, telefone, nif, palavra_passe, adm, email_verificado, token_verificacao) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
                 $stmt = mysqli_prepare($conn, $query);
-                mysqli_stmt_bind_param($stmt, "sssssiis", $nome, $email, $telefone, $nif, $passVazia, $adm, $emailVerificado, $token);
+                $nifInt = (int)$nif;
+                $admInt = (int)$adm;
+                mysqli_stmt_bind_param($stmt, "sssiisis", $nome, $email, $telefone, $nifInt, $passVazia, $admInt, $emailVerificado, $token);
 
-                if (mysqli_stmt_execute($stmt)) {
-                    
-                    // ENVIAR O E-MAIL
-                    $protocolo = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
-                    $dominio = $_SERVER['HTTP_HOST'];
-                    $linkValidacao = $protocolo . "://" . $dominio . "/ativar_funcionario.php?token=" . $token;
+                try {
+                    if (mysqli_stmt_execute($stmt)) {
+                        $protocolo = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+                        $dominio = $_SERVER['HTTP_HOST'];
+                        $linkValidacao = $protocolo . "://" . $dominio . "/ativar_funcionario.php?token=" . $token;
 
-                    require_once __DIR__ . '/../../src/send_email.php';
-                    enviarEmailValidacaoFuncionario($email, $nome, $linkValidacao, $adm);
+                        require_once __DIR__ . '/../../src/send_email.php';
+                        enviarEmailValidacaoFuncionario($email, $nome, $linkValidacao, $admInt);
 
-                    echo "<script>alert('Funcionário criado com sucesso! Foi enviado um email para ativar a conta.'); window.location.href = 'list.php';</script>";
-                    exit();
-                } else {
+                        echo "<script>alert('Funcionário criado com sucesso! Foi enviado um email para ativar a conta.'); window.location.href = 'list.php';</script>";
+                        exit();
+                    }
                     $erros['bd'] = "Erro ao criar funcionário na base de dados.";
+                } catch (mysqli_sql_exception $e) {
+                    $msg = $e->getMessage();
+                    if (stripos($msg, 'NIF') !== false) {
+                        $erros['nif'] = "NIF inválido. Deve ter 9 dígitos e não pode começar por 0 ou 8.";
+                    } elseif (stripos($msg, 'Nome') !== false) {
+                        $erros['nome'] = "Nome inválido. Use o nome completo com iniciais maiúsculas (ex: Ana Silva).";
+                    } elseif (stripos($msg, 'Email') !== false) {
+                        $erros['email'] = "Email inválido.";
+                    } elseif (stripos($msg, 'Telefone') !== false) {
+                        $erros['telefone'] = "Telefone inválido.";
+                    } else {
+                        $erros['bd'] = $msg;
+                    }
                 }
             }
         }
@@ -169,8 +184,7 @@ if (isset($_POST['create_worker'])) {
                             <label for="nome" class="form-label">Nome Completo</label>
                             <input type="text" class="form-control" id="nome" name="nome" 
                                    placeholder="Ex: Ana Silva"
-                                   pattern="^[a-zA-ZÀ-ÿ\s]+$"
-                                   title="O nome deve conter apenas letras e espaços." 
+                                   title="Use o nome completo com iniciais maiúsculas." 
                                    value="<?= isset($_POST['nome']) ? htmlspecialchars($_POST['nome']) : '' ?>" required>
                         </div>
 
@@ -195,11 +209,11 @@ if (isset($_POST['create_worker'])) {
                         <div class="col-md-6">
                             <label for="nif" class="form-label">NIF</label>
                             <input type="text" class="form-control" id="nif" name="nif" 
-                                   placeholder="123456789"
+                                   placeholder="234567890"
                                    maxlength="9"
                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-                                   pattern="[0-9]{9}"
-                                   title="O NIF deve ter 9 dígitos" 
+                                   pattern="[1-79][0-9]{8}"
+                                   title="NIF com 9 dígitos. Não pode começar por 0 ou 8." 
                                    value="<?= isset($_POST['nif']) ? htmlspecialchars($_POST['nif']) : '' ?>" required>
                         </div>
 

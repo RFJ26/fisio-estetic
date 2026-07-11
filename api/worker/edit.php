@@ -62,9 +62,9 @@ if (isset($_POST['edit_worker'])) {
     }
 
     // NIF
-    $regexpNif = "/^[0-9]{9}$/";
+    $regexpNif = "/^[1-79]\d{8}$/";
     if (!preg_match($regexpNif, $nif)) {
-        $erros['nif'] = "NIF inválido (9 dígitos).";
+        $erros['nif'] = "NIF inválido. Deve ter 9 dígitos e não pode começar por 0 ou 8.";
     }
 
     // --- VERIFICAÇÕES DE DUPLICADOS ---
@@ -93,6 +93,9 @@ if (isset($_POST['edit_worker'])) {
             } else {
 
                 // --- ATUALIZAÇÃO NA BD ---
+                $nifInt = (int)$nif;
+                $admInt = (int)$adm;
+
                 if (!empty($password)) {
                     if(strlen($password) < 6) {
                         $erros['password'] = "A nova password deve ter min. 6 caracteres.";
@@ -100,20 +103,30 @@ if (isset($_POST['edit_worker'])) {
                         $passHash = md5($password);
                         $query = "UPDATE funcionario SET nome=?, email=?, telefone=?, nif=?, adm=?, palavra_passe=? WHERE id=?";
                         $stmtUpdate = mysqli_prepare($conn, $query);
-                        mysqli_stmt_bind_param($stmtUpdate, "ssssisi", $nome, $email, $telefone, $nif, $adm, $passHash, $id);
+                        mysqli_stmt_bind_param($stmtUpdate, "sssisisi", $nome, $email, $telefone, $nifInt, $admInt, $passHash, $id);
                     }
                 } else {
                     $query = "UPDATE funcionario SET nome=?, email=?, telefone=?, nif=?, adm=? WHERE id=?";
                     $stmtUpdate = mysqli_prepare($conn, $query);
-                    mysqli_stmt_bind_param($stmtUpdate, "ssssii", $nome, $email, $telefone, $nif, $adm, $id);
+                    mysqli_stmt_bind_param($stmtUpdate, "sssiii", $nome, $email, $telefone, $nifInt, $admInt, $id);
                 }
 
                 if (empty($erros) && isset($stmtUpdate)) {
-                    if (mysqli_stmt_execute($stmtUpdate)) {
-                        echo "<script>alert('Funcionário atualizado com sucesso!'); window.location.href = 'list.php';</script>";
-                        exit();
-                    } else {
+                    try {
+                        if (mysqli_stmt_execute($stmtUpdate)) {
+                            echo "<script>alert('Funcionário atualizado com sucesso!'); window.location.href = 'list.php';</script>";
+                            exit();
+                        }
                         $erros['bd'] = "Erro ao atualizar na base de dados.";
+                    } catch (mysqli_sql_exception $e) {
+                        $msg = $e->getMessage();
+                        if (stripos($msg, 'NIF') !== false) {
+                            $erros['nif'] = "NIF inválido. Deve ter 9 dígitos e não pode começar por 0 ou 8.";
+                        } elseif (stripos($msg, 'Nome') !== false) {
+                            $erros['nome'] = "Nome inválido. Use o nome completo com iniciais maiúsculas.";
+                        } else {
+                            $erros['bd'] = $msg;
+                        }
                     }
                 }
             }
@@ -215,8 +228,8 @@ if (isset($_POST['edit_worker'])) {
                         <div class="col-md-6">
                             <label for="nif" class="form-label">NIF</label>
                             <input type="text" id="nif" name="nif" class="form-control" 
-                            pattern="[0-9]{9}"
-                            title="O NIF deve ter 9 dígitos" value="<?= htmlspecialchars($nif) ?>" required>
+                            pattern="[1-79][0-9]{8}"
+                            title="NIF com 9 dígitos. Não pode começar por 0 ou 8." value="<?= htmlspecialchars($nif) ?>" required>
                         </div>
 
                         <div class="col-md-6">

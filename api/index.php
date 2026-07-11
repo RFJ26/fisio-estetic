@@ -15,6 +15,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <title>Entrar - Fisioestetic</title>
     <link rel="stylesheet" href="css/mouse-fix.css">
     <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/password-toggle.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 </head>
@@ -69,9 +70,12 @@ if (session_status() === PHP_SESSION_NONE) {
 
             <div class="input-group" style="margin-bottom: 5px;">
                 <label for="password">Palavra-passe</label>
-                <div class="input-wrapper">
-                    <i class="bi bi-lock"></i>
+                <div class="input-wrapper password-field">
+                    <i class="bi bi-lock field-icon"></i>
                     <input type="password" id="password" name="password" placeholder="••••••••" required>
+                    <button type="button" class="password-toggle" aria-label="Mostrar palavra-passe" title="Mostrar palavra-passe">
+                        <i class="bi bi-eye"></i>
+                    </button>
                 </div>
             </div>
 
@@ -92,5 +96,6 @@ if (session_status() === PHP_SESSION_NONE) {
 </div>
 
     <?php require_once __DIR__ . '/includes/perf_foot.php'; ?>
+    <script src="scripts/password-toggle.js" defer></script>
 </body>
 </html>

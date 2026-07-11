@@ -133,6 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     <link rel="stylesheet" href="../css/sidebar.css">
     <link rel="stylesheet" href="../css/worker/perfil.css">
+    <link rel="stylesheet" href="../css/password-toggle.css">
 </head>
 <body>
 
@@ -261,27 +262,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                             <div class="mb-4">
                                 <label class="form-label small text-muted text-uppercase fw-semibold">Palavra-passe Atual</label>
-                                <div class="input-group">
+                                <div class="input-group password-field">
                                     <span class="input-group-text bg-light border-end-0"><i class="bi bi-key text-muted"></i></span>
                                     <input type="password" name="senha_atual" class="form-control border-start-0 ps-0 bg-light" required placeholder="Digite a sua senha atual">
+                                    <button type="button" class="input-group-text password-toggle" aria-label="Mostrar palavra-passe" title="Mostrar palavra-passe">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
                                 </div>
                             </div>
 
                             <div class="row g-3">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label small text-muted text-uppercase fw-semibold">Nova Palavra-passe</label>
-                                    <div class="input-group">
+                                    <div class="input-group password-field">
                                         <span class="input-group-text bg-light border-end-0"><i class="bi bi-lock text-muted"></i></span>
                                         <input type="password" name="nova_senha" id="nova_senha" class="form-control border-start-0 ps-0 bg-light" 
                                                required placeholder="Mínimo 8 caracteres"
                                                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
+                                        <button type="button" class="input-group-text password-toggle" aria-label="Mostrar palavra-passe" title="Mostrar palavra-passe">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
                                     <label class="form-label small text-muted text-uppercase fw-semibold">Confirmar Nova</label>
-                                    <div class="input-group">
+                                    <div class="input-group password-field">
                                         <span class="input-group-text bg-light border-end-0"><i class="bi bi-check-lg text-muted"></i></span>
                                         <input type="password" name="confirmar_senha" id="confirmar_senha" class="form-control border-start-0 ps-0 bg-light" required placeholder="Repita a nova senha">
+                                        <button type="button" class="input-group-text password-toggle" aria-label="Mostrar palavra-passe" title="Mostrar palavra-passe">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -322,6 +332,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             });
         }
     </script>
+    <script src="../scripts/password-toggle.js" defer></script>
     <?php require_once __DIR__ . '/../includes/perf_foot.php'; ?>
 </body>
 </html>

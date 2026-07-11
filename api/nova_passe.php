@@ -80,6 +80,7 @@ if (isset($_POST['nova_passe'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criar Nova Passe - Fisioestetic</title>
     <link rel="stylesheet" href="css/register.css">
+    <link rel="stylesheet" href="css/password-toggle.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 </head>
@@ -109,17 +110,23 @@ if (isset($_POST['nova_passe'])) {
 
                 <div class="input-group">
                     <label for="senha">Nova Palavra-passe</label>
-                    <div class="input-wrapper">
-                        <i class="bi bi-lock"></i>
+                    <div class="input-wrapper password-field">
+                        <i class="bi bi-lock field-icon"></i>
                         <input type="password" id="senha" name="senha" placeholder="Mínimo 6 caracteres" required minlength="6">
+                        <button type="button" class="password-toggle" aria-label="Mostrar palavra-passe" title="Mostrar palavra-passe">
+                            <i class="bi bi-eye"></i>
+                        </button>
                     </div>
                 </div>
 
                 <div class="input-group">
                     <label for="confirmar_senha">Confirmar Palavra-passe</label>
-                    <div class="input-wrapper">
-                        <i class="bi bi-lock-fill"></i>
+                    <div class="input-wrapper password-field">
+                        <i class="bi bi-lock-fill field-icon"></i>
                         <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="Repita a palavra-passe" required minlength="6">
+                        <button type="button" class="password-toggle" aria-label="Mostrar palavra-passe" title="Mostrar palavra-passe">
+                            <i class="bi bi-eye"></i>
+                        </button>
                     </div>
                 </div>
                 
@@ -137,5 +144,6 @@ if (isset($_POST['nova_passe'])) {
   </div>
 
     <?php require_once __DIR__ . '/includes/perf_foot.php'; ?>
+    <script src="scripts/password-toggle.js" defer></script>
 </body>
 </html>

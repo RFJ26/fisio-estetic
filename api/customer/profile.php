@@ -109,6 +109,7 @@ $dados = mysqli_fetch_assoc($result_user);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/mouse-fix.css">
     <link rel="stylesheet" href="../css/customer/profile.css">
+    <link rel="stylesheet" href="../css/password-toggle.css">
 </head>
 <body>
 
@@ -231,12 +232,15 @@ $dados = mysqli_fetch_assoc($result_user);
 
                             <div class="col-md-12">
                                 <label for="password" class="form-label">Nova Palavra-passe</label>
-                                <div class="input-group">
+                                <div class="input-group password-field">
                                     <span class="input-group-text"><i class="bi bi-key"></i></span>
                                     <input type="password" class="form-control" id="password" name="password" 
                                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                                            title="Mínimo 8 caracteres, 1 maiúscula, 1 minúscula e 1 número"
                                            placeholder="Deixe em branco para manter a atual">
+                                    <button type="button" class="input-group-text password-toggle" aria-label="Mostrar palavra-passe" title="Mostrar palavra-passe">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
                                 </div>
                             </div>
 
@@ -256,6 +260,7 @@ $dados = mysqli_fetch_assoc($result_user);
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../scripts/password-toggle.js" defer></script>
     <?php require_once __DIR__ . '/../includes/perf_foot.php'; ?>
 </body>
 </html>

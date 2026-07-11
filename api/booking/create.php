@@ -196,7 +196,7 @@ $res_serv = mysqli_query($conn, $q_servicos);
                     <label class="form-label">Horários Disponíveis</label>
                     <hr class="mt-0 mb-3 text-muted">
                     <div id="loader" class="loader"><div class="spinner-border text-success" role="status"></div></div>
-                    <div id="gridSlots" class="slots-container"></div>
+                    <div id="gridSlots"></div>
                     <div id="msgSemVagas" class="alert alert-warning mt-3 text-center small" style="display:none;">Não existem vagas disponíveis para esta data.</div>
                     <button type="submit" name="finalizar" id="btnFinalizar" class="btn btn-success w-100 mt-3 p-3 fw-bold" style="display:none;">CONFIRMAR MARCAÇÃO</button>
                 </div>
@@ -351,19 +351,46 @@ $res_serv = mysqli_query($conn, $q_servicos);
             // ENVIA O ID DO CLIENTE PARA APAGAR AS HORAS QUE A JOANA JÁ TEM OCUPADAS!
             fetch(`get_slots.php?data=${dataIso}&id_relacao=${selectServico.value}&id_cliente=${idCliente}`)
                 .then(r => r.json())
-                .then(slots => {
+                .then(data => {
                     loader.style.display = 'none';
-                    if(slots.length === 0) msgSemVagas.style.display = 'block';
-                    else {
-                        slots.forEach(slot => {
-                            const btn = document.createElement('div');
-                            btn.className = 'slot-btn';
-                            btn.textContent = slot.hora;
-                            btn.onclick = () => cliqueSlot(btn, slot.id);
-                            gridSlots.appendChild(btn);
-                        });
+                    const manha = data.manha || [];
+                    const tarde = data.tarde || [];
+                    const total = manha.length + tarde.length;
+
+                    if (total === 0) {
+                        msgSemVagas.style.display = 'block';
+                        return;
                     }
+
+                    renderPeriodoSlots('Manhã', 'bi-sunrise', manha);
+                    renderPeriodoSlots('Tarde', 'bi-sunset', tarde);
                 });
+        }
+
+        function renderPeriodoSlots(titulo, icone, slots) {
+            if (slots.length === 0) return;
+
+            const bloco = document.createElement('div');
+            bloco.className = 'slots-period-block';
+
+            const tituloEl = document.createElement('div');
+            tituloEl.className = 'slots-period-title';
+            tituloEl.innerHTML = `<i class="bi ${icone} me-2"></i>${titulo}`;
+            bloco.appendChild(tituloEl);
+
+            const grid = document.createElement('div');
+            grid.className = 'slots-container';
+
+            slots.forEach(slot => {
+                const btn = document.createElement('div');
+                btn.className = 'slot-btn';
+                btn.textContent = slot.hora;
+                btn.onclick = () => cliqueSlot(btn, slot.id);
+                grid.appendChild(btn);
+            });
+
+            bloco.appendChild(grid);
+            gridSlots.appendChild(bloco);
         }
 
         function cliqueSlot(el, id) {

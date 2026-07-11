@@ -2,6 +2,7 @@
 session_start();
 include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
+require_once __DIR__ . '/../../src/helpers.php';
 
 // Verifica se temos o ID do serviço
 if (!isset($_GET['id_servico']) || empty($_GET['id_servico'])) {
@@ -23,17 +24,11 @@ if (!$servico) {
     exit();
 }
 
-// 2. GERAR LISTA DE HORÁRIOS (15 min, 08:00 até 21:45)
-$lista_horarios = [];
-$inicio = strtotime('08:00');
-$fim    = strtotime('21:45');
-$slot_id = 1;
-
-while ($inicio <= $fim) {
-    $lista_horarios[$slot_id] = date('H:i', $inicio);
-    $inicio = strtotime('+15 minutes', $inicio);
-    $slot_id++;
-}
+// 2. GERAR LISTAS DE HORÁRIOS (manhã: até 12:45; tarde: a partir de 13:00)
+$lista_horarios = gerarMapaHorarios();
+$lista_manha = filtrarHorariosManha($lista_horarios);
+$lista_manha_fim = filtrarHorariosManha($lista_horarios, true);
+$lista_tarde = filtrarHorariosTarde($lista_horarios);
 
 // 3. INICIALIZAR VARIÁVEIS
 $data_inicio_val = date('Y-m-d');
@@ -66,7 +61,7 @@ if ($res_disp->num_rows > 0) {
         $dias_db['sexta']   = $row['sexta'];
         $dias_db['sabado']  = $row['sabado'];
 
-        if($row['slot_inicial'] < 21) { 
+        if($row['slot_inicial'] < SLOT_TARDE_INICIO) { 
             $manha_ativo = true;
             $m_ini_db = $row['slot_inicial'];
             $m_fim_db = $row['slot_final'];
@@ -268,7 +263,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <label class="small text-muted">Hora Início</label>
                                         <select name="manha_inicio" class="form-select time-select">
                                             <option value="">-- Selecione --</option>
-                                            <?php foreach($lista_horarios as $id => $hora): ?>
+                                            <?php foreach($lista_manha as $id => $hora): ?>
                                                 <option value="<?= $id ?>" <?= ($m_ini_db == $id) ? 'selected' : '' ?>><?= $hora ?></option>
                                             <?php endforeach; ?>
                                         </select>
@@ -277,7 +272,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <label class="small text-muted">Hora Fim</label>
                                         <select name="manha_fim" class="form-select time-select">
                                             <option value="">-- Selecione --</option>
-                                            <?php foreach($lista_horarios as $id => $hora): ?>
+                                            <?php foreach($lista_manha_fim as $id => $hora): ?>
                                                 <option value="<?= $id ?>" <?= ($m_fim_db == $id) ? 'selected' : '' ?>><?= $hora ?></option>
                                             <?php endforeach; ?>
                                         </select>
@@ -302,7 +297,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <label class="small text-muted">Hora Início</label>
                                         <select name="tarde_inicio" class="form-select time-select">
                                             <option value="">-- Selecione --</option>
-                                            <?php foreach($lista_horarios as $id => $hora): ?>
+                                            <?php foreach($lista_tarde as $id => $hora): ?>
                                                 <option value="<?= $id ?>" <?= ($t_ini_db == $id) ? 'selected' : '' ?>><?= $hora ?></option>
                                             <?php endforeach; ?>
                                         </select>
@@ -311,7 +306,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <label class="small text-muted">Hora Fim</label>
                                         <select name="tarde_fim" class="form-select time-select">
                                             <option value="">-- Selecione --</option>
-                                            <?php foreach($lista_horarios as $id => $hora): ?>
+                                            <?php foreach($lista_tarde as $id => $hora): ?>
                                                 <option value="<?= $id ?>" <?= ($t_fim_db == $id) ? 'selected' : '' ?>><?= $hora ?></option>
                                             <?php endforeach; ?>
                                         </select>

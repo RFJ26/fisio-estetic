@@ -1,4 +1,53 @@
 <?php
+
+// Slot 21 = 13:00 — limite entre manhã e tarde
+const SLOT_TARDE_INICIO = 21;
+
+function gerarMapaHorarios(): array {
+    $lista = [];
+    $inicio = strtotime('08:00');
+    $fim = strtotime('21:45');
+    $slot_id = 1;
+
+    while ($inicio <= $fim) {
+        $lista[$slot_id] = date('H:i', $inicio);
+        $inicio = strtotime('+15 minutes', $inicio);
+        $slot_id++;
+    }
+
+    return $lista;
+}
+
+function slotEhManha(int $slot): bool {
+    return $slot < SLOT_TARDE_INICIO;
+}
+
+function filtrarHorariosManha(array $lista, bool $incluirHoraFim13 = false): array {
+    $filtrado = [];
+
+    foreach ($lista as $id => $hora) {
+        if ($id < SLOT_TARDE_INICIO) {
+            $filtrado[$id] = $hora;
+        } elseif ($incluirHoraFim13 && $id === SLOT_TARDE_INICIO) {
+            $filtrado[$id] = $hora;
+        }
+    }
+
+    return $filtrado;
+}
+
+function filtrarHorariosTarde(array $lista): array {
+    $filtrado = [];
+
+    foreach ($lista as $id => $hora) {
+        if ($id >= SLOT_TARDE_INICIO) {
+            $filtrado[$id] = $hora;
+        }
+    }
+
+    return $filtrado;
+}
+
 // Define a função que recebe um número de slot (ex: 1) e devolve a hora formatada (ex: "08:00")
 function converterSlotParaHora($slot) {
     

@@ -524,108 +524,129 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['finalizar_reserva'])) 
                                         <input type="hidden" name="p_func" value="<?= $id_funcionario ?>">
                                         <input type="hidden" name="p_data" value="<?= $data_selecionada ?>">
 
-                                        <div class="slots-container">
-                                            <?php
-                                            // Mesma lógica de validação de slots aplicada aqui (Apenas para o dia selecionado)
-                                            $dia_semana_numero = date('w', strtotime($data_selecionada));
-                                            $nomes_colunas_bd = [0 => 'domingo', 1 => 'segunda', 2 => 'terca', 3 => 'quarta', 4 => 'quinta', 5 => 'sexta', 6 => 'sabado'];
-                                            $coluna_dia_semana = $nomes_colunas_bd[$dia_semana_numero];
+                                        <?php
+                                        // Mesma lógica de validação de slots aplicada aqui (Apenas para o dia selecionado)
+                                        $dia_semana_numero = date('w', strtotime($data_selecionada));
+                                        $nomes_colunas_bd = [0 => 'domingo', 1 => 'segunda', 2 => 'terca', 3 => 'quarta', 4 => 'quinta', 5 => 'sexta', 6 => 'sabado'];
+                                        $coluna_dia_semana = $nomes_colunas_bd[$dia_semana_numero];
 
-                                            $mapa_dia_atual = array_fill(0, 100, false);
+                                        $mapa_dia_atual = array_fill(0, 100, false);
 
-                                            $consulta_disponibilidade = "SELECT slot_inicial, slot_final 
-                                                                         FROM disponibilidade 
-                                                                         WHERE id_servico = '$id_servico' 
-                                                                         AND '$data_selecionada' BETWEEN data_inicio AND data_fim 
-                                                                         AND $coluna_dia_semana = 1";
-                                            $resultado_disponibilidade = mysqli_query($conn, $consulta_disponibilidade);
+                                        $consulta_disponibilidade = "SELECT slot_inicial, slot_final 
+                                                                     FROM disponibilidade 
+                                                                     WHERE id_servico = '$id_servico' 
+                                                                     AND '$data_selecionada' BETWEEN data_inicio AND data_fim 
+                                                                     AND $coluna_dia_semana = 1";
+                                        $resultado_disponibilidade = mysqli_query($conn, $consulta_disponibilidade);
 
-                                            if ($resultado_disponibilidade) {
-                                                while ($turno = mysqli_fetch_assoc($resultado_disponibilidade)) {
-                                                    for ($i = intval($turno['slot_inicial']); $i < intval($turno['slot_final']); $i++) {
-                                                        if ($i < 100) $mapa_dia_atual[$i] = true;
-                                                    }
+                                        if ($resultado_disponibilidade) {
+                                            while ($turno = mysqli_fetch_assoc($resultado_disponibilidade)) {
+                                                for ($i = intval($turno['slot_inicial']); $i < intval($turno['slot_final']); $i++) {
+                                                    if ($i < 100) $mapa_dia_atual[$i] = true;
+                                                }
+                                            }
+                                        }
+
+                                        $consulta_indisponibilidade = "SELECT slot_inicial, slot_final 
+                                                                       FROM indisponibilidade 
+                                                                       WHERE id_funcionario = '$id_funcionario' 
+                                                                       AND '$data_selecionada' BETWEEN data_inicio AND data_fim 
+                                                                       AND $coluna_dia_semana = 1";
+                                        $resultado_indisponibilidade = mysqli_query($conn, $consulta_indisponibilidade);
+
+                                        if ($resultado_indisponibilidade) {
+                                            while ($ausencia = mysqli_fetch_assoc($resultado_indisponibilidade)) {
+                                                for ($i = intval($ausencia['slot_inicial']); $i < intval($ausencia['slot_final']); $i++) {
+                                                    if (isset($mapa_dia_atual[$i])) $mapa_dia_atual[$i] = false;
+                                                }
+                                            }
+                                        }
+
+                                        $consulta_marcacoes = "SELECT marcacao.slot_inicial, marcacao.slot_final 
+                                                               FROM marcacao 
+                                                               JOIN servico_funcionario ON marcacao.id_servico_funcionario = servico_funcionario.id 
+                                                               WHERE marcacao.data = '$data_selecionada' 
+                                                               AND marcacao.estado != 'cancelada'
+                                                               AND (servico_funcionario.id_funcionario = '$id_funcionario' OR marcacao.id_cliente = '$id_cliente')";
+                                        $resultado_marcacoes = mysqli_query($conn, $consulta_marcacoes);
+
+                                        if ($resultado_marcacoes) {
+                                            while ($marcacao = mysqli_fetch_assoc($resultado_marcacoes)) {
+                                                for ($i = intval($marcacao['slot_inicial']); $i < intval($marcacao['slot_final']); $i++) {
+                                                    if (isset($mapa_dia_atual[$i])) $mapa_dia_atual[$i] = false;
+                                                }
+                                            }
+                                        }
+
+                                        if ($data_selecionada == date('Y-m-d')) {
+                                            $hora_atual_real = intval(date('H'));
+                                            $minuto_atual_real = intval(date('i'));
+                                            $minutos_passados = ($hora_atual_real * 60 + $minuto_atual_real) - (8 * 60);
+
+                                            if ($minutos_passados > 0) {
+                                                $slots_para_bloquear = ceil($minutos_passados / 15);
+                                                for ($i = 0; $i <= ($slots_para_bloquear + 1); $i++) {
+                                                    if (isset($mapa_dia_atual[$i])) $mapa_dia_atual[$i] = false;
+                                                }
+                                            }
+                                        }
+
+                                        $slots_manha = [];
+                                        $slots_tarde = [];
+
+                                        for ($slot_index = 1; $slot_index <= (100 - $duracao_necessaria); $slot_index++) {
+                                            if (!isset($mapa_dia_atual[$slot_index]) || $mapa_dia_atual[$slot_index] !== true) {
+                                                continue;
+                                            }
+
+                                            $cabe_servico_inteiro = true;
+                                            for ($d = 0; $d < $duracao_necessaria; $d++) {
+                                                if (!isset($mapa_dia_atual[$slot_index + $d]) || $mapa_dia_atual[$slot_index + $d] === false) {
+                                                    $cabe_servico_inteiro = false;
+                                                    break;
                                                 }
                                             }
 
-                                            $consulta_indisponibilidade = "SELECT slot_inicial, slot_final 
-                                                                           FROM indisponibilidade 
-                                                                           WHERE id_funcionario = '$id_funcionario' 
-                                                                           AND '$data_selecionada' BETWEEN data_inicio AND data_fim 
-                                                                           AND $coluna_dia_semana = 1";
-                                            $resultado_indisponibilidade = mysqli_query($conn, $consulta_indisponibilidade);
-
-                                            if ($resultado_indisponibilidade) {
-                                                while ($ausencia = mysqli_fetch_assoc($resultado_indisponibilidade)) {
-                                                    for ($i = intval($ausencia['slot_inicial']); $i < intval($ausencia['slot_final']); $i++) {
-                                                        if (isset($mapa_dia_atual[$i])) $mapa_dia_atual[$i] = false;
-                                                    }
-                                                }
+                                            if (!$cabe_servico_inteiro) {
+                                                continue;
                                             }
 
-                                            // Bloqueia as horas já ocupadas (ou pelo funcionário ou pelo cliente atual)
-                                            $consulta_marcacoes = "SELECT marcacao.slot_inicial, marcacao.slot_final 
-                                                                   FROM marcacao 
-                                                                   JOIN servico_funcionario ON marcacao.id_servico_funcionario = servico_funcionario.id 
-                                                                   WHERE marcacao.data = '$data_selecionada' 
-                                                                   AND marcacao.estado != 'cancelada'
-                                                                   AND (servico_funcionario.id_funcionario = '$id_funcionario' OR marcacao.id_cliente = '$id_cliente')";
-                                            
-                                            $resultado_marcacoes = mysqli_query($conn, $consulta_marcacoes);
+                                            $slot = [
+                                                'id' => $slot_index,
+                                                'hora' => converterSlotParaHora($slot_index)
+                                            ];
 
-                                            if ($resultado_marcacoes) {
-                                                while ($marcacao = mysqli_fetch_assoc($resultado_marcacoes)) {
-                                                    for ($i = intval($marcacao['slot_inicial']); $i < intval($marcacao['slot_final']); $i++) {
-                                                        if (isset($mapa_dia_atual[$i])) $mapa_dia_atual[$i] = false;
-                                                    }
-                                                }
+                                            if (slotEhManha($slot_index)) {
+                                                $slots_manha[] = $slot;
+                                            } else {
+                                                $slots_tarde[] = $slot;
                                             }
+                                        }
 
-                                            // Impede marcações no passado se o dia selecionado for "Hoje"
-                                            if ($data_selecionada == date('Y-m-d')) {
-                                                $hora_atual_real = intval(date('H'));
-                                                $minuto_atual_real = intval(date('i'));
-                                                $minutos_passados = ($hora_atual_real * 60 + $minuto_atual_real) - (8 * 60);
-                                                
-                                                if ($minutos_passados > 0) {
-                                                    $slots_para_bloquear = ceil($minutos_passados / 15);
-                                                    for ($i = 0; $i <= ($slots_para_bloquear + 1); $i++) {
-                                                        if (isset($mapa_dia_atual[$i])) $mapa_dia_atual[$i] = false;
-                                                    }
-                                                }
-                                            }
+                                        $slots_encontrados_contador = count($slots_manha) + count($slots_tarde);
 
-                                            // Desenhar os botões com as horas formatadas
-                                            $slots_encontrados_contador = 0;
+                                        $renderSlotsCliente = function(array $slots, string $titulo, string $icone) {
+                                            if (empty($slots)) return;
+                                        ?>
+                                            <div class="slots-period-block mb-3">
+                                                <div class="slots-period-title"><i class="bi <?= $icone ?> me-2"></i><?= $titulo ?></div>
+                                                <div class="slots-container">
+                                                    <?php foreach ($slots as $slot): ?>
+                                                        <input type="radio" class="slot-input" name="slot_selecionado" id="slot_<?= $slot['id'] ?>" value="<?= $slot['id'] ?>" required>
+                                                        <label class="slot-label" for="slot_<?= $slot['id'] ?>"><?= $slot['hora'] ?></label>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                            </div>
+                                        <?php
+                                        };
 
-                                            for ($slot_index = 1; $slot_index <= (100 - $duracao_necessaria); $slot_index++) {
-                                                if (isset($mapa_dia_atual[$slot_index]) && $mapa_dia_atual[$slot_index] === true) {
-                                                    
-                                                    $cabe_servico_inteiro = true;
-                                                    for ($d = 0; $d < $duracao_necessaria; $d++) {
-                                                        if (!isset($mapa_dia_atual[$slot_index + $d]) || $mapa_dia_atual[$slot_index + $d] === false) {
-                                                            $cabe_servico_inteiro = false;
-                                                            break;
-                                                        }
-                                                    }
-
-                                                    if ($cabe_servico_inteiro) {
-                                                        $hora_texto = converterSlotParaHoraLocal($slot_index);
-                                            ?>
-                                                        <input type="radio" class="slot-input" name="slot_selecionado" id="slot_<?= $slot_index ?>" value="<?= $slot_index ?>" required>
-                                                        <label class="slot-label" for="slot_<?= $slot_index ?>"><?= $hora_texto ?></label>
-                                            <?php
-                                                        $slots_encontrados_contador++;
-                                                    }
-                                                }
-                                            }
-
-                                            // Caso não haja opções mostra esta mensagem
-                                            if ($slots_encontrados_contador == 0) {
-                                                echo '<div class="col-12 text-center text-muted py-4"><i class="bi bi-emoji-frown mb-2" style="font-size: 1.5rem;"></i><br>Não existem horários disponíveis para esta data.</div>';
-                                            }
-                                            ?>
-                                        </div>
+                                        if ($slots_encontrados_contador == 0) {
+                                            echo '<div class="col-12 text-center text-muted py-4"><i class="bi bi-emoji-frown mb-2" style="font-size: 1.5rem;"></i><br>Não existem horários disponíveis para esta data.</div>';
+                                        } else {
+                                            $renderSlotsCliente($slots_manha, 'Manhã', 'bi-sunrise');
+                                            $renderSlotsCliente($slots_tarde, 'Tarde', 'bi-sunset');
+                                        }
+                                        ?>
 
                                         <?php if ($slots_encontrados_contador > 0): ?>
                                             <div class="mt-4">

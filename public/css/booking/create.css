@@ -169,6 +169,19 @@ h3 {
 
 
 /* --- GRELHA DE HORÁRIOS (SLOTS) --- */
+.slots-period-block {
+    margin-bottom: 1rem;
+}
+
+.slots-period-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.5rem;
+}
+
 .slots-container { 
     display: grid; 
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); 

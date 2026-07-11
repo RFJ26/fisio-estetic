@@ -58,6 +58,8 @@ if ($dados['data'] < $hoje && in_array(strtolower($dados['estado']), ['ativa', '
 $data_selecionada = isset($_POST['data_edit']) ? $_POST['data_edit'] : $dados['data'];
 $estado_selecionado = isset($_POST['estado_edit']) ? $_POST['estado_edit'] : $dados['estado'];
 $slots_disponiveis = [];
+$slots_manha = [];
+$slots_tarde = [];
 
 // --- 2. CALCULAR SLOTS DISPONÍVEIS ---
 if ($data_selecionada) {
@@ -122,7 +124,14 @@ if ($data_selecionada) {
             
             if ($livre) {
                 $hora_fmt = converterSlotParaHora($i);
-                $slots_disponiveis[] = ['id' => $i, 'hora' => $hora_fmt];
+                $slot = ['id' => $i, 'hora' => $hora_fmt];
+                $slots_disponiveis[] = $slot;
+
+                if (slotEhManha($i)) {
+                    $slots_manha[] = $slot;
+                } else {
+                    $slots_tarde[] = $slot;
+                }
             }
         }
     } 
@@ -306,18 +315,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['salvar_alteracoes'])) 
                                 Nenhum horário disponível para esta data ou profissional em folga.
                             </div>
                         <?php else: ?>
-                            <div class="slots-grid">
-                                <?php foreach($slots_disponiveis as $slot): 
-                                    $isCurrent = ($data_selecionada == $dados['data'] && $slot['id'] == $dados['slot_inicial']);
-                                    $checkSlot = $isCurrent ? 'checked' : '';
-                                ?>
-                                    <input type="radio" name="slot_edit" id="s_<?= $slot['id'] ?>" value="<?= $slot['id'] ?>" class="input-slot-hidden" <?= $checkSlot ?>>
-                                    <label for="s_<?= $slot['id'] ?>" class="slot-card <?= $isCurrent ? 'slot-current' : '' ?>">
-                                        <?= $slot['hora'] ?>
-                                        <?php if($isCurrent): ?><br><small>(Atual)</small><?php endif; ?>
-                                    </label>
-                                <?php endforeach; ?>
-                            </div>
+                            <?php
+                            $renderSlotsPeriodo = function(array $slots, string $titulo, string $icone) use ($data_selecionada, $dados) {
+                                if (empty($slots)) return;
+                            ?>
+                                <div class="slots-period-block mb-3">
+                                    <div class="slots-period-title"><i class="bi <?= $icone ?> me-2"></i><?= $titulo ?></div>
+                                    <div class="slots-grid">
+                                        <?php foreach($slots as $slot):
+                                            $isCurrent = ($data_selecionada == $dados['data'] && $slot['id'] == $dados['slot_inicial']);
+                                            $checkSlot = $isCurrent ? 'checked' : '';
+                                        ?>
+                                            <input type="radio" name="slot_edit" id="s_<?= $slot['id'] ?>" value="<?= $slot['id'] ?>" class="input-slot-hidden" <?= $checkSlot ?>>
+                                            <label for="s_<?= $slot['id'] ?>" class="slot-card <?= $isCurrent ? 'slot-current' : '' ?>">
+                                                <?= $slot['hora'] ?>
+                                                <?php if($isCurrent): ?><br><small>(Atual)</small><?php endif; ?>
+                                            </label>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            <?php
+                            };
+
+                            $renderSlotsPeriodo($slots_manha, 'Manhã', 'bi-sunrise');
+                            $renderSlotsPeriodo($slots_tarde, 'Tarde', 'bi-sunset');
+                            ?>
                         <?php endif; ?>
                     </div>
 

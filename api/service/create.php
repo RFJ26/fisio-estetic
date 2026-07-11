@@ -2,22 +2,16 @@
 session_start();
 include __DIR__ . '/../verifica_login.php';
 require_once __DIR__ . '/../../src/conexao.php';
+require_once __DIR__ . '/../../src/helpers.php';
 
 $erro = '';
 $sucesso = '';
 
-// --- 1. CONFIGURAÇÃO DE HORÁRIOS (56 SLOTS) ---
-$hora_abertura = '08:00'; 
-$intervalo_minutos = 15; 
-$total_slots_dia = 56;    
-
-$lista_horarios = [];
-$time_atual = strtotime($hora_abertura);
-
-for ($i = 1; $i <= $total_slots_dia; $i++) {
-    $lista_horarios[$i] = date('H:i', $time_atual);
-    $time_atual = strtotime("+$intervalo_minutos minutes", $time_atual);
-}
+// --- 1. CONFIGURAÇÃO DE HORÁRIOS ---
+$lista_horarios = gerarMapaHorarios();
+$lista_manha = filtrarHorariosManha($lista_horarios);
+$lista_manha_fim = filtrarHorariosManha($lista_horarios, true);
+$lista_tarde = filtrarHorariosTarde($lista_horarios);
 
 // Buscar categorias
 $query_cat = "SELECT * FROM categoria ORDER BY categoria.designacao ASC";
@@ -300,7 +294,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             <label class="small text-muted mb-1 fw-medium">Início</label>
                                             <select name="manha_inicio" class="form-select form-select-sm time-select">
                                                 <option value="">--</option>
-                                                <?php foreach($lista_horarios as $id => $hora): ?>
+                                                <?php foreach($lista_manha as $id => $hora): ?>
                                                     <option value="<?= $id ?>"><?= $hora ?></option>
                                                 <?php endforeach; ?>
                                             </select>
@@ -309,7 +303,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             <label class="small text-muted mb-1 fw-medium">Fim</label>
                                             <select name="manha_fim" class="form-select form-select-sm time-select">
                                                 <option value="">--</option>
-                                                <?php foreach($lista_horarios as $id => $hora): ?>
+                                                <?php foreach($lista_manha_fim as $id => $hora): ?>
                                                     <option value="<?= $id ?>"><?= $hora ?></option>
                                                 <?php endforeach; ?>
                                             </select>
@@ -331,7 +325,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             <label class="small text-muted mb-1 fw-medium">Início</label>
                                             <select name="tarde_inicio" class="form-select form-select-sm time-select">
                                                 <option value="">--</option>
-                                                <?php foreach($lista_horarios as $id => $hora): ?>
+                                                <?php foreach($lista_tarde as $id => $hora): ?>
                                                     <option value="<?= $id ?>"><?= $hora ?></option>
                                                 <?php endforeach; ?>
                                             </select>
@@ -340,7 +334,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             <label class="small text-muted mb-1 fw-medium">Fim</label>
                                             <select name="tarde_fim" class="form-select form-select-sm time-select">
                                                 <option value="">--</option>
-                                                <?php foreach($lista_horarios as $id => $hora): ?>
+                                                <?php foreach($lista_tarde as $id => $hora): ?>
                                                     <option value="<?= $id ?>"><?= $hora ?></option>
                                                 <?php endforeach; ?>
                                             </select>

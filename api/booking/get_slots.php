@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../src/conexao.php';
+require_once __DIR__ . '/../../src/helpers.php';
 
 $data = isset($_GET['data']) ? mysqli_real_escape_string($conn, $_GET['data']) : '';
 $id_relacao = isset($_GET['id_relacao']) ? intval($_GET['id_relacao']) : 0;
@@ -7,7 +8,7 @@ $id_relacao = isset($_GET['id_relacao']) ? intval($_GET['id_relacao']) : 0;
 $id_cliente = isset($_GET['id_cliente']) ? intval($_GET['id_cliente']) : 0; 
 
 if (!$data || !$id_relacao) {
-    echo json_encode([]);
+    echo json_encode(['manha' => [], 'tarde' => []]);
     exit;
 }
 
@@ -19,7 +20,7 @@ $r_serv = mysqli_query($conn, $q_serv);
 $d_serv = mysqli_fetch_assoc($r_serv);
 
 if (!$d_serv) {
-    echo json_encode([]);
+    echo json_encode(['manha' => [], 'tarde' => []]);
     exit;
 }
 
@@ -79,7 +80,8 @@ if ($data == date('Y-m-d')) {
     }
 }
 
-$slots_disponiveis = [];
+$slots_manha = [];
+$slots_tarde = [];
 for ($i = 1; $i <= (100 - $duracao); $i++) {
     if (isset($mapa_dia_atual[$i]) && $mapa_dia_atual[$i] === true) {
         $cabe = true;
@@ -90,16 +92,17 @@ for ($i = 1; $i <= (100 - $duracao); $i++) {
             }
         }
         if ($cabe) {
-            $hora_inicio = 8; 
-            $minutos_totais = ($i - 1) * 15;
-            $horas = $hora_inicio + floor($minutos_totais / 60);
-            $minutos = $minutos_totais % 60;
-            $hora_fmt = sprintf("%02d:%02d", $horas, $minutos);
+            $hora_fmt = converterSlotParaHora($i);
+            $slot = ['id' => $i, 'hora' => $hora_fmt];
 
-            $slots_disponiveis[] = ['id' => $i, 'hora' => $hora_fmt];
+            if (slotEhManha($i)) {
+                $slots_manha[] = $slot;
+            } else {
+                $slots_tarde[] = $slot;
+            }
         }
     }
 }
 
-echo json_encode($slots_disponiveis);
+echo json_encode(['manha' => $slots_manha, 'tarde' => $slots_tarde]);
 ?>
